@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d00a552e_048552e0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2023-07-12T09:36:56Z",
+      "side": 1,
+      "message": "Please check if you can +2 and merge.",
+      "revId": "e806ae37d90f84f2265b80b3db1cf3dbb3a14a72",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
