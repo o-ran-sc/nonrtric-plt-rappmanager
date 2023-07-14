@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e48f8fe0_e96c1aa7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2023-07-14T13:14:23Z",
+      "side": 1,
+      "message": "Manual verify for now. No verification job available yet.",
+      "revId": "90f78df149a2dc311b533456dec28de6a7c28e22",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
