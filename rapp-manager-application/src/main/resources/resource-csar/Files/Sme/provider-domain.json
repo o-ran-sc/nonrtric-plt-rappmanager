@@ -1,0 +1,34 @@
+{
+  "apiProvDomInfo": "Provider domain",
+  "apiProvFuncs": [
+    {
+      "apiProvFuncInfo": "rApp as APF",
+      "apiProvFuncRole": "APF",
+      "regInfo": {
+        "apiProvPubKey": "APF-PublicKey"
+      }
+    },
+    {
+      "apiProvFuncInfo": "rApp as AEF",
+      "apiProvFuncRole": "AEF",
+      "regInfo": {
+        "apiProvPubKey": "AEF-PublicKey"
+      }
+    },
+    {
+      "apiProvFuncInfo": "rApp as AMF",
+      "apiProvFuncRole": "AMF",
+      "regInfo": {
+        "apiProvPubKey": "AMF-PublicKey"
+      }
+    },
+    {
+      "apiProvFuncInfo": "Gateway as entrypoint AEF",
+      "apiProvFuncRole": "AEF",
+      "regInfo": {
+        "apiProvPubKey": "AEF-Gateway-PublicKey"
+      }
+    }
+  ],
+  "regSec": "PSK"
+}

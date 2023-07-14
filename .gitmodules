@@ -1,0 +1,4 @@
+[submodule "sme"]
+	path = sme
+	url = https://gerrit.o-ran-sc.org/r/nonrtric/plt/sme
+	branch = master
