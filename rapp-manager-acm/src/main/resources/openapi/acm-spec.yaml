@@ -1,0 +1,1388 @@
+#  ============LICENSE_START=======================================================
+#  Copyright (C) 2022-2023 Nordix Foundation
+#  ================================================================================
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+#
+#  SPDX-License-Identifier: Apache-2.0
+#  ============LICENSE_END=========================================================
+openapi: 3.0.1
+info:
+  title: Api Documentation
+  description: Api Documentation
+  termsOfService: urn:tos
+  contact: {}
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0
+  version: "1.0"
+servers:
+  - url: https://{server}
+    variables:
+      server:
+        default: onap/policy/clamp/acm/v2
+        description: This value is assigned by the service provider
+tags:
+  - name: Participant Monitoring
+    description: Pariticipant Monitoring Controller, for monitoring of and requesting information from participants
+  - name: Automation Composition Definition
+    description: Automation Composition Definition Controller, for definition and management of Automation Composition Types
+  - name: Automation Composition Instance
+    description: Automation Composition Instance Controller, for definition and management of Automation Composition Instances
+
+paths:
+  /participants:
+    get:
+      tags:
+        - Participant Monitoring
+      summary: Query Particicpants
+      description: Query the participants that are registered on the ACM runtime
+      operationId: queryParticipants
+      parameters:
+        - name: name
+          in: query
+          required: false
+          description: Automation composition definition name. Regular expressions are supported for filtering. If
+            this parameter is not specified, all automation composition definitions are returned.
+          schema:
+            type: string
+        - name: version
+          in: query
+          required: false
+          description: Automation composition definition version. Regular expressions are supported for filtering. If this
+            parameter is not specified, all automation composition definitions that match the "name" filter are are returned.
+          schema:
+            type: string
+        - name: X-onap-RequestId
+          in: header
+          description: RequestID for http transaction
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: OK, serialised array of instances of
+            [ParticipantInformation](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/concepts/ParticipantInformation.java)
+            that contains information on participants with their information and status. Each participant entry contains
+            a list of AC Element types on the participant. Each AC Element type entry contains a list of AC Element
+            instances on the Participant.
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ParticipantInformation'
+              example:
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getMultiParticipantResponse.json'
+            application/yaml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ParticipantInformation'
+              example:
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getMultiParticipantResponse.yaml'
+        401:
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+      security:
+        - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: London
+    put:
+      tags:
+        - Participant Monitoring
+      summary: Order an immendiate Participant Report from all participants
+      description: Requests all participants to immediately generate a heartbeat report with their information and status
+        and the information and status of all their AC Element Types and Instances. The results are published on subsequent
+        GET REST requests on the "participants" endpoint.
+      operationId: orderAllParticipantsReport
+      parameters:
+        - name: X-onap-RequestId
+          in: header
+          description: RequestID for http transaction
+          schema:
+            type: string
+            format: uuid
+      responses:
+        202:
+          description: Accepted, the request has been accepted and forwarded to participants
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+        400:
+          description: Bad Request, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        401:
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+      security:
+        - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: London
+      x-codegen-request-body-name: body
+  /participants/{participantId}:
+    get:
+      tags:
+        - Participant Monitoring
+      summary: Get details of the requested participant
+        definitions
+      description: Get details of the requested commissioned participant, returning all pariticipant details
+      operationId: getParticipant
+      parameters:
+        - name : participantId
+          in: path
+          description: The UUID of the participant to get
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: X-onap-RequestId
+          in: header
+          description: RequestID for http transaction
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Serialised instance of
+            [ParticipantInformation](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/concepts/ParticipantInformation.java)
+            that information on the participant with its information and status. The participant entry contains
+            a list of AC Element types on the participant. Each AC Element type entry contains a list of AC Element
+            instances on the Participant.
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantInformation'
+              example:
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getSingleParticipantResponse.json'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+              example:
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getParticipantResponse.yaml'
+        401:
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        404:
+          description: Specified participant not found, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+      security:
+        - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: London
+    put:
+      tags:
+        - Participant Monitoring
+      summary: Order an immendiate Participant Report from a participant
+      description: Requests the participants to immediately generate a heartbeat report with its information and status
+        and the information and status of all its AC Element Types and Instances. The results are published on subsequent
+        GET REST requests on the "participants" endpoint.
+      operationId: orderParticipantReport
+      parameters:
+        - name : participantId
+          in: path
+          description: The UUID of the participant to get
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: X-onap-RequestId
+          in: header
+          description: RequestID for http transaction
+          schema:
+            type: string
+            format: uuid
+      responses:
+        202:
+          description: Accepted, the request has been accepted and forwarded to participants
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+        400:
+          description: Bad Request, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        401:
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        404:
+          description: Specified participant not found, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+      security:
+        - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: London
+      x-codegen-request-body-name: body
+  /compositions:
+    get:
+      tags:
+        - Automation Composition Definition
+      summary: Query the commissioned automation composition definitions
+        definitions
+      description: Query the commissioned automation composition
+        definitions, returning the automation composition details
+      operationId: queryCompositionDefinitions
+      parameters:
+        - name: name
+          in: query
+          required: false
+          description: Automation composition definition name. Regular expressions are supported for filtering. If
+            this parameter is not specified, all automation composition definitions are returned.
+          schema:
+            type: string
+        - name: version
+          in: query
+          required: false
+          description: Automation composition definition version. Regular expressions are supported for filtering. If this
+            parameter is not specified, all automation composition definitions that match the "name" filter are are returned.
+          schema:
+            type: string
+        - name: X-onap-RequestId
+          in: header
+          description: RequestID for http transaction
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Serialised instance of
+            [ToscaServiceTemplates](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplates.java)
+            that contains the automation composition definitions that match the requested filters.
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplates'
+              example:
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getAllCompositionDefinitions.json'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplates'
+              example:
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getAllCompositionDefinitions.yaml'
+        401:
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+      security:
+        - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: London
+    post:
+      tags:
+        - Automation Composition Definition
+      summary: Commissions automation composition definitions
+      description: Commissions automation composition definitions, returning the UUIDs of
+        automation composition definitions commissioned by this request.
+      operationId: createCompositionDefinitions
+      parameters:
+        - name: X-onap-RequestId
+          in: header
+          description: RequestID for http transaction
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Serialised instance of
+          [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          containing the automation composition definitions to be commissioned.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToscaServiceTemplate'
+            example:
+              externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionDefinitions.json'
+          application/yaml:
+            schema:
+              $ref: '#/components/schemas/ToscaServiceTemplate'
+            example:
+              externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionDefinitions.yaml'
+        required: true
+      responses:
+        201:
+          description: Serialised instance of
+            [CommissioningResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/commissioning/CommissioningResponse.java)
+            containing the UUIDs of automation composition definitions created by this request
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommissioningResponse'
+              example:
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCommissionCompositionDefinitionsResponse.json'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/CommissioningResponse'
+              example:
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCommissionCompositionDefinitionsResponse.yaml'
+        401:
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        400:
+          description: Bad Request, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+      security:
+        - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: London
+      x-codegen-request-body-name: body
+  /compositions/{compositionId}:
+    get:
+      tags:
+        - Automation Composition Definition
+      summary: Get details of the requested commissioned automation composition
+        definitions
+      description: Get details of the requested commissioned automation composition
+        definitions, returning all automation composition details
+      operationId: getCompositionDefinition
+      parameters:
+        - name : compositionId
+          in: path
+          description: The UUID of the automation composition definition to get
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: X-onap-RequestId
+          in: header
+          description: RequestID for http transaction
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description:
+            Serialised instance of
+            [AutomationCompositionDefinition](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionDefinition.java)
+            containing the requested automation composition definition.
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutomationCompositionDefinition'
+              example:
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getSingleCompositionDefinition.json'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/AutomationCompositionDefinition'
+              example:
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getSingleCompositionDefinition.yaml'
+        401:
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        404:
+          description: Specified automation composition definition not found, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+      security:
+        - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: London
+    put:
+      tags:
+        - Automation Composition Definition
+      summary: Primes or deprimes an automation composition definition
+      description: Primes or deprimes an automation composition definition by sending the AC Element Types to participants and
+        getting participants to take responsibility for AC Element Types in this AC Type.
+      operationId: compositionDefinitionPriming
+      parameters:
+        - name : compositionId
+          in: path
+          description: The UUID of the automation composition definition to update
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: X-onap-RequestId
+          in: header
+          description: RequestID for http transaction
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Serialised instance of
+          [AcTypeStateUpdate](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/commissioning/AcTypeStateUpdate.java)
+          which specifies the requested state change on the automation concept instance
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcTypeStateUpdate'
+            example:
+              externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/putAcTypeStateUpdate.json'
+          application/yaml:
+            schema:
+              $ref: '#/components/schemas/AcTypeStateUpdate'
+            example:
+              externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/putAcTypeStateUpdate.yaml'
+      responses:
+        202:
+          description: Accepted, the request has been accepted and forwarded to participants
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+        400:
+          description: Bad Request, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        401:
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        404:
+          description: Specified automation composition definition not found, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+      security:
+        - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: London
+      x-codegen-request-body-name: body
+    delete:
+      tags:
+        - Automation Composition Definition
+      summary: Delete a commissioned automation composition definition
+      description: Deletes a commissioned automation composition definition,returning the UUID of the automation composition definition deleted by this request
+      operationId: deleteCompositionDefinition
+      parameters:
+        - name : compositionId
+          in: path
+          description: The UUID of the automation composition definition to delete
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: X-onap-RequestId
+          in: header
+          description: RequestID for http transaction
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Serialised instance of
+            [CommissioningResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/commissioning/CommissioningResponse.java)
+            containing the UUID of the automation composition deleted by this request
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommissioningResponse'
+              example:
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/deleteCompositionDefinitionResponse.json'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/CommissioningResponse'
+              example:
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/deleteCompositionDefinitionResponse.yaml'
+        401:
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        404:
+          description: Specified automation composition definition not found, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        400:
+          description: Bad Request, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+      security:
+        - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: London
+  /compositions/{compositionId}/instances:
+    get:
+      tags:
+        - Automation Composition Instance
+      summary: Query details of the requested automation composition instances
+      description: Query details of the requested automation composition instances for the given automation composition definition ID, returning
+        details of all its automation composition instances
+      operationId: queryCompositionInstances
+      parameters:
+        - name : compositionId
+          in: path
+          description: The UUID of the automation composition definition for which to return instances
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: name
+          in: query
+          description: Automation composition instance name. Regular expressions are supported for filtering. If
+            this parameter is not specified, all automation composition instances for the specified definition are returned.
+          schema:
+            type: string
+        - name: version
+          in: query
+          description: Automation composition instance version. Regular expressions are supported for filtering. If this
+            parameter is not specified, all automation composition instances for the specified definition that match the "name" filter are are returned.
+          schema:
+            type: string
+        - name: X-onap-RequestId
+          in: header
+          description: RequestID for http transaction
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Serialised instance of
+            [AutomationCompositions](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositions.java)
+            containing a list of automation composition instances found
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutomationCompositions'
+              example:
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getCompositionInstancesResponse.json'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/AutomationCompositions'
+              example:
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getCompositionInstancesResponse.yaml'
+        401:
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        404:
+          description: The specified automation composition definition was not found, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+      security:
+        - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: London
+    post:
+      tags:
+        - Automation Composition Instance
+      summary: Create automation composition instance
+      description: Creates automation composition instance that use the sepcified automation composition definition. The ID of the created
+        automation composition instance is returned.
+      operationId: createCompositionInstance
+      parameters:
+        - name : compositionId
+          in: path
+          description: The UUID of the automation composition definition on which to create instance
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: X-onap-RequestId
+          in: header
+          description: RequestID for http transaction
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Serialised instance of
+          [AutomationComposition](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationComposition.java)
+          containing a automation composition instance to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutomationComposition'
+            example:
+              externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstance.json'
+          application/yaml:
+            schema:
+              $ref: '#/components/schemas/AutomationComposition'
+            example:
+              externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstance.yaml'
+        required: true
+      responses:
+        201:
+          description: Serialised instance of
+            [InstantiationResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/instantiation/InstantiationResponse.java)
+            containing the UUID of the created automation composition instance
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstantiationResponse'
+              example:
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstancesResponse.json'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/InstantiationResponse'
+              example:
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstancesResponse.yaml'
+        401:
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        404:
+          description: The specified automation composition definition was not found, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        400:
+          description: Bad Request, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+      security:
+        - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: London
+      x-codegen-request-body-name: body
+  /compositions/{compositionId}/instances/{instanceId}:
+    get:
+      tags:
+        - Automation Composition Instance
+      summary: Get automation composition instance details.
+      description: Get details of the requested automation composition instance.
+      operationId: getCompositionInstance
+      parameters:
+        - name : compositionId
+          in: path
+          description: The UUID of the automation composition definition on which to get an instance
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name : instanceId
+          in: path
+          description: The UUID of the automation composition instance to get
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: X-onap-RequestId
+          in: header
+          description: RequestID for http transaction
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Serialised instance of
+            [AutomationComposition](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationComposition.java)
+            containing the automation composition instance
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutomationComposition'
+              example:
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getCompositionInstanceResponse.json'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/AutomationComposition'
+              example:
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getCompositionInstanceResponse.yaml'
+        401:
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        404:
+          description: The automation composition instance was not found, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+      security:
+        - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: London
+    put:
+      tags:
+        - Automation Composition Instance
+      summary: Manage deployment and locking of an automation composition instance
+      description: This request manages deployment and locking of an automation composition instance. This endpoint can
+        order deployment and undeployment of an AC Instance to participants and order unlocking and locking of AC instances
+        on participants
+      operationId: compositionInstanceState
+      parameters:
+        - name : compositionId
+          in: path
+          description: The UUID of the automation composition definition on which to update an instance
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name : instanceId
+          in: path
+          description: The UUID of the automation composition instance to update
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: X-onap-RequestId
+          in: header
+          description: RequestID for http transaction
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Serialised instance of
+          [AcInstanceStateUpdate](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/instantiation/AcInstanceStateUpdate.java)
+          which specifies the requested state change on the automation concept instance
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcInstanceStateUpdate'
+            example:
+              externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/putAcInstanceStateUpdate.json'
+          application/yaml:
+            schema:
+              $ref: '#/components/schemas/AcInstanceStateUpdate'
+            example:
+              externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/putAcInstanceStateUpdate.yaml'
+        required: true
+      responses:
+        202:
+          description: Accepted, the request has been accepted and forwarded to participants
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+        400:
+          description: Bad Request, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        401:
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        404:
+          description: The specified automation composition instance was not found, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+      security:
+        - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: London
+      x-codegen-request-body-name: body
+    delete:
+      tags:
+        - Automation Composition Instance
+      summary: Delete an automation composition instance
+      description: Deletes a automation composition instance, returning the UUID of the deleted automation composition instance
+      operationId: deleteCompositionInstance
+      parameters:
+        - name : compositionId
+          in: path
+          description: The UUID of the automation composition definition on which to delete an instance
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name : instanceId
+          in: path
+          description: The UUID of the automation composition instance to delete
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: X-onap-RequestId
+          in: header
+          description: RequestID for http transaction
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Serialised instance of
+            [InstantiationResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/instantiation/InstantiationResponse.java)
+            containing the UUID of the deleted automation composition instance
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstantiationResponse'
+              example:
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/deleteCompositionInstanceResponse.json'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/InstantiationResponse'
+              example:
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/deleteCompositionInstanceResponse.yaml'
+        401:
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        404:
+          description: The specified automation composition instance was not found, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        400:
+          description: Bad Request, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+      security:
+        - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: London
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    ParticipantInformation:
+      title: ParticipantInformation
+      type: object
+    ToscaServiceTemplates:
+      title: ToscaServiceTemplates
+      type: object
+    ToscaServiceTemplate:
+      title: ToscaServiceTemplate
+      type: object
+    AutomationCompositionDefinition:
+      title: AutomationCompositionDefinition
+      type: object
+    AutomationComposition:
+      title: AutomationComposition
+      type: object
+    AutomationCompositions:
+      title: AutomationCompositions
+      type: object
+    SimpleResponse:
+      title: SimpleResponse
+      type: object
+    CommissioningResponse:
+      title: CommissioningResponse
+      type: object
+    AcTypeStateUpdate:
+      title: AcTypeStateUpdate
+      type: object
+    AcInstanceStateUpdate:
+      title: AcInstanceStateUpdate
+      type: object
+    InstantiationResponse:
+      title: InstantiationResponse
+      type: object
+  headers:
+    X-LatestVersion:
+      schema:
+        type: string
+    X-PatchVersion:
+      schema:
+        type: string
+    X-MinorVersion:
+      schema:
+        type: string
+    X-onap-RequestId:
+      schema:
+        type: string
+        format: uuid

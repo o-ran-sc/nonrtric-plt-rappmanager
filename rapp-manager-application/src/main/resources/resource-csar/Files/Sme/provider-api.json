@@ -1,0 +1,45 @@
+{
+  "apiName": "Rapp API",
+  "description": "Example A API of rApp",
+  "aefProfiles": [
+    {
+      "aefId": "rApp as AEF",
+      "description": "Example A rApp as AEF",
+      "versions": [
+        {
+          "apiVersion": "v1",
+          "resources": [
+            {
+              "resourceName": "exampleA",
+              "commType": "REQUEST_RESPONSE",
+              "uri": "/exampleA/subscription/subscription_id_1",
+              "operations": [
+                "GET"
+              ]
+            }
+          ]
+        }
+      ],
+      "protocol": "HTTP_1_1",
+      "securityMethods": [
+        "PSK"
+      ],
+      "interfaceDescriptions": [
+        {
+          "ipv4Addr": "string",
+          "port": 65535,
+          "securityMethods": [
+            "PKI"
+          ]
+        },
+        {
+          "ipv4Addr": "string",
+          "port": 65535,
+          "securityMethods": [
+            "PKI"
+          ]
+        }
+      ]
+    }
+  ]
+}
