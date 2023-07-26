@@ -1,0 +1,18 @@
+@startuml
+participant "Rapp Manager"
+participant "ACM Runtime"
+participant "CAPIF"
+
+autonumber
+
+group Application Startup
+"Rapp Manager"->"CAPIF": Create "Rapp Manager" as AMF
+end
+
+autonumber
+
+group Application Stop
+"Rapp Manager"->"CAPIF": Delete "Rapp Manager" as AMF
+end
+
+@enduml
