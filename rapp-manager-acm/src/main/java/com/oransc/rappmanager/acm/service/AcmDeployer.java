@@ -21,24 +21,20 @@ package com.oransc.rappmanager.acm.service;
 import com.oransc.rappmanager.acm.configuration.ACMConfiguration;
 import com.oransc.rappmanager.acm.rest.AutomationCompositionDefinitionApiClient;
 import com.oransc.rappmanager.acm.rest.AutomationCompositionInstanceApiClient;
-import com.oransc.rappmanager.acm.rest.ParticipantMonitoringApiClient;
-import com.oransc.rappmanager.models.Rapp;
-import com.oransc.rappmanager.models.RappCsarConfigurationHandler;
 import com.oransc.rappmanager.models.RappDeployer;
-import com.oransc.rappmanager.models.RappEvent;
-import com.oransc.rappmanager.models.RappState;
-import com.oransc.rappmanager.models.cache.RappCacheService;
-import com.oransc.rappmanager.models.statemachine.RappStateMachine;
-import java.util.List;
+import com.oransc.rappmanager.models.csar.RappCsarConfigurationHandler;
+import com.oransc.rappmanager.models.rapp.Rapp;
+import com.oransc.rappmanager.models.rapp.RappEvent;
+import com.oransc.rappmanager.models.rapp.RappState;
+import com.oransc.rappmanager.models.rappinstance.RappACMInstance;
+import com.oransc.rappmanager.models.rappinstance.RappInstance;
+import com.oransc.rappmanager.models.statemachine.RappInstanceStateMachine;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantInformation;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.AcTypeStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.PrimeOrder;
@@ -56,26 +52,17 @@ public class AcmDeployer implements RappDeployer {
 
     Logger logger = LoggerFactory.getLogger(AcmDeployer.class);
 
-    private final ParticipantMonitoringApiClient participantMonitoringApiClient;
     private final AutomationCompositionDefinitionApiClient automationCompositionDefinitionApiClient;
     private final AutomationCompositionInstanceApiClient automationCompositionInstanceApiClient;
     private final RappCsarConfigurationHandler rappCsarConfigurationHandler;
-    private final RappCacheService rappCacheService;
-    private final RappStateMachine rappStateMachine;
+    private final RappInstanceStateMachine rappInstanceStateMachine;
     private final ACMConfiguration acmConfiguration;
-    @Getter
-    private UUID compositionId;
 
-    public List<ParticipantInformation> getAllParticipants() {
-        return participantMonitoringApiClient.queryParticipants(null, null, UUID.randomUUID());
-    }
-
-
-    void updateACMInstanceState(Rapp rapp, DeployOrder deployOrder) {
+    void updateACMInstanceState(UUID compositionId, RappACMInstance rappACMInstance, DeployOrder deployOrder) {
         AcInstanceStateUpdate acInstanceStateUpdate = new AcInstanceStateUpdate();
         acInstanceStateUpdate.setDeployOrder(deployOrder);
-        automationCompositionInstanceApiClient.compositionInstanceState(rapp.getCompositionId(),
-                rapp.getCompositionInstanceId(), acInstanceStateUpdate, UUID.randomUUID());
+        automationCompositionInstanceApiClient.compositionInstanceState(compositionId,
+                rappACMInstance.getAcmInstanceId(), acInstanceStateUpdate, UUID.randomUUID());
     }
 
     public void primeACMComposition(UUID compositionId, PrimeOrder primeOrder) {
@@ -91,7 +78,6 @@ public class AcmDeployer implements RappDeployer {
             commissioningResponse =
                     automationCompositionDefinitionApiClient.createCompositionDefinitions(compositionPayload,
                             UUID.randomUUID());
-            compositionId = commissioningResponse.getCompositionId();
         } catch (Exception e) {
             logger.warn("Error in creating composition", e);
         }
@@ -99,13 +85,13 @@ public class AcmDeployer implements RappDeployer {
     }
 
     public CommissioningResponse deleteComposition(UUID compositionId) {
-        return automationCompositionDefinitionApiClient.deleteCompositionDefinition(compositionId, UUID.randomUUID());
-    }
-
-    public boolean isCompositionStateEquals(UUID compositionId, AcTypeState acTypeState) {
-        //automationCompositionDefinitionApiClient.getCompositionDefinition(compositionId, UUID.randomUUID()).getState().equals(acTypeState);
-        //TODO httpmessage converter doesn't map AutomationCompositionDefinition properly, Fix that and check the response
-        return true;
+        try {
+            return automationCompositionDefinitionApiClient.deleteCompositionDefinition(compositionId,
+                    UUID.randomUUID());
+        } catch (Exception e) {
+            logger.warn("Error in deleting composition {}", compositionId, e);
+        }
+        return null;
     }
 
     boolean isCompositionInstanceStateEquals(UUID compositionId, UUID compositionIntanceId, DeployState deployState) {
@@ -113,15 +99,17 @@ public class AcmDeployer implements RappDeployer {
                 UUID.randomUUID()).getDeployState().equals(deployState);
     }
 
-    boolean waitForCompositionInstanceTargetState(Rapp rapp, DeployState deployState) {
+    boolean waitForCompositionInstanceTargetState(UUID compositionId, RappInstance rappInstance,
+            DeployState deployState) {
         boolean targetInstanceStateTransition = false;
         try {
             for (int i = 0; i < acmConfiguration.getMaxRetries(); i++) {
                 logger.debug("Composition instance state check {}", i + 1);
-                if (isCompositionInstanceStateEquals(rapp.getCompositionId(), rapp.getCompositionInstanceId(),
+                if (isCompositionInstanceStateEquals(compositionId, rappInstance.getAcm().getAcmInstanceId(),
                         deployState)) {
-                    sendRappStateEvent(rapp, deployState);
-                    logger.info("Composition instance {} state is {}", rapp.getCompositionInstanceId(), deployState);
+                    sendRappInstanceStateEvent(rappInstance, deployState);
+                    logger.info("Composition instance {} state is {}", rappInstance.getAcm().getAcmInstanceId(),
+                            deployState);
                     targetInstanceStateTransition = true;
                     break;
                 } else {
@@ -129,23 +117,23 @@ public class AcmDeployer implements RappDeployer {
                 }
             }
         } catch (Exception e) {
-            logger.warn("Unable to get composition instance state for composition {}", rapp.getCompositionId());
+            logger.warn("Unable to get composition instance state for composition {}", compositionId, e);
         }
         return targetInstanceStateTransition;
     }
 
     @Override
-    public boolean deployRapp(Rapp rapp) {
+    public boolean deployRappInstance(Rapp rapp, RappInstance rappInstance) {
         try {
-            rapp.setCompositionId(getCompositionId());
             String instantiationPayload =
-                    rappCsarConfigurationHandler.getInstantiationPayload(rapp, getCompositionId());
+                    rappCsarConfigurationHandler.getInstantiationPayload(rapp, rappInstance.getAcm(),
+                            rapp.getCompositionId());
             InstantiationResponse instantiationResponse =
-                    automationCompositionInstanceApiClient.createCompositionInstance(getCompositionId(),
+                    automationCompositionInstanceApiClient.createCompositionInstance(rapp.getCompositionId(),
                             instantiationPayload, UUID.randomUUID());
             if (instantiationResponse.getInstanceId() != null) {
-                rapp.setCompositionInstanceId(instantiationResponse.getInstanceId());
-                updateACMInstanceState(rapp, DeployOrder.DEPLOY);
+                rappInstance.getAcm().setAcmInstanceId(instantiationResponse.getInstanceId());
+                updateACMInstanceState(rapp.getCompositionId(), rappInstance.getAcm(), DeployOrder.DEPLOY);
                 return true;
             }
         } catch (Exception e) {
@@ -155,47 +143,82 @@ public class AcmDeployer implements RappDeployer {
     }
 
     @Override
-    public boolean undeployRapp(Rapp rapp) {
+    public boolean undeployRappInstance(Rapp rapp, RappInstance rappInstance) {
         AutomationComposition automationComposition =
                 automationCompositionInstanceApiClient.getCompositionInstance(rapp.getCompositionId(),
-                        rapp.getCompositionInstanceId(), UUID.randomUUID());
+                        rappInstance.getAcm().getAcmInstanceId(), UUID.randomUUID());
         if (automationComposition.getDeployState().equals(DeployState.DEPLOYED) && automationComposition.getLockState()
                                                                                            .equals(LockState.LOCKED)) {
-            updateACMInstanceState(rapp, DeployOrder.UNDEPLOY);
-            if (waitForCompositionInstanceTargetState(rapp, DeployState.UNDEPLOYED)) {
+            updateACMInstanceState(rapp.getCompositionId(), rappInstance.getAcm(), DeployOrder.UNDEPLOY);
+            if (waitForCompositionInstanceTargetState(rapp.getCompositionId(), rappInstance, DeployState.UNDEPLOYED)) {
                 automationCompositionInstanceApiClient.deleteCompositionInstance(
                         automationComposition.getCompositionId(), automationComposition.getInstanceId(),
                         UUID.randomUUID());
-                rappStateMachine.sendRappEvent(rapp, RappEvent.ACMUNDEPLOYED);
+                rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.ACMUNDEPLOYED);
                 return true;
             }
         }
         return false;
     }
 
-    public void syncRappStatus(Rapp rapp) {
-        if (rapp.getCompositionId() != null && rapp.getCompositionInstanceId() != null) {
+    @Override
+    public boolean primeRapp(Rapp rapp) {
+        logger.info("Priming rapp {}", rapp.getName());
+        try {
+            String compositionPayload = rappCsarConfigurationHandler.getAcmCompositionPayload(rapp);
+            CommissioningResponse commissioningResponse = createComposition(compositionPayload);
+            if (commissioningResponse != null && commissioningResponse.getCompositionId() != null) {
+                rapp.setCompositionId(commissioningResponse.getCompositionId());
+                logger.info("Priming automation Composition");
+                primeACMComposition(commissioningResponse.getCompositionId(), PrimeOrder.PRIME);
+                rapp.setState(RappState.PRIMED);
+                return true;
+            } else {
+                logger.error("Failed to create automation composition");
+            }
+        } catch (Exception e) {
+            logger.error("Failed to create automation composition", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deprimeRapp(Rapp rapp) {
+        try {
+            primeACMComposition(rapp.getCompositionId(), PrimeOrder.DEPRIME);
+            CommissioningResponse commissioningResponse = deleteComposition(rapp.getCompositionId());
+            if (commissioningResponse != null) {
+                rapp.setState(RappState.COMMISSIONED);
+                return true;
+            }
+        } catch (Exception e) {
+            logger.error("Failed deprime automation composition", e);
+        }
+        return false;
+    }
+
+    public void syncRappInstanceStatus(UUID compositionId, RappInstance rappInstance) {
+        if (rappInstance.getAcm().getAcmInstanceId() != null) {
             try {
                 AutomationComposition compositionInstance =
-                        automationCompositionInstanceApiClient.getCompositionInstance(rapp.getCompositionId(),
-                                rapp.getCompositionInstanceId(), UUID.randomUUID());
-                logger.info("ACM details are " + compositionInstance.toString());
-                sendRappStateEvent(rapp, compositionInstance.getDeployState());
+                        automationCompositionInstanceApiClient.getCompositionInstance(compositionId,
+                                rappInstance.getAcm().getAcmInstanceId(), UUID.randomUUID());
+                sendRappInstanceStateEvent(rappInstance, compositionInstance.getDeployState());
             } catch (RestClientException exception) {
-                logger.warn("Unable to get the ACM details for rapp {}", rapp.getName());
+                logger.warn("Unable to get the ACM details for rapp instance {}", rappInstance.getRappInstanceId());
             }
         }
     }
 
-    void sendRappStateEvent(Rapp rapp, DeployState deployState) {
+    void sendRappInstanceStateEvent(RappInstance rappInstance, DeployState deployState) {
         if (deployState.equals(DeployState.DEPLOYED)) {
-            rappStateMachine.sendRappEvent(rapp, RappEvent.ACMDEPLOYED);
+            rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.ACMDEPLOYED);
         } else if (deployState.equals(DeployState.UNDEPLOYED)) {
-            rappStateMachine.sendRappEvent(rapp, RappEvent.ACMUNDEPLOYED);
+            rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.ACMUNDEPLOYED);
         } else if (deployState.equals(DeployState.DEPLOYING)) {
-            rappStateMachine.sendRappEvent(rapp, RappEvent.DEPLOYING);
+            rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.DEPLOYING);
         } else if (deployState.equals(DeployState.UNDEPLOYING)) {
-            rappStateMachine.sendRappEvent(rapp, RappEvent.UNDEPLOYING);
+            rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.UNDEPLOYING);
         }
     }
 }

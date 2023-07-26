@@ -16,20 +16,29 @@
  * ============LICENSE_END========================================================================
  */
 
-package com.oransc.rappmanager;
+package com.oransc.rappmanager.models.rapp;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cache.annotation.EnableCaching;
 
-@SpringBootApplication
-@EnableConfigurationProperties
-@EnableCaching
-public class RappManagerApplication {
+import com.oransc.rappmanager.models.rappinstance.RappInstance;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import lombok.Builder;
+import lombok.Data;
 
-    public static void main(String[] args) {
-        SpringApplication.run(RappManagerApplication.class, args);
-    }
+@Data
+@Builder(toBuilder = true)
+public class Rapp {
 
+    @Builder.Default
+    UUID rappId = UUID.randomUUID();
+    String name;
+    RappState state;
+    String packageLocation;
+    String packageName;
+    RappResources rappResources;
+    @Builder.Default
+    Map<UUID, RappInstance> rappInstances = new HashMap<>();
+
+    UUID compositionId;
 }

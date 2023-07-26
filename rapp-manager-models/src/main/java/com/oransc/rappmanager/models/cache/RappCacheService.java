@@ -18,8 +18,7 @@
 
 package com.oransc.rappmanager.models.cache;
 
-import com.oransc.rappmanager.models.Rapp;
-import com.oransc.rappmanager.models.statemachine.RappStateMachine;
+import com.oransc.rappmanager.models.rapp.Rapp;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.Cache;
@@ -32,7 +31,6 @@ public class RappCacheService {
 
     private final String RAPP_CACHE = "rapp-cache";
     private final CacheManager cacheManager;
-    private final RappStateMachine rappStateMachine;
 
     public Cache getAllRapp() {
         return cacheManager.getCache(RAPP_CACHE);
@@ -40,9 +38,7 @@ public class RappCacheService {
 
     public Optional<Rapp> getRapp(String rappId) {
         final Cache cache = cacheManager.getCache(RAPP_CACHE);
-        Optional<Rapp> rappOptional = Optional.ofNullable(cache.get(rappId, Rapp.class));
-        rappOptional.ifPresent(rapp -> rapp.setState(rappStateMachine.getRappState(rapp.getRappId())));
-        return rappOptional;
+        return Optional.ofNullable(cache.get(rappId, Rapp.class));
     }
 
     public void putRapp(Rapp rapp) {

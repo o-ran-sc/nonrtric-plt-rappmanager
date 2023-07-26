@@ -1,14 +1,13 @@
 rappmanager:
   csarlocation: src/main/resources/csar
   acm:
-    baseurl: http://10.101.2.254:30442/onap/policy/clamp/acm/v2/
+    baseurl: http://10.101.3.22:30442/onap/policy/clamp/acm/v2/
     username: runtimeUser
     password: zb!XztG34
-    compositionDefinitionLocation: src/main/resources/compositiondefinition.json
     maxRetries: 3
     retryInterval: 2 #seconds
   sme:
-    baseurl: http://10.101.2.254:30232
+    baseurl: http://localhost:60821 #http://10.101.3.22:61761
     providerBasePath: /api-provider-management/v1/
     invokerBasePath: /api-invoker-management/v1/
     publishApiBasePath: /published-apis/v1/

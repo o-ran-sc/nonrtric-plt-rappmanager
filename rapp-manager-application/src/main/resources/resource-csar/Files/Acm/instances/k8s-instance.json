@@ -1,0 +1,31 @@
+{
+  "name": "DemoInstance0",
+  "version": "1.0.1",
+  "compositionId": "COMPOSITIONID",
+  "description": "Demo automation composition instance 0",
+  "elements": {
+    "709c62b3-8918-41b9-a747-d21eb79c6c21": {
+      "id": "709c62b3-8918-41b9-a747-d21eb79c6c21",
+      "definition": {
+        "name": "onap.policy.clamp.ac.element.K8S_StarterAutomationCompositionElement",
+        "version": "1.2.3"
+      },
+      "description": "Starter Automation Composition Element for the Demo",
+      "properties": {
+        "chart": {
+          "chartId": {
+            "name": "ransliceassurance",
+            "version": "1.0.0"
+          },
+          "namespace": "nonrtric",
+          "releaseName": "ransliceassurance",
+          "podName": "ransliceassurance",
+          "repository": {
+            "repoName": "local",
+            "address": "http://10.101.3.22:8879/charts"
+          }
+        }
+      }
+    }
+  }
+}

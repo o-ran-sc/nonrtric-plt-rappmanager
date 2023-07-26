@@ -30,7 +30,6 @@ public class ACMConfiguration {
     String baseUrl;
     String username;
     String password;
-    String compositionDefinitionLocation;
     int maxRetries;
     int retryInterval;
 }

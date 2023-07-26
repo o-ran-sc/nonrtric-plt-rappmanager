@@ -23,10 +23,12 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.SmartLifecycle;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Profile("!test")
 public class SmeLifecycleManager implements SmartLifecycle {
 
     Logger logger = LoggerFactory.getLogger(SmeLifecycleManager.class);
@@ -41,7 +43,7 @@ public class SmeLifecycleManager implements SmartLifecycle {
             APIProviderEnrolmentDetails providerServiceAMF = smeDeployer.createAMF();
             logger.info("Rapp Manager AMF Registration Id: " + providerServiceAMF.getApiProvDomId());
             running = true;
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.warn("Error in initializing AMF", e);
             running = false;
         }

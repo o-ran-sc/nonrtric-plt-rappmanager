@@ -1,0 +1,8 @@
+rappmanager:
+  sme:
+    baseurl: http://localhost:56379 #http://10.101.3.22:61761
+    providerBasePath: /api-provider-management/v1/
+    invokerBasePath: /api-invoker-management/v1/
+    publishApiBasePath: /published-apis/v1/
+    maxRetries: 3
+    retryInterval: 2 #seconds
