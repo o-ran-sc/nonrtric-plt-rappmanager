@@ -21,22 +21,21 @@ package com.oransc.rappmanager.sme.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.oransc.rappmanager.models.Rapp;
-import com.oransc.rappmanager.models.RappCsarConfigurationHandler;
+import com.oransc.rappmanager.models.rapp.Rapp;
+import com.oransc.rappmanager.models.csar.RappCsarConfigurationHandler;
 import com.oransc.rappmanager.models.RappDeployer;
-import com.oransc.rappmanager.models.RappEvent;
+import com.oransc.rappmanager.models.rapp.RappEvent;
+import com.oransc.rappmanager.models.rappinstance.RappInstance;
 import com.oransc.rappmanager.models.cache.RappCacheService;
-import com.oransc.rappmanager.models.statemachine.RappStateMachine;
+import com.oransc.rappmanager.models.statemachine.RappInstanceStateMachine;
 import com.oransc.rappmanager.sme.invoker.data.APIInvokerEnrolmentDetails;
 import com.oransc.rappmanager.sme.provider.data.APIProviderEnrolmentDetails;
 import com.oransc.rappmanager.sme.provider.data.APIProviderFunctionDetails;
 import com.oransc.rappmanager.sme.provider.data.ApiProviderFuncRole;
 import com.oransc.rappmanager.sme.provider.data.RegistrationInformation;
-import com.oransc.rappmanager.sme.publishservice.data.AefProfile;
 import com.oransc.rappmanager.sme.publishservice.data.ServiceAPIDescription;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +59,7 @@ public class SmeDeployer implements RappDeployer {
 
     private final RappCacheService rappCacheService;
 
-    private final RappStateMachine rappStateMachine;
+    private final RappInstanceStateMachine rappInstanceStateMachine;
 
     private String amfRegistrationId;
 
@@ -89,16 +88,17 @@ public class SmeDeployer implements RappDeployer {
         deleteProviderFunc(amfRegistrationId);
     }
 
-
     @Override
-    public boolean deployRapp(Rapp rapp) {
-        logger.debug("Deploying SME functions for Rapp {}", rapp.getName());
+    public boolean deployRappInstance(Rapp rapp, RappInstance rappInstance) {
+        logger.debug("Deploying SME functions for RappInstance {}", rappInstance.getRappInstanceId());
         try {
-            boolean deployState = createProviderDomain(rapp) && createPublishApi(rapp) && createInvoker(rapp);
+            boolean deployState =
+                    createProviderDomain(rapp, rappInstance) && createPublishApi(rapp, rappInstance) && createInvoker(
+                            rapp, rappInstance);
             if (deployState) {
-                rappStateMachine.sendRappEvent(rapp, RappEvent.SMEDEPLOYED);
+                rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.SMEDEPLOYED);
             } else {
-                rappStateMachine.sendRappEvent(rapp, RappEvent.SMEDEPLOYFAILED);
+                rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.SMEDEPLOYFAILED);
             }
             return deployState;
         } catch (JsonProcessingException e) {
@@ -108,40 +108,60 @@ public class SmeDeployer implements RappDeployer {
     }
 
     @Override
-    public boolean undeployRapp(Rapp rapp) {
+    public boolean undeployRappInstance(Rapp rapp, RappInstance rappInstance) {
         logger.debug("Undeploying SME functions for Rapp {}", rapp.getName());
         try {
-            rapp.getSmeInvokers().forEach(this::deleteInvoker);
-            rapp.getSmeServiceApis().forEach(s -> deletePublishApi(s, rapp.getSmeApfId()));
-            rapp.getSmeProviderFunctions().values().forEach(this::deleteProviderFunc);
-            rappStateMachine.sendRappEvent(rapp, RappEvent.SMEUNDEPLOYED);
+            rappInstance.getSme().getInvokerIds().forEach(this::deleteInvoker);
+            rappInstance.getSme().getServiceApiIds()
+                    .forEach(s -> deletePublishApi(s, rappInstance.getSme().getApfId()));
+            rappInstance.getSme().getProviderFunctionIds().forEach(this::deleteProviderFunc);
+            rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.SMEUNDEPLOYED);
             return true;
         } catch (Exception e) {
-            logger.warn("Failed to Undeploy SME functions for Rapp {}", rapp.getName());
+            logger.warn("Failed to Undeploy SME functions for Rapp {}", rapp.getName(), e);
         }
         return false;
     }
 
-    boolean createProviderDomain(Rapp rapp) throws JsonProcessingException {
+    @Override
+    public boolean primeRapp(Rapp rapp) {
+        //If there is any priming operations on SME
+        return true;
+    }
+
+    @Override
+    public boolean deprimeRapp(Rapp rapp) {
+        //If there is any deprimgng operations
+        return true;
+    }
+
+    boolean createProviderDomain(Rapp rapp, RappInstance rappInstance) throws JsonProcessingException {
         logger.debug("Creating provider domain for Rapp {}", rapp.getName());
         try {
-            String providerDomainPayload = rappCsarConfigurationHandler.getSmeProviderDomainPayload(rapp);
+            String providerDomainPayload =
+                    rappCsarConfigurationHandler.getSmeProviderDomainPayload(rapp, rappInstance.getSme());
+            logger.info("provider domain payload " + providerDomainPayload);
             if (providerDomainPayload != null) {
                 APIProviderEnrolmentDetails apiProviderEnrolmentDetails =
                         objectMapper.readValue(providerDomainPayload, APIProviderEnrolmentDetails.class);
+                //TODO Fix this Temporary workaround
+                apiProviderEnrolmentDetails.setRegSec(
+                        apiProviderEnrolmentDetails.getRegSec() + rappInstance.getRappInstanceId());
                 APIProviderEnrolmentDetails responseApiEnrollmentDetails =
                         providerDefaultApiClient.postRegistrations(apiProviderEnrolmentDetails);
                 if (responseApiEnrollmentDetails.getApiProvFuncs() != null) {
+                    rappInstance.getSme().setProviderFunctionIds(responseApiEnrollmentDetails.getApiProvFuncs().stream()
+                                                                         .map(APIProviderFunctionDetails::getApiProvFuncId)
+                                                                         .toList());
+
                     getProviderFuncId(responseApiEnrollmentDetails.getApiProvFuncs(),
-                            ApiProviderFuncRole.APF).ifPresent(apiProviderFunctionDetails -> rapp.setSmeApfId(
-                            apiProviderFunctionDetails.getApiProvFuncId()));
+                            ApiProviderFuncRole.APF).ifPresent(apiProviderFunctionDetails -> rappInstance.getSme()
+                                                                                                     .setApfId(
+                                                                                                             apiProviderFunctionDetails.getApiProvFuncId()));
                     getProviderFuncId(responseApiEnrollmentDetails.getApiProvFuncs(),
-                            ApiProviderFuncRole.AEF).ifPresent(apiProviderFunctionDetails -> rapp.setSmeAefId(
-                            apiProviderFunctionDetails.getApiProvFuncId()));
-                    rapp.setSmeProviderFunctions(responseApiEnrollmentDetails.getApiProvFuncs().stream().collect(
-                            Collectors.toMap(APIProviderFunctionDetails::getApiProvFuncInfo,
-                                    APIProviderFunctionDetails::getApiProvFuncId)));
-                    rappCacheService.putRapp(rapp);
+                            ApiProviderFuncRole.AEF).ifPresent(apiProviderFunctionDetails -> rappInstance.getSme()
+                                                                                                     .setAefId(
+                                                                                                             apiProviderFunctionDetails.getApiProvFuncId()));
                     return true;
                 }
             }
@@ -163,24 +183,23 @@ public class SmeDeployer implements RappDeployer {
     }
 
 
-    boolean createPublishApi(Rapp rapp) throws JsonProcessingException {
+    boolean createPublishApi(Rapp rapp, RappInstance rappInstance) throws JsonProcessingException {
         logger.debug("Creating publish api for Rapp {}", rapp.getName());
         try {
-            String providerApiPayload = rappCsarConfigurationHandler.getSmeProviderApiPayload(rapp);
+            String providerApiPayload =
+                    rappCsarConfigurationHandler.getSmeProviderApiPayload(rapp, rappInstance.getSme());
             if (providerApiPayload != null) {
                 ServiceAPIDescription serviceAPIDescription =
                         objectMapper.readValue(providerApiPayload, ServiceAPIDescription.class);
                 serviceAPIDescription.getAefProfiles().forEach(aefProfile -> {
-                    aefProfile.setAefId(rapp.getSmeProviderFunctions().get(aefProfile.getAefId()));
+                    aefProfile.setAefId(rappInstance.getSme().getAefId());
                 });
                 ServiceAPIDescription serviceAPIDescriptionResponse =
-                        publishServiceDefaultApiClient.postApfIdServiceApis(rapp.getSmeApfId(), serviceAPIDescription);
+                        publishServiceDefaultApiClient.postApfIdServiceApis(rappInstance.getSme().getApfId(),
+                                serviceAPIDescription);
 
                 if (serviceAPIDescriptionResponse.getAefProfiles() != null) {
-                    rapp.setSmeServiceApis(
-                            serviceAPIDescriptionResponse.getAefProfiles().stream().map(AefProfile::getAefId)
-                                    .collect(Collectors.toList()));
-                    rappCacheService.putRapp(rapp);
+                    rappInstance.getSme().setServiceApiIds(List.of(serviceAPIDescriptionResponse.getApiId()));
                     return true;
                 }
             }
@@ -194,10 +213,10 @@ public class SmeDeployer implements RappDeployer {
         publishServiceDefaultApiClient.deleteApfIdServiceApisServiceApiId(serviceApiId, apfId);
     }
 
-    boolean createInvoker(Rapp rapp) throws JsonProcessingException {
+    boolean createInvoker(Rapp rapp, RappInstance rappInstance) throws JsonProcessingException {
         logger.debug("Creating provider domain for Rapp {}", rapp.getName());
         try {
-            String invokerPayload = rappCsarConfigurationHandler.getSmeInvokerPayload(rapp);
+            String invokerPayload = rappCsarConfigurationHandler.getSmeInvokerPayload(rapp, rappInstance.getSme());
             if (invokerPayload != null) {
                 List<APIInvokerEnrolmentDetails> apiInvokerEnrolmentDetails =
                         objectMapper.readValue(invokerPayload, new TypeReference<>() { });
@@ -205,10 +224,8 @@ public class SmeDeployer implements RappDeployer {
                     APIInvokerEnrolmentDetails apiInvokerEnrolmentDetailsResponse =
                             invokerDefaultApiClient.postOnboardedInvokers(apiInvokerEnrolmentDetail);
                     if (apiInvokerEnrolmentDetailsResponse.getApiList() != null) {
-                        rapp.getSmeInvokers().addAll(apiInvokerEnrolmentDetailsResponse.getApiList().stream()
-                                                             .map(com.oransc.rappmanager.sme.invoker.data.ServiceAPIDescription::getApiId)
-                                                             .toList());
-                        rappCacheService.putRapp(rapp);
+                        rappInstance.getSme()
+                                .setInvokerIds(List.of(apiInvokerEnrolmentDetailsResponse.getApiInvokerId()));
                     }
                 });
                 return true;

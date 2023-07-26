@@ -1,0 +1,13 @@
+{
+  "apiProvDomInfo": "provider domain rApp as APF",
+  "apiProvFuncs": [
+    {
+      "apiProvFuncInfo": "rApp as APF",
+      "apiProvFuncRole": "APF",
+      "regInfo": {
+        "apiProvPubKey": "APF-PublicKey"
+      }
+    }
+  ],
+  "regSec": "PSK"
+}

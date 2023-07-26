@@ -16,20 +16,8 @@
  * ============LICENSE_END========================================================================
  */
 
-package com.oransc.rappmanager;
+package com.oransc.rappmanager.models.rapp;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cache.annotation.EnableCaching;
-
-@SpringBootApplication
-@EnableConfigurationProperties
-@EnableCaching
-public class RappManagerApplication {
-
-    public static void main(String[] args) {
-        SpringApplication.run(RappManagerApplication.class, args);
-    }
-
+public enum PrimeOrder {
+    PRIME, DEPRIME;
 }

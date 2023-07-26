@@ -41,7 +41,7 @@ public class SmeLifecycleManager implements SmartLifecycle {
             APIProviderEnrolmentDetails providerServiceAMF = smeDeployer.createAMF();
             logger.info("Rapp Manager AMF Registration Id: " + providerServiceAMF.getApiProvDomId());
             running = true;
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.warn("Error in initializing AMF", e);
             running = false;
         }

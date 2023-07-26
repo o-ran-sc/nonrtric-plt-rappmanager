@@ -1,0 +1,13 @@
+{
+  "apiProvDomInfo": "provider domain Gateway as entrypoint AEF",
+  "apiProvFuncs": [
+    {
+      "apiProvFuncInfo": "Gateway as entrypoint AEF",
+      "apiProvFuncRole": "AEF",
+      "regInfo": {
+        "apiProvPubKey": "AEF-Gateway-PublicKey"
+      }
+    }
+  ],
+  "regSec": "PSK"
+}

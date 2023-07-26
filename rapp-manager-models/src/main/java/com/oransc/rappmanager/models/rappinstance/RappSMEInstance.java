@@ -16,20 +16,22 @@
  * ============LICENSE_END========================================================================
  */
 
-package com.oransc.rappmanager;
+package com.oransc.rappmanager.models.rappinstance;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cache.annotation.EnableCaching;
+import java.util.List;
+import lombok.Data;
 
-@SpringBootApplication
-@EnableConfigurationProperties
-@EnableCaching
-public class RappManagerApplication {
+@Data
+public class RappSMEInstance {
 
-    public static void main(String[] args) {
-        SpringApplication.run(RappManagerApplication.class, args);
-    }
+    String providerFunction;
+    List<String> providerFunctionIds;
+    String serviceApis;
+    List<String> serviceApiIds;
+    String invokers;
+    List<String> invokerIds;
+
+    String aefId;
+    String apfId;
 
 }
