@@ -1,0 +1,73 @@
+@startuml
+autonumber
+
+actor "API User"
+participant "rApp Manager"
+collections "File System"
+participant "ACM Runtime"
+participant "A1PMS Participant"
+participant "Kserve Participant"
+participant "K8s Participant"
+participant "CAPIF"
+
+autonumber
+group Create rApp Instance
+"API User"->"rApp Manager": Create rApp Instance
+"rApp Manager"->"API User": Create rApp Instance response
+end
+
+autonumber
+group Deploy rApp Instance
+"API User"->"rApp Manager": Deploy rApp Instance
+"rApp Manager"->"File System": Fetch rApp Package and Instance details
+    group ACM Deploy
+        "rApp Manager"->"ACM Runtime": Instantiate and Deploy ACM Instance
+        "ACM Runtime"->"A1PMS Participant": Deploy ACM Instance
+        "ACM Runtime"<--"A1PMS Participant": Response
+        "ACM Runtime"->"Kserve Participant": Deploy ACM Instance
+        "ACM Runtime"<--"Kserve Participant": Response
+        "ACM Runtime"->"K8s Participant": Deploy ACM Instance
+        "ACM Runtime"<--"K8s Participant": Response
+        "rApp Manager"->"ACM Runtime": ACM Deployment Status
+    end
+
+    group SME Deploy
+    "rApp Manager"->"CAPIF": Create CAPIF entities
+    "CAPIF"->"CAPIF": Create the entities as provided
+    "rApp Manager"<-"CAPIF": Response of CAPIF entities creation
+    end
+"API User"<-"rApp Manager": Deploy rApp Instance Status
+end
+
+autonumber
+group Undeploy rApp Instance
+"API User"->"rApp Manager": Undeploy rApp Instance
+"rApp Manager"->"File System": Fetch rApp Package and Instance details
+    group ACM Undeploy
+        "rApp Manager"->"ACM Runtime": Undeploy ACM Instance
+        "ACM Runtime"->"A1PMS Participant": Undeploy ACM Instance
+        "ACM Runtime"<--"A1PMS Participant": Response
+        "ACM Runtime"->"Kserve Participant": Undeploy ACM Instance
+        "ACM Runtime"<--"Kserve Participant": Response
+        "ACM Runtime"->"K8s Participant": Undeploy ACM Instance
+        "ACM Runtime"<--"K8s Participant": Response
+        "rApp Manager"->"ACM Runtime": ACM Undeployment Status
+        "rApp Manager"->"ACM Runtime": Delete ACM Instance
+        "rApp Manager"<-"ACM Runtime": Delete ACM Instance response
+    end
+
+    group SME Undeploy
+    "rApp Manager"->"CAPIF": Delete CAPIF entities
+    "CAPIF"->"CAPIF": Delete the entities as provided
+    "rApp Manager"<-"CAPIF": Response of CAPIF entities Deletion
+    end
+"API User"<-"rApp Manager": Undeploy rApp Instance Status
+end
+
+autonumber
+group Delete rApp Instance
+"API User"->"rApp Manager": Delete rApp Instance
+"rApp Manager"->"API User": Delete rApp Instance response
+end
+
+@enduml

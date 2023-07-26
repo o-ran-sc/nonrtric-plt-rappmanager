@@ -1,0 +1,35 @@
+@startuml
+autonumber
+
+actor "API User"
+participant "rApp Manager"
+collections "File System"
+participant "ACM Runtime"
+
+group Create rApp
+"API User"->"rApp Manager": Create rApp
+"rApp Manager"->"rApp Manager": Validate rApp
+"rApp Manager"->"File System": Store rApp Package
+"rApp Manager"->"API User": Onboard rApp Status
+"API User"->"rApp Manager": Prime rApp
+"rApp Manager"->"ACM Runtime": Create ACM composition
+"ACM Runtime"->"rApp Manager": Create ACM composition Status
+"rApp Manager"->"ACM Runtime": Prime ACM composition
+"ACM Runtime"->"rApp Manager": Prime ACM composition Status
+end
+
+autonumber
+group Delete rApp
+"API User"->"rApp Manager": Deprime rApp
+"rApp Manager"->"ACM Runtime": Deprime ACM composition
+"ACM Runtime"->"rApp Manager": Deprime ACM composition Status
+"rApp Manager"->"ACM Runtime": Delete ACM composition
+"ACM Runtime"->"rApp Manager": Delete ACM composition Status
+"API User"->"rApp Manager": Delete rApp
+"rApp Manager"->"rApp Manager": Validate rApp Instances
+"rApp Manager"->"API User": Delete rApp Status
+
+end
+
+
+@enduml
