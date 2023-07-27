@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1bd0678_35bbac7c",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2023-07-27T16:47:57Z",
+      "side": 1,
+      "message": "Suggestion .. in documentation the spelling rApp is better :-)",
+      "range": {
+        "startLine": 26,
+        "startChar": 103,
+        "endLine": 26,
+        "endChar": 107
+      },
+      "revId": "e08009adfac3610f3c213000391f45b7a8fbd115",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
