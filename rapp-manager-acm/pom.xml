@@ -77,7 +77,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>rapp-manager-acm/src/main/resources/openapi/acm-spec.yaml</inputSpec>
+                            <inputSpec>${basedir}/src/main/resources/openapi/acm-spec.yaml</inputSpec>
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
                             <generateApiTests>false</generateApiTests>
