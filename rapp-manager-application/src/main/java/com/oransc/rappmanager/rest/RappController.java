@@ -30,11 +30,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.Collection;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.Cache;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,7 +59,7 @@ public class RappController {
     private final RappService rappService;
 
     @GetMapping
-    public ResponseEntity<Cache> getRapps() {
+    public ResponseEntity<Collection<Rapp>> getRapps() {
         return ResponseEntity.ok(rappCacheService.getAllRapp());
     }
 

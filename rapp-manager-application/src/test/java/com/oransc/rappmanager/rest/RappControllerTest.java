@@ -1,5 +1,6 @@
 package com.oransc.rappmanager.rest;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -50,7 +51,14 @@ public class RappControllerTest {
 
     @Test
     void testGetRapps() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/rapps")).andExpect(status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.get("/rapps")).andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+        UUID rappId = UUID.randomUUID();
+        Rapp rapp = Rapp.builder().rappId(rappId).name(String.valueOf(rappId)).packageName(validRappFile)
+                            .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
+        rappCacheService.putRapp(rapp);
+        mockMvc.perform(MockMvcRequestBuilders.get("/rapps")).andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 
     @Test

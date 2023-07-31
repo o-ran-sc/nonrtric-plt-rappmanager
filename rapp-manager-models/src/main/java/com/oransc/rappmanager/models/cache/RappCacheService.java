@@ -19,6 +19,10 @@
 package com.oransc.rappmanager.models.cache;
 
 import com.oransc.rappmanager.models.rapp.Rapp;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.Cache;
@@ -32,8 +36,13 @@ public class RappCacheService {
     private final String RAPP_CACHE = "rapp-cache";
     private final CacheManager cacheManager;
 
-    public Cache getAllRapp() {
-        return cacheManager.getCache(RAPP_CACHE);
+    public Collection<Rapp> getAllRapp() {
+        Cache cache = cacheManager.getCache(RAPP_CACHE);
+        if (cache != null) {
+            Map<String, Rapp> nativeCache = (Map<String, Rapp>) cache.getNativeCache();
+            return nativeCache.values();
+        }
+        return List.of();
     }
 
     public Optional<Rapp> getRapp(String rappId) {

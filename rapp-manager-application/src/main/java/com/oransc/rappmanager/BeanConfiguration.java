@@ -28,6 +28,8 @@ import com.oransc.rappmanager.sme.provider.rest.DefaultApiClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -105,6 +107,11 @@ public class BeanConfiguration {
             @Qualifier("smeInvokerApiClient") com.oransc.rappmanager.sme.invoker.ApiClient apiClient) {
         apiClient.setBasePath(smeConfiguration.getBaseUrl() + smeConfiguration.getInvokerBasePath());
         return new com.oransc.rappmanager.sme.invoker.rest.DefaultApiClient(apiClient);
+    }
+
+    @Bean
+    public CacheManager cacheManager() {
+        return new ConcurrentMapCacheManager();
     }
 
 }
