@@ -19,6 +19,13 @@
         <module>rapp-manager-sme</module>
         <module>rapp-manager-application</module>
     </modules>
+    <repositories>
+        <repository>
+            <id>onap-releases</id>
+            <name>onap-releases</name>
+            <url>https://nexus.onap.org/content/repositories/releases/</url>
+        </repository>
+    </repositories>
     <properties>
         <java.version>17</java.version>
         <openapi.maven.version>6.6.0</openapi.maven.version>
