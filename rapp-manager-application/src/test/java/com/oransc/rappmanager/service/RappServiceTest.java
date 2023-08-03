@@ -6,11 +6,12 @@ import static org.mockito.Mockito.when;
 
 import com.oransc.rappmanager.acm.service.AcmDeployer;
 import com.oransc.rappmanager.models.rapp.Rapp;
+import com.oransc.rappmanager.models.rapp.RappState;
 import com.oransc.rappmanager.models.rappinstance.RappInstance;
 import com.oransc.rappmanager.models.rappinstance.RappInstanceState;
-import com.oransc.rappmanager.models.rapp.RappState;
 import com.oransc.rappmanager.models.statemachine.RappInstanceStateMachine;
 import com.oransc.rappmanager.sme.service.SmeDeployer;
+import com.oransc.rappmanager.sme.service.SmeLifecycleManager;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,9 @@ public class RappServiceTest {
 
     @MockBean
     SmeDeployer smeDeployer;
+
+    @MockBean
+    SmeLifecycleManager smeLifecycleManager;
 
     @Autowired
     RappInstanceStateMachine rappInstanceStateMachine;

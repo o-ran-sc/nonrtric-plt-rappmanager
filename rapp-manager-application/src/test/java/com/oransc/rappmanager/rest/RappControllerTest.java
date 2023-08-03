@@ -13,6 +13,7 @@ import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappPrimeOrder;
 import com.oransc.rappmanager.models.rapp.RappState;
 import com.oransc.rappmanager.models.cache.RappCacheService;
+import com.oransc.rappmanager.sme.service.SmeLifecycleManager;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.UUID;
@@ -41,6 +42,9 @@ public class RappControllerTest {
 
     @MockBean
     AcmDeployer acmDeployer;
+
+    @MockBean
+    SmeLifecycleManager smeLifecycleManager;
 
     private final String validRappFile = "valid-rapp-package.csar";
 

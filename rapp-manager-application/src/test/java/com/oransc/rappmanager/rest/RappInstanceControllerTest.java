@@ -17,6 +17,7 @@ import com.oransc.rappmanager.models.rapp.RappState;
 import com.oransc.rappmanager.models.cache.RappCacheService;
 import com.oransc.rappmanager.models.statemachine.RappInstanceStateMachine;
 import com.oransc.rappmanager.sme.service.SmeDeployer;
+import com.oransc.rappmanager.sme.service.SmeLifecycleManager;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -47,6 +48,9 @@ public class RappInstanceControllerTest {
 
     @MockBean
     SmeDeployer smeDeployer;
+
+    @MockBean
+    SmeLifecycleManager smeLifecycleManager;
 
     private final String validRappFile = "valid-rapp-package.csar";
 
