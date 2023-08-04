@@ -19,7 +19,6 @@
 package com.oransc.rappmanager.models.cache;
 
 import com.oransc.rappmanager.models.rapp.Rapp;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;

@@ -1,5 +1,5 @@
 rappmanager:
-  csarlocation: src/main/resources/csar
+  csarlocation: src/test/resources/csar
   acm:
     baseurl: http://10.101.3.22:30442/onap/policy/clamp/acm/v2/
     username: runtimeUser
