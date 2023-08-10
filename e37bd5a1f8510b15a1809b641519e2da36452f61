@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "495b0a2d_a83024ea",
+        "filename": "README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2023-08-10T13:00:01Z",
+      "side": 1,
+      "message": "A pedantic spelling suggestion. Can I suggest you use r-App or rApp, or even RApp  instead of Rapp? \nThanks.",
+      "range": {
+        "startLine": 1,
+        "startChar": 2,
+        "endLine": 1,
+        "endChar": 7
+      },
+      "revId": "e37bd5a1f8510b15a1809b641519e2da36452f61",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1705dcc2_6264159a",
+        "filename": "README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2023-08-10T13:00:01Z",
+      "side": 1,
+      "message": "again, a silly pedantic suggestion:   O-RAN SC",
+      "range": {
+        "startLine": 32,
+        "startChar": 68,
+        "endLine": 32,
+        "endChar": 76
+      },
+      "revId": "e37bd5a1f8510b15a1809b641519e2da36452f61",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
