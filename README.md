@@ -1,21 +1,21 @@
-# Rapp Manager (This is a prototype)
-Rapp manager is an application which lifecycle manages the Rapp.
+# rApp Manager (This is a prototype)
+rApp manager is an application which lifecycle manages the rApp.
 
-<mark>**Rapp packaging model used here is purely a prototype**</mark>
+<mark>**rApp packaging model used here is purely a prototype**</mark>
 
 ## Architecture
 
 ![Image](docs/images/architecture.png "Rapp Manager Architecture")
 
-### Rapp States
+### rApp States
 
 ![Image](docs/images/rapp-states.png "Rapp States")
 
-### Rapp Instance States
+### rApp Instance States
 
 ![Image](docs/images/rapp-instance-states.png "Rapp Instance States")
 
-### Events responsible for Rapp Instance State Transition
+### Events responsible for rApp Instance State Transition
 
 ![Image](docs/images/rapp-state-events.png "Rapp Manager State Events")
 
@@ -23,14 +23,14 @@ Rapp manager is an application which lifecycle manages the Rapp.
 
 ### ONAP ACM
 
-ONAP ACM is used here as a backend of Rapp manager to lifecycle manage the deployment items as part of Rapp.
+ONAP ACM is used here as a backend of rApp manager to lifecycle manage the deployment items as part of rApp.
 
 ONAP ACM related details can be found [here](https://docs.onap.org/projects/onap-policy-parent/en/london/clamp/clamp.html).
 
 
 ### Integration of SME (CAPIF)
 
-This integration is based on the CAPIF function developed as part of ORAN-SC. It is available [here](https://github.com/o-ran-sc/nonrtric-plt-sme/blob/master/capifcore/README.md)
+This integration is based on the CAPIF function developed as part of O-RAN SC. It is available [here](https://github.com/o-ran-sc/nonrtric-plt-sme/blob/master/capifcore/README.md)
 
 ## Flow Diagrams
 
@@ -38,11 +38,11 @@ This integration is based on the CAPIF function developed as part of ORAN-SC. It
 
 ![Image](docs/images/application-lifecycle.png "Rapp Manager Application Lifecycle")
 
-### Rapp Flow
+### rApp Flow
 
 ![Image](docs/images/rapp-flow.png "Rapp Flow")
 
-### Rapp Instance Flow
+### rApp Instance Flow
 
 ![Image](docs/images/rapp-instance-flow.png "Rapp Instance Flow")
 
