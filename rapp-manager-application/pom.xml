@@ -9,6 +9,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
+    <groupId>com.oransc.rappmanager</groupId>
     <artifactId>rapp-manager-application</artifactId>
 
     <properties>
