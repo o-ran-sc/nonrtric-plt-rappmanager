@@ -56,6 +56,16 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco-maven-plugin.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>com/oransc/rappmanager/acm/*.class</exclude>
+                        <exclude>com/oransc/rappmanager/acm/rest/**</exclude>
+                        <exclude>com/oransc/rappmanager/acm/auth/**</exclude>
+                        <exclude>com/oransc/rappmanager/sme/provider/**</exclude>
+                        <exclude>com/oransc/rappmanager/sme/invoker/**</exclude>
+                        <exclude>com/oransc/rappmanager/sme/publishservice/**</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>default-prepare-agent</id>
