@@ -43,6 +43,35 @@
         <apache.httpcore.version>4.3.2</apache.httpcore.version>
         <exec-maven-plugin.version>3.1.0</exec-maven-plugin.version>
     </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.onap.policy.clamp</groupId>
+            <artifactId>policy-clamp-models</artifactId>
+            <version>${onap.acm.models.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-data-jpa</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-aop</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-security</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-validation</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-webflux</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>
@@ -56,6 +85,16 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco-maven-plugin.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>com/oransc/rappmanager/acm/*.class</exclude>
+                        <exclude>com/oransc/rappmanager/acm/rest/**</exclude>
+                        <exclude>com/oransc/rappmanager/acm/auth/**</exclude>
+                        <exclude>com/oransc/rappmanager/sme/provider/**</exclude>
+                        <exclude>com/oransc/rappmanager/sme/invoker/**</exclude>
+                        <exclude>com/oransc/rappmanager/sme/publishservice/**</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>default-prepare-agent</id>
