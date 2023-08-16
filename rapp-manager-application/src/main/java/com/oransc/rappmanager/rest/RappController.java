@@ -21,6 +21,7 @@ package com.oransc.rappmanager.rest;
 import com.oransc.rappmanager.configuration.RappManagerConfiguration;
 import com.oransc.rappmanager.models.cache.RappCacheService;
 import com.oransc.rappmanager.models.csar.RappCsarConfigurationHandler;
+import com.oransc.rappmanager.models.exception.RappHandlerException;
 import com.oransc.rappmanager.models.rapp.PrimeOrder;
 import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappPrimeOrder;
@@ -35,6 +36,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,7 +67,8 @@ public class RappController {
 
     @GetMapping("{rapp_id}")
     public ResponseEntity<Rapp> getRapp(@PathVariable("rapp_id") String rappId) {
-        return rappCacheService.getRapp(rappId).map(ResponseEntity::ok).orElse(ResponseEntity.badRequest().build());
+        return rappCacheService.getRapp(rappId).map(ResponseEntity::ok).orElseThrow(
+                () -> new RappHandlerException(HttpStatus.NOT_FOUND, "rApp '" + rappId + "' not found."));
     }
 
     @PostMapping("{rapp_id}")
@@ -85,7 +88,7 @@ public class RappController {
             return ResponseEntity.accepted().build();
         } else {
             logger.info("Invalid Rapp package for {}", rappId);
-            return ResponseEntity.badRequest().build();
+            throw new RappHandlerException(HttpStatus.BAD_REQUEST, "Invalid rApp package.");
         }
     }
 
@@ -98,7 +101,8 @@ public class RappController {
                             .filter(primeOrder -> primeOrder.equals(PrimeOrder.PRIME))
                             .map(primeOrder -> rappService.primeRapp(rapp))
                             .orElseGet(() -> rappService.deprimeRapp(rapp)))
-                       .orElse(ResponseEntity.notFound().build());
+                       .orElseThrow(() -> new RappHandlerException(HttpStatus.NOT_FOUND,
+                               "rApp '" + rappId + "' not found."));
         // @formatter:on
     }
 
@@ -111,7 +115,8 @@ public class RappController {
                    rappCacheService.deleteRapp(rapp);
                    return ResponseEntity.ok().build();
                })
-               .orElse(ResponseEntity.notFound().build());
+               .orElseThrow(() -> new RappHandlerException(HttpStatus.NOT_FOUND,
+                               "rApp '" + rappId + "' not found."));
         // @formatter:on
     }
 }

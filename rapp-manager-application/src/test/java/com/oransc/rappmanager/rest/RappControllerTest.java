@@ -8,11 +8,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oransc.rappmanager.acm.service.AcmDeployer;
+import com.oransc.rappmanager.models.cache.RappCacheService;
 import com.oransc.rappmanager.models.rapp.PrimeOrder;
 import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappPrimeOrder;
 import com.oransc.rappmanager.models.rapp.RappState;
-import com.oransc.rappmanager.models.cache.RappCacheService;
 import com.oransc.rappmanager.sme.service.SmeLifecycleManager;
 import java.io.File;
 import java.io.FileInputStream;
@@ -79,7 +79,7 @@ public class RappControllerTest {
     @Test
     void testGetInvalidRapp() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/rapps/{rapp_id}", UUID.randomUUID()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
     }
 
     @Test
