@@ -18,12 +18,13 @@
 
 package com.oransc.rappmanager.rest;
 
-import com.oransc.rappmanager.models.rappinstance.DeployOrder;
+import com.oransc.rappmanager.models.cache.RappCacheService;
+import com.oransc.rappmanager.models.exception.RappHandlerException;
 import com.oransc.rappmanager.models.rapp.Rapp;
+import com.oransc.rappmanager.models.rappinstance.DeployOrder;
 import com.oransc.rappmanager.models.rappinstance.RappInstance;
 import com.oransc.rappmanager.models.rappinstance.RappInstanceDeployOrder;
 import com.oransc.rappmanager.models.rappinstance.RappInstanceState;
-import com.oransc.rappmanager.models.cache.RappCacheService;
 import com.oransc.rappmanager.models.statemachine.RappInstanceStateMachine;
 import com.oransc.rappmanager.service.RappService;
 import java.util.Map;
@@ -31,6 +32,7 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,8 +54,8 @@ public class RappInstanceController {
 
     @GetMapping
     public ResponseEntity<Map<UUID, RappInstance>> getAllRappInstances(@PathVariable("rapp_id") String rappId) {
-        return rappCacheService.getRapp(rappId).map(Rapp::getRappInstances).map(ResponseEntity::ok)
-                       .orElse(ResponseEntity.notFound().build());
+        return rappCacheService.getRapp(rappId).map(Rapp::getRappInstances).map(ResponseEntity::ok).orElseThrow(
+                () -> new RappHandlerException(HttpStatus.NOT_FOUND, "No instance found for rApp '" + rappId + "'."));
     }
 
     @PostMapping
@@ -63,7 +65,7 @@ public class RappInstanceController {
             rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
             rapp.getRappInstances().put(rappInstance.getRappInstanceId(), rappInstance);
             return ResponseEntity.ok(rappInstance);
-        }).orElse(ResponseEntity.notFound().build());
+        }).orElseThrow(() -> new RappHandlerException(HttpStatus.NOT_FOUND, "rApp '" + rappId + "' not found."));
     }
 
     @GetMapping("{rapp_instance_id}")
@@ -76,7 +78,8 @@ public class RappInstanceController {
                            RappInstance rappInstance = rappPair.getLeft().getRappInstances().get(rappInstanceId);
                            rappInstance.setState(rappInstanceStateMachine.getRappInstanceState(rappInstanceId));
                            return rappInstance;
-                       }).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+                       }).map(ResponseEntity::ok).orElseThrow(() -> new RappHandlerException(HttpStatus.NOT_FOUND,
+                        "No instance found for rApp '" + rappId + "'."));
     }
 
     @PutMapping("{rapp_instance_id}")
@@ -91,7 +94,8 @@ public class RappInstanceController {
                         .filter(deployOrder -> deployOrder.equals(DeployOrder.DEPLOY))
                         .map(primeOrder -> rappService.deployRappInstance(rappPair.getLeft(), rappPair.getRight()))
                         .orElseGet(() -> rappService.undeployRappInstance(rappPair.getLeft(), rappPair.getRight())))
-                   .orElse(ResponseEntity.notFound().build());
+                   .orElseThrow(() -> new RappHandlerException(HttpStatus.NOT_FOUND,
+                           "rApp instance '" + rappInstanceId + "' not found."));
         //@formatter:on
     }
 
@@ -108,7 +112,8 @@ public class RappInstanceController {
                                    rappPair.getLeft().getRappInstances().get(rappInstanceId));
                            rappPair.getLeft().getRappInstances().remove(rappInstanceId);
                            return ResponseEntity.noContent().build();
-                       }).orElse(ResponseEntity.notFound().build());
+                       }).orElseThrow(() -> new RappHandlerException(HttpStatus.NOT_FOUND,
+                        "rApp instance '" + rappInstanceId + "' not found."));
     }
 
 }
