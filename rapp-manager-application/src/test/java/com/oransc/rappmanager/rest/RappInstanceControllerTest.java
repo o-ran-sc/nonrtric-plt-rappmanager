@@ -32,7 +32,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-public class RappInstanceControllerTest {
+class RappInstanceControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

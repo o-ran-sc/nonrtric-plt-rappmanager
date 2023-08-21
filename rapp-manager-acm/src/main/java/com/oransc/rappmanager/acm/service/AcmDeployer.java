@@ -118,6 +118,7 @@ public class AcmDeployer implements RappDeployer {
             }
         } catch (Exception e) {
             logger.warn("Unable to get composition instance state for composition {}", compositionId, e);
+            Thread.currentThread().interrupt();
         }
         return targetInstanceStateTransition;
     }

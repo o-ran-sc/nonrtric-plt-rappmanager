@@ -18,7 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {RappInstanceStateMachine.class, RappInstanceStateMachineConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class RappInstanceStateMachineTest {
+class RappInstanceStateMachineTest {
 
     @Autowired
     RappInstanceStateMachine rappInstanceStateMachine;

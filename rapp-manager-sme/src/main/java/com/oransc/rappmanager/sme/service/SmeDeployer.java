@@ -140,11 +140,10 @@ public class SmeDeployer implements RappDeployer {
         try {
             String providerDomainPayload =
                     rappCsarConfigurationHandler.getSmeProviderDomainPayload(rapp, rappInstance.getSme());
-            logger.info("provider domain payload " + providerDomainPayload);
+            logger.debug("Provider domain payload {}", providerDomainPayload);
             if (providerDomainPayload != null) {
                 APIProviderEnrolmentDetails apiProviderEnrolmentDetails =
                         objectMapper.readValue(providerDomainPayload, APIProviderEnrolmentDetails.class);
-                //TODO Fix this Temporary workaround
                 apiProviderEnrolmentDetails.setRegSec(
                         apiProviderEnrolmentDetails.getRegSec() + rappInstance.getRappInstanceId());
                 APIProviderEnrolmentDetails responseApiEnrollmentDetails =
@@ -191,9 +190,7 @@ public class SmeDeployer implements RappDeployer {
             if (providerApiPayload != null) {
                 ServiceAPIDescription serviceAPIDescription =
                         objectMapper.readValue(providerApiPayload, ServiceAPIDescription.class);
-                serviceAPIDescription.getAefProfiles().forEach(aefProfile -> {
-                    aefProfile.setAefId(rappInstance.getSme().getAefId());
-                });
+                serviceAPIDescription.getAefProfiles().forEach(aefProfile -> aefProfile.setAefId(rappInstance.getSme().getAefId()));
                 ServiceAPIDescription serviceAPIDescriptionResponse =
                         publishServiceDefaultApiClient.postApfIdServiceApis(rappInstance.getSme().getApfId(),
                                 serviceAPIDescription);

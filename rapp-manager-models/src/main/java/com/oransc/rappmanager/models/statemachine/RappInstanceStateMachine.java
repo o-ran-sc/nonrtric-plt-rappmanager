@@ -27,9 +27,11 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
@@ -43,13 +45,14 @@ public class RappInstanceStateMachine {
     public void onboardRappInstance(UUID rappInstanceId) {
         StateMachine<RappInstanceState, RappEvent> stateMachine = stateMachineFactory.getStateMachine(rappInstanceId);
         stateMachineMap.put(rappInstanceId, stateMachine);
-        stateMachine.start();
+        stateMachine.startReactively().subscribe();
     }
 
     public void sendRappInstanceEvent(RappInstance rappInstance, RappEvent rappEvent) {
         logger.info("Sending rapp instance event {} for {}", rappEvent.name(), rappInstance.getRappInstanceId());
         logger.debug("State machine map is {}", stateMachineMap);
-        stateMachineMap.get(rappInstance.getRappInstanceId()).sendEvent(rappEvent);
+        stateMachineMap.get(rappInstance.getRappInstanceId())
+                .sendEvent(Mono.just(MessageBuilder.withPayload(rappEvent).build())).subscribe();
     }
 
     public RappInstanceState getRappInstanceState(UUID rappInstanceId) {
@@ -57,7 +60,7 @@ public class RappInstanceStateMachine {
     }
 
     public void deleteRappInstance(RappInstance rappInstance) {
-        stateMachineMap.get(rappInstance.getRappInstanceId()).stop();
+        stateMachineMap.get(rappInstance.getRappInstanceId()).stopReactively().subscribe();
         stateMachineMap.remove(rappInstance.getRappInstanceId());
     }
 }

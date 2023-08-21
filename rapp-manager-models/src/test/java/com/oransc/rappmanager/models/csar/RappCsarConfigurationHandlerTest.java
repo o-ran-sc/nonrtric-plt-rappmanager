@@ -44,7 +44,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @SpringBootTest
 @ContextConfiguration(classes = RappCsarConfigurationHandler.class)
-public class RappCsarConfigurationHandlerTest {
+class RappCsarConfigurationHandlerTest {
 
     @Autowired
     RappCsarConfigurationHandler rappCsarConfigurationHandler;
@@ -90,14 +90,14 @@ public class RappCsarConfigurationHandlerTest {
         File file = new File(validCsarFileLocation + validRappFile);
         List<String> fileListFromCsar =
                 rappCsarConfigurationHandler.getFileListFromCsar(file, "Files/Sme/serviceapis/");
-        assertThat(fileListFromCsar.size()).isEqualTo(2);
+        assertThat(fileListFromCsar).hasSize(2);
     }
 
     @Test
     void testInvalidFileListing() {
         File file = new File(validCsarFileLocation);
         List<String> fileListFromCsar = rappCsarConfigurationHandler.getFileListFromCsar(file, null);
-        assertThat(fileListFromCsar.size()).isEqualTo(0);
+        assertThat(fileListFromCsar).isEmpty();
     }
 
     @Test
@@ -109,10 +109,10 @@ public class RappCsarConfigurationHandlerTest {
         RappResources rappResources = rappCsarConfigurationHandler.getRappResource(rapp);
         assertThat(rappResources).isNotNull();
         assertNotNull(rappResources.getAcm().getCompositionDefinitions());
-        assertThat(rappResources.getAcm().getCompositionInstances().size()).isEqualTo(3);
-        assertThat(rappResources.getSme().getProviderFunctions().size()).isEqualTo(4);
-        assertThat(rappResources.getSme().getServiceApis().size()).isEqualTo(2);
-        assertThat(rappResources.getSme().getInvokers().size()).isEqualTo(2);
+        assertThat(rappResources.getAcm().getCompositionInstances()).hasSize(3);
+        assertThat(rappResources.getSme().getProviderFunctions()).hasSize(4);
+        assertThat(rappResources.getSme().getServiceApis()).hasSize(2);
+        assertThat(rappResources.getSme().getInvokers()).hasSize(2);
     }
 
     @Test

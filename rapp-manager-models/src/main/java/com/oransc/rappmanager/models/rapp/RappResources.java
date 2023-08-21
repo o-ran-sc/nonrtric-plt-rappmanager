@@ -25,8 +25,8 @@ import lombok.Data;
 @Data
 public class RappResources {
 
-    public ACMResources acm;
-    public SMEResources sme;
+    ACMResources acm;
+    SMEResources sme;
 
     @Data
     @Builder

@@ -59,6 +59,7 @@ public class RappController {
     private final RappManagerConfiguration rappManagerConfiguration;
     private final RappCacheService rappCacheService;
     private final RappService rappService;
+    private static final String RAPP_NOT_FOUND = "rApp %s not found.";
 
     @GetMapping
     public ResponseEntity<Collection<Rapp>> getRapps() {
@@ -68,7 +69,7 @@ public class RappController {
     @GetMapping("{rapp_id}")
     public ResponseEntity<Rapp> getRapp(@PathVariable("rapp_id") String rappId) {
         return rappCacheService.getRapp(rappId).map(ResponseEntity::ok).orElseThrow(
-                () -> new RappHandlerException(HttpStatus.NOT_FOUND, "rApp '" + rappId + "' not found."));
+                () -> new RappHandlerException(HttpStatus.NOT_FOUND, String.format(RAPP_NOT_FOUND, rappId)));
     }
 
     @PostMapping("{rapp_id}")
@@ -102,7 +103,7 @@ public class RappController {
                             .map(primeOrder -> rappService.primeRapp(rapp))
                             .orElseGet(() -> rappService.deprimeRapp(rapp)))
                        .orElseThrow(() -> new RappHandlerException(HttpStatus.NOT_FOUND,
-                               "rApp '" + rappId + "' not found."));
+                               String.format(RAPP_NOT_FOUND, rappId)));
         // @formatter:on
     }
 
@@ -116,7 +117,7 @@ public class RappController {
                    return ResponseEntity.ok().build();
                })
                .orElseThrow(() -> new RappHandlerException(HttpStatus.NOT_FOUND,
-                               "rApp '" + rappId + "' not found."));
+                       String.format(RAPP_NOT_FOUND, rappId)));
         // @formatter:on
     }
 }

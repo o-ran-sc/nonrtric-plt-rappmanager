@@ -49,7 +49,6 @@ public class BeanConfiguration {
     @Bean("acmApiClient")
     public ApiClient acmApiClient(RestTemplate restTemplate) {
         ApiClient apiClient = new ApiClient(restTemplate);
-        //        apiClient.setDebugging(true);
         apiClient.setUsername(acmConfiguration.getUsername());
         apiClient.setPassword(acmConfiguration.getPassword());
         return apiClient.setBasePath(acmConfiguration.getBaseUrl());

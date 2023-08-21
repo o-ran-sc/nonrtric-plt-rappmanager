@@ -18,7 +18,6 @@
 
 package com.oransc.rappmanager.models.rapp;
 
-import com.oransc.rappmanager.models.rapp.PrimeOrder;
 import lombok.Data;
 
 @Data

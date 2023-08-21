@@ -32,7 +32,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class RappCacheService {
 
-    private final String RAPP_CACHE = "rapp-cache";
+    private static final String RAPP_CACHE = "rapp-cache";
     private final CacheManager cacheManager;
 
     public Collection<Rapp> getAllRapp() {
@@ -45,8 +45,7 @@ public class RappCacheService {
     }
 
     public Optional<Rapp> getRapp(String rappId) {
-        final Cache cache = cacheManager.getCache(RAPP_CACHE);
-        return Optional.ofNullable(cache.get(rappId, Rapp.class));
+        return Optional.ofNullable(cacheManager.getCache(RAPP_CACHE)).map(cache -> cache.get(rappId, Rapp.class));
     }
 
     public void putRapp(Rapp rapp) {

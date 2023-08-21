@@ -71,7 +71,7 @@ import org.springframework.web.client.RestTemplate;
         RappInstanceStateMachine.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureMockMvc
-public class AcmDeployerTest {
+class AcmDeployerTest {
 
     MockRestServiceServer mockServer;
     @SpyBean

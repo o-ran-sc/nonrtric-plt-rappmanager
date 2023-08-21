@@ -21,9 +21,9 @@ package com.oransc.rappmanager.service;
 import com.oransc.rappmanager.acm.service.AcmDeployer;
 import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappEvent;
+import com.oransc.rappmanager.models.rapp.RappState;
 import com.oransc.rappmanager.models.rappinstance.RappInstance;
 import com.oransc.rappmanager.models.rappinstance.RappInstanceState;
-import com.oransc.rappmanager.models.rapp.RappState;
 import com.oransc.rappmanager.models.statemachine.RappInstanceStateMachine;
 import com.oransc.rappmanager.sme.service.SmeDeployer;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +38,7 @@ public class RappService {
     private final AcmDeployer acmDeployer;
     private final SmeDeployer smeDeployer;
     private final RappInstanceStateMachine rappInstanceStateMachine;
+    private static final String STATE_TRANSITION_NOT_PERMITTED = "State transition from %s to %s is not permitted.";
 
     public ResponseEntity<String> primeRapp(Rapp rapp) {
         if (rapp.getState().equals(RappState.COMMISSIONED)) {
@@ -48,8 +49,8 @@ public class RappService {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest()
-                           .body("State transition from " + RappState.PRIMED.name() + " to " + rapp.getState().name()
-                                         + " is not permitted.");
+                           .body(String.format(STATE_TRANSITION_NOT_PERMITTED, RappState.PRIMED.name(),
+                                   rapp.getState().name()));
         }
     }
 
@@ -65,9 +66,8 @@ public class RappService {
                 return ResponseEntity.badRequest().body("Unable to deprime as there are active rapp instances,");
             } else {
                 return ResponseEntity.badRequest()
-                               .body("State transition from " + RappState.COMMISSIONED.name() + " to " + rapp.getState()
-                                                                                                                 .name()
-                                             + " is not permitted.");
+                               .body(String.format(STATE_TRANSITION_NOT_PERMITTED, RappState.COMMISSIONED.name(),
+                                       rapp.getState().name()));
             }
         }
     }
@@ -81,8 +81,9 @@ public class RappService {
             }
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
         } else {
-            return ResponseEntity.badRequest().body("State transition from " + rappInstance.getState().name() + " to "
-                                                            + RappInstanceState.DEPLOYED.name() + " is not permitted.");
+            return ResponseEntity.badRequest()
+                           .body(String.format(STATE_TRANSITION_NOT_PERMITTED, rappInstance.getState().name(),
+                                   RappInstanceState.DEPLOYED.name()));
         }
     }
 
@@ -95,9 +96,9 @@ public class RappService {
             }
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
         } else {
-            return ResponseEntity.badRequest().body("State transition from " + rappInstance.getState().name() + " to "
-                                                            + RappInstanceState.UNDEPLOYED.name()
-                                                            + " is not permitted.");
+            return ResponseEntity.badRequest()
+                           .body(String.format(STATE_TRANSITION_NOT_PERMITTED, rappInstance.getState().name(),
+                                   RappInstanceState.UNDEPLOYED.name()));
         }
     }
 

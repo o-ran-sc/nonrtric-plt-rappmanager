@@ -51,6 +51,7 @@ public class RappInstanceController {
     private final RappCacheService rappCacheService;
     private final RappInstanceStateMachine rappInstanceStateMachine;
     private final RappService rappService;
+    private static final String RAPP_INSTANCE_NOT_FOUND = "rApp instance %s not found.";
 
     @GetMapping
     public ResponseEntity<Map<UUID, RappInstance>> getAllRappInstances(@PathVariable("rapp_id") String rappId) {
@@ -79,7 +80,7 @@ public class RappInstanceController {
                            rappInstance.setState(rappInstanceStateMachine.getRappInstanceState(rappInstanceId));
                            return rappInstance;
                        }).map(ResponseEntity::ok).orElseThrow(() -> new RappHandlerException(HttpStatus.NOT_FOUND,
-                        "No instance found for rApp '" + rappId + "'."));
+                        String.format(RAPP_INSTANCE_NOT_FOUND, rappId)));
     }
 
     @PutMapping("{rapp_instance_id}")
@@ -95,7 +96,7 @@ public class RappInstanceController {
                         .map(primeOrder -> rappService.deployRappInstance(rappPair.getLeft(), rappPair.getRight()))
                         .orElseGet(() -> rappService.undeployRappInstance(rappPair.getLeft(), rappPair.getRight())))
                    .orElseThrow(() -> new RappHandlerException(HttpStatus.NOT_FOUND,
-                           "rApp instance '" + rappInstanceId + "' not found."));
+                           String.format(RAPP_INSTANCE_NOT_FOUND, rappId)));
         //@formatter:on
     }
 
@@ -113,7 +114,7 @@ public class RappInstanceController {
                            rappPair.getLeft().getRappInstances().remove(rappInstanceId);
                            return ResponseEntity.noContent().build();
                        }).orElseThrow(() -> new RappHandlerException(HttpStatus.NOT_FOUND,
-                        "rApp instance '" + rappInstanceId + "' not found."));
+                        String.format(RAPP_INSTANCE_NOT_FOUND, rappId)));
     }
 
 }

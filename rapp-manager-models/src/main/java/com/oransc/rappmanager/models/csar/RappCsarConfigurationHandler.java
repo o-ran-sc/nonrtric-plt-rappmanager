@@ -19,8 +19,8 @@
 package com.oransc.rappmanager.models.csar;
 
 import com.oransc.rappmanager.models.rapp.Rapp;
-import com.oransc.rappmanager.models.rappinstance.RappACMInstance;
 import com.oransc.rappmanager.models.rapp.RappResources;
+import com.oransc.rappmanager.models.rappinstance.RappACMInstance;
 import com.oransc.rappmanager.models.rappinstance.RappSMEInstance;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -42,20 +42,20 @@ import org.springframework.web.multipart.MultipartFile;
 public class RappCsarConfigurationHandler {
 
     Logger logger = LoggerFactory.getLogger(RappCsarConfigurationHandler.class);
-    private final String acmCompositionJsonLocation = "Files/Acm/definition/compositions.json";
-    private final String acmDefinitionLocation = "Files/Acm/definition";
-    private final String acmInstancesLocation = "Files/Acm/instances";
+    private static final String ACM_COMPOSITION_JSON_LOCATION = "Files/Acm/definition/compositions.json";
+    private static final String ACM_DEFINITION_LOCATION = "Files/Acm/definition";
+    private static final String ACM_INSTANCES_LOCATION = "Files/Acm/instances";
 
-    private final String smeProviderFuncsLocation = "Files/Sme/providers";
-    private final String smeServiceApisLocation = "Files/Sme/serviceapis";
+    private static final String SME_PROVIDER_FUNCS_LOCATION = "Files/Sme/providers";
+    private static final String SME_SERVICE_APIS_LOCATION = "Files/Sme/serviceapis";
 
-    private final String smeInvokersLocation = "Files/Sme/invokers";
+    private static final String SME_INVOKERS_LOCATION = "Files/Sme/invokers";
 
 
     public boolean isValidRappPackage(MultipartFile multipartFile) {
-        return multipartFile.getOriginalFilename() != null && multipartFile.getOriginalFilename().endsWith(".csar")
-                       && isFileExistsInCsar(multipartFile, acmCompositionJsonLocation);
-        //TODO Additional file checks needs to be added
+        return multipartFile != null && multipartFile.getOriginalFilename() != null
+                       && multipartFile.getOriginalFilename().endsWith(".csar") && isFileExistsInCsar(multipartFile,
+                ACM_COMPOSITION_JSON_LOCATION);
     }
 
     boolean isFileExistsInCsar(MultipartFile multipartFile, String fileLocation) {
@@ -78,7 +78,7 @@ public class RappCsarConfigurationHandler {
     }
 
     public String getInstantiationPayload(Rapp rapp, RappACMInstance rappACMInstance, UUID compositionId) {
-        return getPayload(rapp, getResourceUri(acmInstancesLocation, rappACMInstance.getInstance())).replaceAll(
+        return getPayload(rapp, getResourceUri(ACM_INSTANCES_LOCATION, rappACMInstance.getInstance())).replaceAll(
                 "COMPOSITIONID", String.valueOf(compositionId));
     }
 
@@ -115,20 +115,20 @@ public class RappCsarConfigurationHandler {
 
 
     public String getSmeProviderDomainPayload(Rapp rapp, RappSMEInstance rappSMEInstance) {
-        return getPayload(rapp, getResourceUri(smeProviderFuncsLocation, rappSMEInstance.getProviderFunction()));
+        return getPayload(rapp, getResourceUri(SME_PROVIDER_FUNCS_LOCATION, rappSMEInstance.getProviderFunction()));
     }
 
     public String getSmeProviderApiPayload(Rapp rapp, RappSMEInstance rappSMEInstance) {
-        return getPayload(rapp, getResourceUri(smeServiceApisLocation, rappSMEInstance.getServiceApis()));
+        return getPayload(rapp, getResourceUri(SME_SERVICE_APIS_LOCATION, rappSMEInstance.getServiceApis()));
     }
 
     public String getSmeInvokerPayload(Rapp rapp, RappSMEInstance rappSMEInstance) {
-        return getPayload(rapp, getResourceUri(smeInvokersLocation, rappSMEInstance.getInvokers()));
+        return getPayload(rapp, getResourceUri(SME_INVOKERS_LOCATION, rappSMEInstance.getInvokers()));
     }
 
     public String getAcmCompositionPayload(Rapp rapp) {
         return getPayload(rapp,
-                getResourceUri(acmDefinitionLocation, rapp.getRappResources().getAcm().getCompositionDefinitions()));
+                getResourceUri(ACM_DEFINITION_LOCATION, rapp.getRappResources().getAcm().getCompositionDefinitions()));
     }
 
     String getResourceUri(String resourceLocation, String resource) {
@@ -141,13 +141,14 @@ public class RappCsarConfigurationHandler {
             File csarFile = getCsarFile(rapp);
             if (csarFile.exists()) {
                 rappResources.setAcm(RappResources.ACMResources.builder().compositionDefinitions(
-                                getFileListFromCsar(csarFile, acmDefinitionLocation).get(0))
-                                             .compositionInstances(getFileListFromCsar(csarFile, acmInstancesLocation))
+                                getFileListFromCsar(csarFile, ACM_DEFINITION_LOCATION).get(0))
+                                             .compositionInstances(getFileListFromCsar(csarFile, ACM_INSTANCES_LOCATION))
                                              .build());
                 rappResources.setSme(RappResources.SMEResources.builder()
-                                             .providerFunctions(getFileListFromCsar(csarFile, smeProviderFuncsLocation))
-                                             .serviceApis(getFileListFromCsar(csarFile, smeServiceApisLocation))
-                                             .invokers(getFileListFromCsar(csarFile, smeInvokersLocation)).build());
+                                             .providerFunctions(getFileListFromCsar(csarFile,
+                                                     SME_PROVIDER_FUNCS_LOCATION))
+                                             .serviceApis(getFileListFromCsar(csarFile, SME_SERVICE_APIS_LOCATION))
+                                             .invokers(getFileListFromCsar(csarFile, SME_INVOKERS_LOCATION)).build());
             }
         } catch (Exception e) {
             logger.warn("Error in getting the rapp resources", e);
