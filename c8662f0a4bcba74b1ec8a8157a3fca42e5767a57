@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0bf58c94_08d7629c",
+        "filename": "pom.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2023-08-21T15:38:04Z",
+      "side": 1,
+      "message": "license",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 5
+      },
+      "revId": "c8662f0a4bcba74b1ec8a8157a3fca42e5767a57",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "59669e8a_ece3d8b2",
+        "filename": "pom.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2023-08-21T15:38:04Z",
+      "side": 1,
+      "message": "org.o-ran-sc.nonrtric.plt",
+      "range": {
+        "startLine": 10,
+        "startChar": 13,
+        "endLine": 10,
+        "endChar": 23
+      },
+      "revId": "c8662f0a4bcba74b1ec8a8157a3fca42e5767a57",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2f144338_bb751955",
+        "filename": "pom.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2023-08-21T15:38:04Z",
+      "side": 1,
+      "message": "O-RAN SC rApp Management function. \n\n(Does more than ACM, so no need to mention ACM specifically here)",
+      "range": {
+        "startLine": 15,
+        "startChar": 17,
+        "endLine": 15,
+        "endChar": 44
+      },
+      "revId": "c8662f0a4bcba74b1ec8a8157a3fca42e5767a57",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5cb3322_1337e809",
+        "filename": "rapp-manager-acm/pom.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2023-08-21T15:38:04Z",
+      "side": 1,
+      "message": "Please add a licence comment for all POM files.",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 6
+      },
+      "revId": "c8662f0a4bcba74b1ec8a8157a3fca42e5767a57",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9852ada_9104d3d8",
+        "filename": "rapp-manager-acm/pom.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2023-08-21T15:38:04Z",
+      "side": 1,
+      "message": "update when parent pom changes. \n\nSimilar for other POM files",
+      "range": {
+        "startLine": 7,
+        "startChar": 17,
+        "endLine": 7,
+        "endChar": 27
+      },
+      "revId": "c8662f0a4bcba74b1ec8a8157a3fca42e5767a57",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2f7635ca_a79dcb1e",
+        "filename": "rapp-manager-acm/pom.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2023-08-21T15:38:04Z",
+      "side": 1,
+      "message": "org.o-ran-sc.nonrtric.plt.rappmaneger \n\n(And similarly for other POM files)",
+      "range": {
+        "startLine": 12,
+        "startChar": 12,
+        "endLine": 12,
+        "endChar": 24
+      },
+      "revId": "c8662f0a4bcba74b1ec8a8157a3fca42e5767a57",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
