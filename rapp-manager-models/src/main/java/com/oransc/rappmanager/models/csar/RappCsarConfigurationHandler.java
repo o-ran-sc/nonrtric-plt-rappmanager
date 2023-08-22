@@ -53,9 +53,12 @@ public class RappCsarConfigurationHandler {
 
 
     public boolean isValidRappPackage(MultipartFile multipartFile) {
-        return multipartFile != null && multipartFile.getOriginalFilename() != null
-                       && multipartFile.getOriginalFilename().endsWith(".csar") && isFileExistsInCsar(multipartFile,
-                ACM_COMPOSITION_JSON_LOCATION);
+        String originalFilename = multipartFile.getOriginalFilename();
+        if (originalFilename != null) {
+            return originalFilename.endsWith(".csar") && isFileExistsInCsar(multipartFile,
+                    ACM_COMPOSITION_JSON_LOCATION);
+        }
+        return false;
     }
 
     boolean isFileExistsInCsar(MultipartFile multipartFile, String fileLocation) {
