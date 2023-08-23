@@ -32,7 +32,8 @@ import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
+import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -62,9 +63,9 @@ public class RappCsarConfigurationHandler {
     }
 
     boolean isFileExistsInCsar(MultipartFile multipartFile, String fileLocation) {
-        try (ZipInputStream zipInputStream = new ZipInputStream(multipartFile.getInputStream())) {
-            ZipEntry zipEntry;
-            while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+        try (ZipArchiveInputStream zipArchiveInputStream = new ZipArchiveInputStream(multipartFile.getInputStream())) {
+            ArchiveEntry zipEntry;
+            while ((zipEntry = zipArchiveInputStream.getNextEntry()) != null) {
                 if (zipEntry.getName().matches(fileLocation)) {
                     return Boolean.TRUE;
                 }
@@ -99,13 +100,13 @@ public class RappCsarConfigurationHandler {
     ByteArrayOutputStream getFileFromCsar(File csarFile, String fileLocation) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try (FileInputStream fileInputStream = new FileInputStream(csarFile);
-             ZipInputStream zipInputStream = new ZipInputStream(fileInputStream)) {
-            ZipEntry entry;
-            while ((entry = zipInputStream.getNextEntry()) != null) {
+             ZipArchiveInputStream zipArchiveInputStream = new ZipArchiveInputStream(fileInputStream)) {
+            ArchiveEntry entry;
+            while ((entry = zipArchiveInputStream.getNextEntry()) != null) {
                 if (!entry.isDirectory() && entry.getName().equals(fileLocation)) {
                     byte[] buffer = new byte[1024];
                     int bytesRead;
-                    while ((bytesRead = zipInputStream.read(buffer)) != -1) {
+                    while ((bytesRead = zipArchiveInputStream.read(buffer)) != -1) {
                         byteArrayOutputStream.write(buffer, 0, bytesRead);
                     }
                 }
@@ -144,12 +145,10 @@ public class RappCsarConfigurationHandler {
             File csarFile = getCsarFile(rapp);
             if (csarFile.exists()) {
                 rappResources.setAcm(RappResources.ACMResources.builder().compositionDefinitions(
-                                getFileListFromCsar(csarFile, ACM_DEFINITION_LOCATION).get(0))
-                                             .compositionInstances(getFileListFromCsar(csarFile, ACM_INSTANCES_LOCATION))
-                                             .build());
-                rappResources.setSme(RappResources.SMEResources.builder()
-                                             .providerFunctions(getFileListFromCsar(csarFile,
-                                                     SME_PROVIDER_FUNCS_LOCATION))
+                        getFileListFromCsar(csarFile, ACM_DEFINITION_LOCATION).get(0)).compositionInstances(
+                        getFileListFromCsar(csarFile, ACM_INSTANCES_LOCATION)).build());
+                rappResources.setSme(RappResources.SMEResources.builder().providerFunctions(
+                                getFileListFromCsar(csarFile, SME_PROVIDER_FUNCS_LOCATION))
                                              .serviceApis(getFileListFromCsar(csarFile, SME_SERVICE_APIS_LOCATION))
                                              .invokers(getFileListFromCsar(csarFile, SME_INVOKERS_LOCATION)).build());
             }

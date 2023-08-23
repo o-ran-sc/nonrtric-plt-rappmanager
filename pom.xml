@@ -42,6 +42,7 @@
         <slf4j.version>2.0.7</slf4j.version>
         <apache.httpcore.version>4.3.2</apache.httpcore.version>
         <exec-maven-plugin.version>3.1.0</exec-maven-plugin.version>
+        <apache.compress.version>1.22</apache.compress.version>
     </properties>
     <build>
         <plugins>
