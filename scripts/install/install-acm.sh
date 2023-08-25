@@ -29,7 +29,7 @@ K8S_CONFIGURATION_FILE="docker/helm/policy/components/policy-clamp-ac-k8s-ppnt/v
 IP_ADDRESS=$(hostname -I | awk '{print $1}')
 echo "IP Address : $IP_ADDRESS"
 
-git clone -b london "https://gerrit.onap.org/r/policy/docker"
+git clone "https://gerrit.onap.org/r/policy/docker"
 
 CWD=$(pwd)
 export WORKSPACE="$CWD/docker"
