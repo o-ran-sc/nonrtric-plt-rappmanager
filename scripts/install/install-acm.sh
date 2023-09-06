@@ -25,6 +25,7 @@ DISABLE_COMPONENTS=(policy-api policy-pap policy-apex-pdp policy-pdpd-cl policy-
 ACM_VALUES_FILE="docker/helm/policy/values.yaml"
 A1PMS_CONFIGURATION_FILE="docker/helm/policy/components/policy-clamp-ac-a1pms-ppnt/resources/config/A1pmsParticipantParameters.yaml"
 K8S_CONFIGURATION_FILE="docker/helm/policy/components/policy-clamp-ac-k8s-ppnt/values.yaml"
+K8S_VERSIONS_FILE="docker/compose/get-k8s-versions.sh"
 
 IP_ADDRESS=$(hostname -I | awk '{print $1}')
 echo "IP Address : $IP_ADDRESS"
@@ -34,8 +35,15 @@ git clone "https://gerrit.onap.org/r/policy/docker"
 CWD=$(pwd)
 export WORKSPACE="$CWD/docker"
 
+#Temporary workaround. Should be removed once this gets fixed in policy/docker repo
+echo "Update policy-db-migrator version..."
+yq eval '.dbmigrator.image="onap/policy-db-migrator:3.0-SNAPSHOT-latest"' -i $ACM_VALUES_FILE
+sed -i 's/component=policy-clamp-ac-kserve-ppnt/component=policy-clamp-ac-sim-ppnt/g' $K8S_VERSIONS_FILE
+PARAMETER_STRING="metrics:\n  security:\n    disabled: false"
+echo -e "$PARAMETER_STRING" >> docker/helm/policy/components/policy-clamp-runtime-acm/resources/config/acRuntimeParameters.yaml
+
 echo "Updating policy docker image versions..."
-bash docker/compose/get-k8s-versions.sh
+bash $K8S_VERSIONS_FILE
 
 echo "Enabling the access for the clusterroles..."
 kubectl apply -f resources/acm-role-binding.yaml
