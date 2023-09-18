@@ -27,9 +27,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import org.apache.commons.compress.archivers.ArchiveEntry;
@@ -145,7 +146,7 @@ public class RappCsarConfigurationHandler {
             File csarFile = getCsarFile(rapp);
             if (csarFile.exists()) {
                 rappResources.setAcm(RappResources.ACMResources.builder().compositionDefinitions(
-                        getFileListFromCsar(csarFile, ACM_DEFINITION_LOCATION).get(0)).compositionInstances(
+                        getFileListFromCsar(csarFile, ACM_DEFINITION_LOCATION).iterator().next()).compositionInstances(
                         getFileListFromCsar(csarFile, ACM_INSTANCES_LOCATION)).build());
                 rappResources.setSme(RappResources.SMEResources.builder().providerFunctions(
                                 getFileListFromCsar(csarFile, SME_PROVIDER_FUNCS_LOCATION))
@@ -158,14 +159,15 @@ public class RappCsarConfigurationHandler {
         return rappResources;
     }
 
-    List<String> getFileListFromCsar(File csarFile, String dirLocation) {
+    Set<String> getFileListFromCsar(File csarFile, String dirLocation) {
         try (ZipFile zipFile = new ZipFile(csarFile)) {
             return zipFile.stream().filter(Predicate.not(ZipEntry::isDirectory)).map(ZipEntry::getName)
                            .filter(name -> name.startsWith(dirLocation))
-                           .map(name -> name.substring(name.lastIndexOf("/") + 1, name.lastIndexOf("."))).toList();
+                           .map(name -> name.substring(name.lastIndexOf("/") + 1, name.lastIndexOf(".")))
+                           .collect(Collectors.toSet());
         } catch (IOException e) {
             logger.warn("Error in listing the files from csar", e);
         }
-        return List.of();
+        return Set.of();
     }
 }

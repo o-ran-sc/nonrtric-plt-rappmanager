@@ -18,7 +18,7 @@
 
 package com.oransc.rappmanager.models.rapp;
 
-import java.util.List;
+import java.util.Set;
 import lombok.Builder;
 import lombok.Data;
 
@@ -33,15 +33,15 @@ public class RappResources {
     public static class ACMResources {
 
         String compositionDefinitions;
-        List<String> compositionInstances;
+        Set<String> compositionInstances;
     }
 
     @Data
     @Builder
     public static class SMEResources {
 
-        List<String> providerFunctions;
-        List<String> serviceApis;
-        List<String> invokers;
+        Set<String> providerFunctions;
+        Set<String> serviceApis;
+        Set<String> invokers;
     }
 }

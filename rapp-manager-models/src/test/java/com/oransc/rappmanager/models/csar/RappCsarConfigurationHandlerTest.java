@@ -30,7 +30,7 @@ import com.oransc.rappmanager.models.rappinstance.RappSMEInstance;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import org.apache.http.entity.ContentType;
 import org.json.JSONException;
@@ -88,15 +88,14 @@ class RappCsarConfigurationHandlerTest {
     @Test
     void testFileListing() {
         File file = new File(validCsarFileLocation + validRappFile);
-        List<String> fileListFromCsar =
-                rappCsarConfigurationHandler.getFileListFromCsar(file, "Files/Sme/serviceapis/");
+        Set<String> fileListFromCsar = rappCsarConfigurationHandler.getFileListFromCsar(file, "Files/Sme/serviceapis/");
         assertThat(fileListFromCsar).hasSize(2);
     }
 
     @Test
     void testInvalidFileListing() {
         File file = new File(validCsarFileLocation);
-        List<String> fileListFromCsar = rappCsarConfigurationHandler.getFileListFromCsar(file, null);
+        Set<String> fileListFromCsar = rappCsarConfigurationHandler.getFileListFromCsar(file, null);
         assertThat(fileListFromCsar).isEmpty();
     }
 
@@ -130,7 +129,7 @@ class RappCsarConfigurationHandlerTest {
         UUID rappId = UUID.randomUUID();
         RappResources rappResources = new RappResources();
         rappResources.setAcm(RappResources.ACMResources.builder().compositionDefinitions("compositions")
-                                     .compositionInstances(List.of()).build());
+                                     .compositionInstances(Set.of()).build());
         Rapp rapp =
                 Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
                         .rappResources(rappResources).build();
@@ -143,7 +142,7 @@ class RappCsarConfigurationHandlerTest {
         UUID rappId = UUID.randomUUID();
         RappResources rappResources = new RappResources();
         rappResources.setAcm(RappResources.ACMResources.builder().compositionDefinitions("invalidcomposition")
-                                     .compositionInstances(List.of()).build());
+                                     .compositionInstances(Set.of()).build());
         Rapp rapp =
                 Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
                         .rappResources(rappResources).build();
