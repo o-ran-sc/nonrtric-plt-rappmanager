@@ -47,11 +47,12 @@ public class RappCsarConfigurationHandler {
     private static final String ACM_COMPOSITION_JSON_LOCATION = "Files/Acm/definition/compositions.json";
     private static final String ACM_DEFINITION_LOCATION = "Files/Acm/definition";
     private static final String ACM_INSTANCES_LOCATION = "Files/Acm/instances";
-
     private static final String SME_PROVIDER_FUNCS_LOCATION = "Files/Sme/providers";
     private static final String SME_SERVICE_APIS_LOCATION = "Files/Sme/serviceapis";
-
     private static final String SME_INVOKERS_LOCATION = "Files/Sme/invokers";
+    private static final String DME_INFO_TYPES_LOCATION = "Files/Dme/infotypes";
+    private static final String DME_INFO_PRODUCERS_LOCATION = "Files/Dme/infoproducers";
+    private static final String DME_INFO_CONSUMERS_LOCATION = "Files/Dme/infoconsumers";
 
 
     public boolean isValidRappPackage(MultipartFile multipartFile) {
@@ -88,7 +89,7 @@ public class RappCsarConfigurationHandler {
     }
 
     String getPayload(Rapp rapp, String location) {
-        logger.info("Getting payload for {} from {}", rapp.getRappId(), location);
+        logger.debug("Getting payload for {} from {}", rapp.getRappId(), location);
         File csarFile = getCsarFile(rapp);
         return getFileFromCsar(csarFile, location).toString();
     }
@@ -136,6 +137,18 @@ public class RappCsarConfigurationHandler {
                 getResourceUri(ACM_DEFINITION_LOCATION, rapp.getRappResources().getAcm().getCompositionDefinitions()));
     }
 
+    public String getDmeInfoProducerPayload(Rapp rapp, String producerIdentifier) {
+        return getPayload(rapp, getResourceUri(DME_INFO_PRODUCERS_LOCATION, producerIdentifier));
+    }
+
+    public String getDmeInfoTypePayload(Rapp rapp, String infoTypeIdentifier) {
+        return getPayload(rapp, getResourceUri(DME_INFO_TYPES_LOCATION, infoTypeIdentifier));
+    }
+
+    public String getDmeInfoConsumerPayload(Rapp rapp, String infoConsumerIdentifier) {
+        return getPayload(rapp, getResourceUri(DME_INFO_CONSUMERS_LOCATION, infoConsumerIdentifier));
+    }
+
     String getResourceUri(String resourceLocation, String resource) {
         return resourceLocation + "/" + resource + ".json";
     }
@@ -152,6 +165,10 @@ public class RappCsarConfigurationHandler {
                                 getFileListFromCsar(csarFile, SME_PROVIDER_FUNCS_LOCATION))
                                              .serviceApis(getFileListFromCsar(csarFile, SME_SERVICE_APIS_LOCATION))
                                              .invokers(getFileListFromCsar(csarFile, SME_INVOKERS_LOCATION)).build());
+                rappResources.setDme(RappResources.DMEResources.builder()
+                                             .infoTypes(getFileListFromCsar(csarFile, DME_INFO_TYPES_LOCATION))
+                                             .infoProducers(getFileListFromCsar(csarFile, DME_INFO_PRODUCERS_LOCATION))
+                                             .infoConsumers(getFileListFromCsar(csarFile, DME_INFO_CONSUMERS_LOCATION)).build());
             }
         } catch (Exception e) {
             logger.warn("Error in getting the rapp resources", e);

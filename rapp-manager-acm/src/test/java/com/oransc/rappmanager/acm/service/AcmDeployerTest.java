@@ -287,8 +287,6 @@ class AcmDeployerTest {
         boolean primeRapp = acmDeployer.primeRapp(rapp);
         mockServer.verify();
         assertTrue(primeRapp);
-        assertEquals(RappState.PRIMED, rapp.getState());
-
     }
 
     @Test

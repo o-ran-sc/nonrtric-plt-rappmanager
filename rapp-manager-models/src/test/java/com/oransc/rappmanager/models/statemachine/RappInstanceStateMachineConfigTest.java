@@ -75,7 +75,7 @@ class RappInstanceStateMachineConfigTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = RappEvent.class, names = {"ACMDEPLOYED", "SMEDEPLOYED"})
+    @EnumSource(value = RappEvent.class, names = {"ACMDEPLOYED", "SMEDEPLOYED", "DMEDEPLOYED" })
     void testIndividualDeployedState(RappEvent rappEvent) throws Exception {
         StateMachineTestPlan plan =
                 StateMachineTestPlanBuilder.<RappInstanceState, RappEvent>builder().stateMachine(stateMachine).step()
@@ -92,19 +92,47 @@ class RappInstanceStateMachineConfigTest {
                         .expectState(RappInstanceState.UNDEPLOYED).and().step().sendEvent(RappEvent.DEPLOYING)
                         .expectState(RappInstanceState.DEPLOYING).expectStateChanged(1).and().step()
                         .sendEvent(RappEvent.ACMDEPLOYED).expectState(RappInstanceState.DEPLOYING).and().step()
-                        .sendEvent(RappEvent.SMEDEPLOYED).expectState(RappInstanceState.DEPLOYED).expectStateChanged(1)
+                        .sendEvent(RappEvent.SMEDEPLOYED).expectState(RappInstanceState.DEPLOYING).and().step()
+                        .sendEvent(RappEvent.DMEDEPLOYED).expectState(RappInstanceState.DEPLOYED).expectStateChanged(1)
                         .and().build();
         plan.test();
     }
 
     @Test
-    void testDeployFailedState() throws Exception {
+    void testAcmDeployFailedState() throws Exception {
+        StateMachineTestPlan plan =
+                StateMachineTestPlanBuilder.<RappInstanceState, RappEvent>builder().stateMachine(stateMachine).step()
+                        .expectState(RappInstanceState.UNDEPLOYED).and().step().sendEvent(RappEvent.DEPLOYING)
+                        .expectState(RappInstanceState.DEPLOYING).expectStateChanged(1).and().step()
+                        .sendEvent(RappEvent.SMEDEPLOYED).expectState(RappInstanceState.DEPLOYING).and().step()
+                        .sendEvent(RappEvent.DMEDEPLOYED).expectState(RappInstanceState.DEPLOYING).and().step()
+                        .sendEvent(RappEvent.ACMDEPLOYFAILED).expectState(RappInstanceState.UNDEPLOYED)
+                        .expectStateChanged(1).and().build();
+        plan.test();
+    }
+
+    @Test
+    void testSmeDeployFailedState() throws Exception {
         StateMachineTestPlan plan =
                 StateMachineTestPlanBuilder.<RappInstanceState, RappEvent>builder().stateMachine(stateMachine).step()
                         .expectState(RappInstanceState.UNDEPLOYED).and().step().sendEvent(RappEvent.DEPLOYING)
                         .expectState(RappInstanceState.DEPLOYING).expectStateChanged(1).and().step()
                         .sendEvent(RappEvent.ACMDEPLOYED).expectState(RappInstanceState.DEPLOYING).and().step()
+                        .sendEvent(RappEvent.DMEDEPLOYED).expectState(RappInstanceState.DEPLOYING).and().step()
                         .sendEvent(RappEvent.SMEDEPLOYFAILED).expectState(RappInstanceState.UNDEPLOYED)
+                        .expectStateChanged(1).and().build();
+        plan.test();
+    }
+
+    @Test
+    void testDmeDeployFailedState() throws Exception {
+        StateMachineTestPlan plan =
+                StateMachineTestPlanBuilder.<RappInstanceState, RappEvent>builder().stateMachine(stateMachine).step()
+                        .expectState(RappInstanceState.UNDEPLOYED).and().step().sendEvent(RappEvent.DEPLOYING)
+                        .expectState(RappInstanceState.DEPLOYING).expectStateChanged(1).and().step()
+                        .sendEvent(RappEvent.ACMDEPLOYED).expectState(RappInstanceState.DEPLOYING).and().step()
+                        .sendEvent(RappEvent.SMEDEPLOYED).expectState(RappInstanceState.DEPLOYING).and().step()
+                        .sendEvent(RappEvent.DMEDEPLOYFAILED).expectState(RappInstanceState.UNDEPLOYED)
                         .expectStateChanged(1).and().build();
         plan.test();
     }
@@ -116,21 +144,23 @@ class RappInstanceStateMachineConfigTest {
                         .expectState(RappInstanceState.UNDEPLOYED).and().step().sendEvent(RappEvent.DEPLOYING)
                         .expectState(RappInstanceState.DEPLOYING).expectStateChanged(1).and().step()
                         .sendEvent(RappEvent.ACMDEPLOYED).expectState(RappInstanceState.DEPLOYING).and().step()
-                        .sendEvent(RappEvent.SMEDEPLOYED).expectState(RappInstanceState.DEPLOYED).expectStateChanged(1)
+                        .sendEvent(RappEvent.SMEDEPLOYED).expectState(RappInstanceState.DEPLOYING).and().step()
+                        .sendEvent(RappEvent.DMEDEPLOYED).expectState(RappInstanceState.DEPLOYED).expectStateChanged(1)
                         .and().step().sendEvent(RappEvent.UNDEPLOYING).expectState(RappInstanceState.UNDEPLOYING)
                         .expectStateChanged(1).and().build();
         plan.test();
     }
 
     @ParameterizedTest
-    @EnumSource(value = RappEvent.class, names = {"ACMUNDEPLOYED", "SMEUNDEPLOYED"})
+    @EnumSource(value = RappEvent.class, names = {"ACMUNDEPLOYED", "SMEUNDEPLOYED", "DMEUNDEPLOYED" })
     void testIndividualUndeployedState(RappEvent rappEvent) throws Exception {
         StateMachineTestPlan plan =
                 StateMachineTestPlanBuilder.<RappInstanceState, RappEvent>builder().stateMachine(stateMachine).step()
                         .expectState(RappInstanceState.UNDEPLOYED).and().step().sendEvent(RappEvent.DEPLOYING)
                         .expectState(RappInstanceState.DEPLOYING).expectStateChanged(1).and().step()
                         .sendEvent(RappEvent.ACMDEPLOYED).expectState(RappInstanceState.DEPLOYING).and().step()
-                        .sendEvent(RappEvent.SMEDEPLOYED).expectState(RappInstanceState.DEPLOYED).expectStateChanged(1)
+                        .sendEvent(RappEvent.SMEDEPLOYED).expectState(RappInstanceState.DEPLOYING).and().step()
+                        .sendEvent(RappEvent.DMEDEPLOYED).expectState(RappInstanceState.DEPLOYED).expectStateChanged(1)
                         .and().step().sendEvent(RappEvent.UNDEPLOYING).expectState(RappInstanceState.UNDEPLOYING)
                         .expectStateChanged(1).and().step().sendEvent(rappEvent)
                         .expectState(RappInstanceState.UNDEPLOYING).and().build();
@@ -144,25 +174,63 @@ class RappInstanceStateMachineConfigTest {
                         .expectState(RappInstanceState.UNDEPLOYED).and().step().sendEvent(RappEvent.DEPLOYING)
                         .expectState(RappInstanceState.DEPLOYING).expectStateChanged(1).and().step()
                         .sendEvent(RappEvent.ACMDEPLOYED).expectState(RappInstanceState.DEPLOYING).and().step()
-                        .sendEvent(RappEvent.SMEDEPLOYED).expectState(RappInstanceState.DEPLOYED).expectStateChanged(1)
+                        .sendEvent(RappEvent.SMEDEPLOYED).expectState(RappInstanceState.DEPLOYING).and().step()
+                        .sendEvent(RappEvent.DMEDEPLOYED).expectState(RappInstanceState.DEPLOYED).expectStateChanged(1)
                         .and().step().sendEvent(RappEvent.UNDEPLOYING).expectState(RappInstanceState.UNDEPLOYING)
                         .expectStateChanged(1).and().step().sendEvent(RappEvent.ACMUNDEPLOYED)
                         .expectState(RappInstanceState.UNDEPLOYING).and().step().sendEvent(RappEvent.SMEUNDEPLOYED)
-                        .expectState(RappInstanceState.UNDEPLOYED).expectStateChanged(1).and().build();
+                        .expectState(RappInstanceState.UNDEPLOYING).and().step().sendEvent(RappEvent.DMEUNDEPLOYED)
+                        .expectStateChanged(1).and().build();
         plan.test();
     }
 
     @Test
-    void testUndeployFailedState() throws Exception {
+    void testUndeployAcmFailedState() throws Exception {
         StateMachineTestPlan plan =
                 StateMachineTestPlanBuilder.<RappInstanceState, RappEvent>builder().stateMachine(stateMachine).step()
                         .expectState(RappInstanceState.UNDEPLOYED).and().step().sendEvent(RappEvent.DEPLOYING)
                         .expectState(RappInstanceState.DEPLOYING).expectStateChanged(1).and().step()
                         .sendEvent(RappEvent.ACMDEPLOYED).expectState(RappInstanceState.DEPLOYING).and().step()
-                        .sendEvent(RappEvent.SMEDEPLOYED).expectState(RappInstanceState.DEPLOYED).expectStateChanged(1)
+                        .sendEvent(RappEvent.SMEDEPLOYED).expectState(RappInstanceState.DEPLOYING).and().step()
+                        .sendEvent(RappEvent.DMEDEPLOYED).expectState(RappInstanceState.DEPLOYED).expectStateChanged(1)
+                        .and().step().sendEvent(RappEvent.UNDEPLOYING).expectState(RappInstanceState.UNDEPLOYING)
+                        .expectStateChanged(1).and().step().sendEvent(RappEvent.SMEUNDEPLOYED)
+                        .expectState(RappInstanceState.UNDEPLOYING).and().step().sendEvent(RappEvent.DMEUNDEPLOYED)
+                        .expectState(RappInstanceState.UNDEPLOYING).and().step().sendEvent(RappEvent.ACMUNDEPLOYFAILED)
+                        .expectState(RappInstanceState.DEPLOYED).expectStateChanged(1).and().build();
+        plan.test();
+    }
+
+    @Test
+    void testUndeploySmeFailedState() throws Exception {
+        StateMachineTestPlan plan =
+                StateMachineTestPlanBuilder.<RappInstanceState, RappEvent>builder().stateMachine(stateMachine).step()
+                        .expectState(RappInstanceState.UNDEPLOYED).and().step().sendEvent(RappEvent.DEPLOYING)
+                        .expectState(RappInstanceState.DEPLOYING).expectStateChanged(1).and().step()
+                        .sendEvent(RappEvent.ACMDEPLOYED).expectState(RappInstanceState.DEPLOYING).and().step()
+                        .sendEvent(RappEvent.SMEDEPLOYED).expectState(RappInstanceState.DEPLOYING).and().step()
+                        .sendEvent(RappEvent.DMEDEPLOYED).expectState(RappInstanceState.DEPLOYED).expectStateChanged(1)
                         .and().step().sendEvent(RappEvent.UNDEPLOYING).expectState(RappInstanceState.UNDEPLOYING)
                         .expectStateChanged(1).and().step().sendEvent(RappEvent.ACMUNDEPLOYED)
+                        .expectState(RappInstanceState.UNDEPLOYING).and().step().sendEvent(RappEvent.DMEUNDEPLOYED)
                         .expectState(RappInstanceState.UNDEPLOYING).and().step().sendEvent(RappEvent.SMEUNDEPLOYFAILED)
+                        .expectState(RappInstanceState.DEPLOYED).expectStateChanged(1).and().build();
+        plan.test();
+    }
+
+    @Test
+    void testUndeployDmeFailedState() throws Exception {
+        StateMachineTestPlan plan =
+                StateMachineTestPlanBuilder.<RappInstanceState, RappEvent>builder().stateMachine(stateMachine).step()
+                        .expectState(RappInstanceState.UNDEPLOYED).and().step().sendEvent(RappEvent.DEPLOYING)
+                        .expectState(RappInstanceState.DEPLOYING).expectStateChanged(1).and().step()
+                        .sendEvent(RappEvent.ACMDEPLOYED).expectState(RappInstanceState.DEPLOYING).and().step()
+                        .sendEvent(RappEvent.SMEDEPLOYED).expectState(RappInstanceState.DEPLOYING).and().step()
+                        .sendEvent(RappEvent.DMEDEPLOYED).expectState(RappInstanceState.DEPLOYED).expectStateChanged(1)
+                        .and().step().sendEvent(RappEvent.UNDEPLOYING).expectState(RappInstanceState.UNDEPLOYING)
+                        .expectStateChanged(1).and().step().sendEvent(RappEvent.ACMUNDEPLOYED)
+                        .expectState(RappInstanceState.UNDEPLOYING).and().step().sendEvent(RappEvent.SMEUNDEPLOYED)
+                        .expectState(RappInstanceState.UNDEPLOYING).and().step().sendEvent(RappEvent.DMEUNDEPLOYFAILED)
                         .expectState(RappInstanceState.DEPLOYED).expectStateChanged(1).and().build();
         plan.test();
     }

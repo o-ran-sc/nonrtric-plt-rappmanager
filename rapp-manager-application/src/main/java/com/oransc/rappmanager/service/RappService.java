@@ -19,6 +19,7 @@
 package com.oransc.rappmanager.service;
 
 import com.oransc.rappmanager.acm.service.AcmDeployer;
+import com.oransc.rappmanager.dme.service.DmeDeployer;
 import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappEvent;
 import com.oransc.rappmanager.models.rapp.RappState;
@@ -37,13 +38,16 @@ public class RappService {
 
     private final AcmDeployer acmDeployer;
     private final SmeDeployer smeDeployer;
+    private final DmeDeployer dmeDeployer;
     private final RappInstanceStateMachine rappInstanceStateMachine;
     private static final String STATE_TRANSITION_NOT_PERMITTED = "State transition from %s to %s is not permitted.";
 
     public ResponseEntity<String> primeRapp(Rapp rapp) {
         if (rapp.getState().equals(RappState.COMMISSIONED)) {
             rapp.setState(RappState.PRIMING);
-            if (!acmDeployer.primeRapp(rapp)) {
+            if (acmDeployer.primeRapp(rapp) && dmeDeployer.primeRapp(rapp)) {
+                rapp.setState(RappState.PRIMED);
+            } else {
                 rapp.setState(RappState.COMMISSIONED);
             }
             return ResponseEntity.ok().build();
@@ -57,7 +61,9 @@ public class RappService {
     public ResponseEntity<String> deprimeRapp(Rapp rapp) {
         if (rapp.getState().equals(RappState.PRIMED) && rapp.getRappInstances().isEmpty()) {
             rapp.setState(RappState.DEPRIMING);
-            if (!acmDeployer.deprimeRapp(rapp)) {
+            if (acmDeployer.deprimeRapp(rapp) && dmeDeployer.deprimeRapp(rapp)) {
+                rapp.setState(RappState.COMMISSIONED);
+            } else {
                 rapp.setState(RappState.PRIMED);
             }
             return ResponseEntity.ok().build();
@@ -75,8 +81,8 @@ public class RappService {
     public ResponseEntity<String> deployRappInstance(Rapp rapp, RappInstance rappInstance) {
         if (rappInstance.getState().equals(RappInstanceState.UNDEPLOYED)) {
             rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.DEPLOYING);
-            if (acmDeployer.deployRappInstance(rapp, rappInstance) && smeDeployer.deployRappInstance(rapp,
-                    rappInstance)) {
+            if (acmDeployer.deployRappInstance(rapp, rappInstance) && smeDeployer.deployRappInstance(rapp, rappInstance)
+                        && dmeDeployer.deployRappInstance(rapp, rappInstance)) {
                 return ResponseEntity.accepted().build();
             }
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
@@ -91,7 +97,7 @@ public class RappService {
         if (rappInstance.getState().equals(RappInstanceState.DEPLOYED)) {
             rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.UNDEPLOYING);
             if (acmDeployer.undeployRappInstance(rapp, rappInstance) && smeDeployer.undeployRappInstance(rapp,
-                    rappInstance)) {
+                    rappInstance) && dmeDeployer.undeployRappInstance(rapp, rappInstance)) {
                 return ResponseEntity.accepted().build();
             }
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();

@@ -21,12 +21,11 @@ package com.oransc.rappmanager.sme.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.oransc.rappmanager.models.rapp.Rapp;
-import com.oransc.rappmanager.models.csar.RappCsarConfigurationHandler;
 import com.oransc.rappmanager.models.RappDeployer;
+import com.oransc.rappmanager.models.csar.RappCsarConfigurationHandler;
+import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappEvent;
 import com.oransc.rappmanager.models.rappinstance.RappInstance;
-import com.oransc.rappmanager.models.cache.RappCacheService;
 import com.oransc.rappmanager.models.statemachine.RappInstanceStateMachine;
 import com.oransc.rappmanager.sme.invoker.data.APIInvokerEnrolmentDetails;
 import com.oransc.rappmanager.sme.provider.data.APIProviderEnrolmentDetails;
@@ -49,6 +48,7 @@ public class SmeDeployer implements RappDeployer {
 
     private final com.oransc.rappmanager.sme.provider.rest.DefaultApiClient providerDefaultApiClient;
 
+
     private final com.oransc.rappmanager.sme.publishservice.rest.DefaultApiClient publishServiceDefaultApiClient;
 
     private final com.oransc.rappmanager.sme.invoker.rest.DefaultApiClient invokerDefaultApiClient;
@@ -56,8 +56,6 @@ public class SmeDeployer implements RappDeployer {
     private final RappCsarConfigurationHandler rappCsarConfigurationHandler;
 
     private final ObjectMapper objectMapper;
-
-    private final RappCacheService rappCacheService;
 
     private final RappInstanceStateMachine rappInstanceStateMachine;
 
@@ -131,7 +129,7 @@ public class SmeDeployer implements RappDeployer {
 
     @Override
     public boolean deprimeRapp(Rapp rapp) {
-        //If there is any deprimgng operations
+        //If there is any depriming operations
         return true;
     }
 
@@ -190,7 +188,8 @@ public class SmeDeployer implements RappDeployer {
             if (providerApiPayload != null) {
                 ServiceAPIDescription serviceAPIDescription =
                         objectMapper.readValue(providerApiPayload, ServiceAPIDescription.class);
-                serviceAPIDescription.getAefProfiles().forEach(aefProfile -> aefProfile.setAefId(rappInstance.getSme().getAefId()));
+                serviceAPIDescription.getAefProfiles()
+                        .forEach(aefProfile -> aefProfile.setAefId(rappInstance.getSme().getAefId()));
                 ServiceAPIDescription serviceAPIDescriptionResponse =
                         publishServiceDefaultApiClient.postApfIdServiceApis(rappInstance.getSme().getApfId(),
                                 serviceAPIDescription);

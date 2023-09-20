@@ -36,6 +36,7 @@
         <module>rapp-manager-models</module>
         <module>rapp-manager-acm</module>
         <module>rapp-manager-sme</module>
+        <module>rapp-manager-dme</module>
         <module>rapp-manager-application</module>
     </modules>
     <repositories>

@@ -22,11 +22,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.mock;
 
 import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappResources;
 import com.oransc.rappmanager.models.rappinstance.RappACMInstance;
+import com.oransc.rappmanager.models.rappinstance.RappDMEInstance;
 import com.oransc.rappmanager.models.rappinstance.RappSMEInstance;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -75,6 +78,18 @@ class RappCsarConfigurationHandlerTest {
     }
 
     @Test
+    void testCsarPackageValidationFailureWithoutOrginalName() throws IOException {
+        MultipartFile multipartFile = mock(MultipartFile.class);
+        assertEquals(Boolean.FALSE, rappCsarConfigurationHandler.isValidRappPackage(multipartFile));
+    }
+
+    @Test
+    void testInvalidCsarFileExist() {
+        MultipartFile multipartFile = mock(MultipartFile.class);
+        assertEquals(Boolean.FALSE, rappCsarConfigurationHandler.isFileExistsInCsar(multipartFile, "INVALID_LOCATION"));
+    }
+
+    @Test
     void testCsarInstantiationPayload() throws JSONException {
         Rapp rapp = Rapp.builder().name("").packageName(validRappFile).packageLocation(validCsarFileLocation).build();
         UUID compositionId = UUID.randomUUID();
@@ -100,6 +115,13 @@ class RappCsarConfigurationHandlerTest {
     }
 
     @Test
+    void testInvalidFileListingFromCsar() {
+        File file = new File("InvalidFile");
+        ByteArrayOutputStream fileByteArray = rappCsarConfigurationHandler.getFileFromCsar(file, null);
+        assertThat(fileByteArray.size()).isZero();
+    }
+
+    @Test
     void testListResources() {
         UUID rappId = UUID.randomUUID();
         Rapp rapp =
@@ -108,10 +130,13 @@ class RappCsarConfigurationHandlerTest {
         RappResources rappResources = rappCsarConfigurationHandler.getRappResource(rapp);
         assertThat(rappResources).isNotNull();
         assertNotNull(rappResources.getAcm().getCompositionDefinitions());
-        assertThat(rappResources.getAcm().getCompositionInstances()).hasSize(3);
+        assertThat(rappResources.getAcm().getCompositionInstances()).hasSize(4);
         assertThat(rappResources.getSme().getProviderFunctions()).hasSize(4);
         assertThat(rappResources.getSme().getServiceApis()).hasSize(2);
         assertThat(rappResources.getSme().getInvokers()).hasSize(2);
+        assertThat(rappResources.getDme().getInfoTypes()).hasSize(2);
+        assertThat(rappResources.getDme().getInfoProducers()).hasSize(2);
+        assertThat(rappResources.getDme().getInfoConsumers()).hasSize(2);
     }
 
     @Test
@@ -122,6 +147,7 @@ class RappCsarConfigurationHandlerTest {
         assertThat(rappResources).isNotNull();
         assertNull(rappResources.getAcm());
         assertNull(rappResources.getSme());
+        assertNull(rappResources.getDme());
     }
 
     @Test
@@ -185,6 +211,45 @@ class RappCsarConfigurationHandlerTest {
                         .build();
         String smeProviderDomainPayload = rappCsarConfigurationHandler.getSmeInvokerPayload(rapp, rappSMEInstance);
         assertNotNull(smeProviderDomainPayload);
+    }
+
+    @Test
+    void testGetDmeInfoTypePayload() {
+        UUID rappId = UUID.randomUUID();
+        RappDMEInstance rappDMEInstance = new RappDMEInstance();
+        rappDMEInstance.setInfoTypesProducer(Set.of("json-file-data-from-filestore"));
+        Rapp rapp =
+                Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
+                        .build();
+        String dmeInfoTypePayload = rappCsarConfigurationHandler.getDmeInfoTypePayload(rapp,
+                rappDMEInstance.getInfoTypesProducer().iterator().next());
+        assertNotNull(dmeInfoTypePayload);
+    }
+
+    @Test
+    void testGetDmeInfoProducerPayload() {
+        UUID rappId = UUID.randomUUID();
+        RappDMEInstance rappDMEInstance = new RappDMEInstance();
+        rappDMEInstance.setInfoProducer("json-file-data-producer");
+        Rapp rapp =
+                Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
+                        .build();
+        String dmeInfoProducerPayload =
+                rappCsarConfigurationHandler.getDmeInfoProducerPayload(rapp, rappDMEInstance.getInfoProducer());
+        assertNotNull(dmeInfoProducerPayload);
+    }
+
+    @Test
+    void testGetDmeInfoConsumerPayload() {
+        UUID rappId = UUID.randomUUID();
+        RappDMEInstance rappDMEInstance = new RappDMEInstance();
+        rappDMEInstance.setInfoConsumer("json-file-consumer");
+        Rapp rapp =
+                Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
+                        .build();
+        String dmeInfoConsumerPayload =
+                rappCsarConfigurationHandler.getDmeInfoConsumerPayload(rapp, rappDMEInstance.getInfoConsumer());
+        assertNotNull(dmeInfoConsumerPayload);
     }
 
 }

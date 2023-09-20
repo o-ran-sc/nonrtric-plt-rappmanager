@@ -22,7 +22,7 @@
           "podName": "ransliceassurance",
           "repository": {
             "repoName": "local",
-            "address": "http://10.101.3.22:8879/charts"
+            "address": "http://10.101.2.41:8879/charts"
           }
         }
       }

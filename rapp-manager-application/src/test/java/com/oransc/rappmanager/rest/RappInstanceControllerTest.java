@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oransc.rappmanager.acm.service.AcmDeployer;
+import com.oransc.rappmanager.dme.service.DmeDeployer;
 import com.oransc.rappmanager.models.rappinstance.DeployOrder;
 import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rappinstance.RappInstance;
@@ -48,6 +49,9 @@ class RappInstanceControllerTest {
 
     @MockBean
     SmeDeployer smeDeployer;
+
+    @MockBean
+    DmeDeployer dmeDeployer;
 
     @MockBean
     SmeLifecycleManager smeLifecycleManager;
@@ -146,6 +150,7 @@ class RappInstanceControllerTest {
         rappInstanceDeployOrder.setDeployOrder(DeployOrder.DEPLOY);
         when(acmDeployer.deployRappInstance(any(), any())).thenReturn(true);
         when(smeDeployer.deployRappInstance(any(), any())).thenReturn(true);
+        when(dmeDeployer.deployRappInstance(any(), any())).thenReturn(true);
         mockMvc.perform(MockMvcRequestBuilders.put("/rapps/{rapp_id}/instance/{instance_id}", rappId, rappInstanceId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(rappInstanceDeployOrder)))
@@ -164,6 +169,7 @@ class RappInstanceControllerTest {
         rappInstanceDeployOrder.setDeployOrder(DeployOrder.DEPLOY);
         when(acmDeployer.deployRappInstance(any(), any())).thenReturn(true);
         when(smeDeployer.deployRappInstance(any(), any())).thenReturn(true);
+        when(dmeDeployer.deployRappInstance(any(), any())).thenReturn(true);
         mockMvc.perform(MockMvcRequestBuilders.put("/rapps/{rapp_id}/instance/{instance_id}", rappId, rappInstanceId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(rappInstanceDeployOrder)))
@@ -176,6 +182,7 @@ class RappInstanceControllerTest {
         rappInstanceDeployOrder.setDeployOrder(DeployOrder.DEPLOY);
         when(acmDeployer.deployRappInstance(any(), any())).thenReturn(true);
         when(smeDeployer.deployRappInstance(any(), any())).thenReturn(true);
+        when(dmeDeployer.deployRappInstance(any(), any())).thenReturn(true);
         mockMvc.perform(MockMvcRequestBuilders.put("/rapps/{rapp_id}/instance/{instance_id}", UUID.randomUUID(),
                                 UUID.randomUUID()).contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(rappInstanceDeployOrder)))
@@ -194,6 +201,7 @@ class RappInstanceControllerTest {
         rappInstanceDeployOrder.setDeployOrder(DeployOrder.UNDEPLOY);
         when(acmDeployer.undeployRappInstance(any(), any())).thenReturn(true);
         when(smeDeployer.undeployRappInstance(any(), any())).thenReturn(true);
+        when(dmeDeployer.undeployRappInstance(any(), any())).thenReturn(true);
         mockMvc.perform(MockMvcRequestBuilders.put("/rapps/{rapp_id}/instance/{instance_id}", rappId, rappInstanceId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(rappInstanceDeployOrder)))
@@ -212,6 +220,7 @@ class RappInstanceControllerTest {
         rappInstanceDeployOrder.setDeployOrder(DeployOrder.UNDEPLOY);
         when(acmDeployer.undeployRappInstance(any(), any())).thenReturn(true);
         when(smeDeployer.undeployRappInstance(any(), any())).thenReturn(true);
+        when(dmeDeployer.undeployRappInstance(any(), any())).thenReturn(true);
         mockMvc.perform(MockMvcRequestBuilders.put("/rapps/{rapp_id}/instance/{instance_id}", rappId, rappInstanceId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(rappInstanceDeployOrder)))
@@ -226,6 +235,7 @@ class RappInstanceControllerTest {
         rappInstanceDeployOrder.setDeployOrder(DeployOrder.UNDEPLOY);
         when(acmDeployer.undeployRappInstance(any(), any())).thenReturn(true);
         when(smeDeployer.undeployRappInstance(any(), any())).thenReturn(true);
+        when(dmeDeployer.undeployRappInstance(any(), any())).thenReturn(true);
         mockMvc.perform(MockMvcRequestBuilders.put("/rapps/{rapp_id}/instance/{instance_id}", rappId, rappInstanceId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(rappInstanceDeployOrder)))

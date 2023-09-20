@@ -16,17 +16,15 @@
  * ============LICENSE_END========================================================================
  */
 
-package com.oransc.rappmanager.models.rappinstance;
+package com.oransc.rappmanager.dme.configuration;
 
-import java.util.UUID;
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
+@ConfigurationProperties(prefix = "rappmanager.dme")
 @Data
-public class RappInstance {
-
-    UUID rappInstanceId = UUID.randomUUID();
-    RappInstanceState state = RappInstanceState.UNDEPLOYED;
-    RappACMInstance acm;
-    RappSMEInstance sme;
-    RappDMEInstance dme;
+public class DmeConfiguration {
+    String baseUrl;
 }

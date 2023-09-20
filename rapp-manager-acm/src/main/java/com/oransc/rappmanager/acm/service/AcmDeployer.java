@@ -25,7 +25,6 @@ import com.oransc.rappmanager.models.RappDeployer;
 import com.oransc.rappmanager.models.csar.RappCsarConfigurationHandler;
 import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappEvent;
-import com.oransc.rappmanager.models.rapp.RappState;
 import com.oransc.rappmanager.models.rappinstance.RappACMInstance;
 import com.oransc.rappmanager.models.rappinstance.RappInstance;
 import com.oransc.rappmanager.models.statemachine.RappInstanceStateMachine;
@@ -172,7 +171,6 @@ public class AcmDeployer implements RappDeployer {
                 rapp.setCompositionId(commissioningResponse.getCompositionId());
                 logger.info("Priming automation Composition");
                 primeACMComposition(commissioningResponse.getCompositionId(), PrimeOrder.PRIME);
-                rapp.setState(RappState.PRIMED);
                 return true;
             } else {
                 logger.error("Failed to create automation composition");
@@ -189,7 +187,6 @@ public class AcmDeployer implements RappDeployer {
             primeACMComposition(rapp.getCompositionId(), PrimeOrder.DEPRIME);
             CommissioningResponse commissioningResponse = deleteComposition(rapp.getCompositionId());
             if (commissioningResponse != null) {
-                rapp.setState(RappState.COMMISSIONED);
                 return true;
             }
         } catch (Exception e) {

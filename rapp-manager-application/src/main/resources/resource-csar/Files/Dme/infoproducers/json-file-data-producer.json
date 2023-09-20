@@ -1,0 +1,7 @@
+{
+  "info_job_callback_url": "http://localhost/jsonproducerjobcallback",
+  "info_producer_supervision_callback_url": "http://localhost/jsonproducersupervisioncallback",
+  "supported_info_types": [
+    "json-file-data-from-filestore"
+  ]
+}

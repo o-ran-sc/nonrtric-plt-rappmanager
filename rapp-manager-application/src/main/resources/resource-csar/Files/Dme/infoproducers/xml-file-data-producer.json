@@ -1,0 +1,7 @@
+{
+  "info_job_callback_url": "http://localhost/xmlproducerjobcallback",
+  "info_producer_supervision_callback_url": "http://localhost/xmlproducersupervisioncallback",
+  "supported_info_types": [
+    "xml-file-data-from-filestore"
+  ]
+}

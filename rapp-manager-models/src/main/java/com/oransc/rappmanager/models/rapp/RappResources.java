@@ -27,6 +27,7 @@ public class RappResources {
 
     ACMResources acm;
     SMEResources sme;
+    DMEResources dme;
 
     @Data
     @Builder
@@ -43,5 +44,14 @@ public class RappResources {
         Set<String> providerFunctions;
         Set<String> serviceApis;
         Set<String> invokers;
+    }
+
+    @Data
+    @Builder
+    public static class DMEResources {
+
+        Set<String> infoTypes;
+        Set<String> infoProducers;
+        Set<String> infoConsumers;
     }
 }

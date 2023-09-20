@@ -23,6 +23,9 @@ import com.oransc.rappmanager.acm.configuration.ACMConfiguration;
 import com.oransc.rappmanager.acm.rest.AutomationCompositionDefinitionApiClient;
 import com.oransc.rappmanager.acm.rest.AutomationCompositionInstanceApiClient;
 import com.oransc.rappmanager.acm.rest.ParticipantMonitoringApiClient;
+import com.oransc.rappmanager.dme.configuration.DmeConfiguration;
+import com.oransc.rappmanager.dme.rest.DataConsumerApiClient;
+import com.oransc.rappmanager.dme.rest.DataProducerRegistrationApiClient;
 import com.oransc.rappmanager.sme.configuration.SmeConfiguration;
 import com.oransc.rappmanager.sme.provider.rest.DefaultApiClient;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +43,7 @@ public class BeanConfiguration {
 
     private final ACMConfiguration acmConfiguration;
     private final SmeConfiguration smeConfiguration;
+    private final DmeConfiguration dmeConfiguration;
 
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
@@ -106,6 +110,23 @@ public class BeanConfiguration {
             @Qualifier("smeInvokerApiClient") com.oransc.rappmanager.sme.invoker.ApiClient apiClient) {
         apiClient.setBasePath(smeConfiguration.getBaseUrl() + smeConfiguration.getInvokerBasePath());
         return new com.oransc.rappmanager.sme.invoker.rest.DefaultApiClient(apiClient);
+    }
+
+    @Bean
+    public com.oransc.rappmanager.dme.ApiClient dmeApiClient(RestTemplate restTemplate) {
+        com.oransc.rappmanager.dme.ApiClient apiClient = new com.oransc.rappmanager.dme.ApiClient(restTemplate);
+        return apiClient.setBasePath(dmeConfiguration.getBaseUrl());
+    }
+
+    @Bean
+    public DataProducerRegistrationApiClient dataProducerRegistrationApiClient(
+            com.oransc.rappmanager.dme.ApiClient apiClient) {
+        return new DataProducerRegistrationApiClient(apiClient);
+    }
+
+    @Bean
+    public DataConsumerApiClient dataConsumerApiClient(com.oransc.rappmanager.dme.ApiClient apiClient) {
+        return new DataConsumerApiClient(apiClient);
     }
 
     @Bean

@@ -41,4 +41,5 @@ public class Rapp {
     Map<UUID, RappInstance> rappInstances = new HashMap<>();
 
     UUID compositionId;
+    Boolean isDmeValid;
 }

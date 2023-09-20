@@ -1,0 +1,13 @@
+{
+  "info_type_id": "xml-file-data-from-filestore",
+  "job_owner": "console",
+  "status_notification_uri": "http://callback.nonrtric:80/post",
+  "job_definition": {
+    "db-url": "http://influxdb2.nonrtric:8086",
+    "db-org": "est",
+    "db-bucket": "pm-bucket",
+    "db-token": "token",
+    "filterType": "pmdata",
+    "filter": {}
+  }
+}

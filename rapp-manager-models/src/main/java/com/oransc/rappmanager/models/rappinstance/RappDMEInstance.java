@@ -18,15 +18,14 @@
 
 package com.oransc.rappmanager.models.rappinstance;
 
-import java.util.UUID;
+import java.util.Set;
 import lombok.Data;
 
 @Data
-public class RappInstance {
+public class RappDMEInstance {
 
-    UUID rappInstanceId = UUID.randomUUID();
-    RappInstanceState state = RappInstanceState.UNDEPLOYED;
-    RappACMInstance acm;
-    RappSMEInstance sme;
-    RappDMEInstance dme;
+    Set<String> infoTypesProducer;
+    String infoProducer;
+    String infoTypeConsumer;
+    String infoConsumer;
 }

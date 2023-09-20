@@ -263,7 +263,7 @@
             "name": "org.onap.policy.clamp.acm.KserveParticipant",
             "version": "2.3.4"
           },
-          "uninitializedToPassiveTimeout": 60,
+          "uninitializedToPassiveTimeout": 300,
           "statusCheckInterval": 30
         }
       },

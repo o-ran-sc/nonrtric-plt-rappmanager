@@ -58,10 +58,16 @@ public class RappInstanceStateMachineConfig extends EnumStateMachineConfigurerAd
                     .source(RappInstanceState.DEPLOYING).target(RappInstanceState.UNDEPLOYED).event(RappEvent.SMEDEPLOYFAILED)
                     .and()
                 .withExternal()
+                    .source(RappInstanceState.DEPLOYING).target(RappInstanceState.UNDEPLOYED).event(RappEvent.DMEDEPLOYFAILED)
+                    .and()
+                .withExternal()
                     .source(RappInstanceState.UNDEPLOYING).target(RappInstanceState.DEPLOYED).event(RappEvent.ACMUNDEPLOYFAILED)
                     .and()
                 .withExternal()
                     .source(RappInstanceState.UNDEPLOYING).target(RappInstanceState.DEPLOYED).event(RappEvent.SMEUNDEPLOYFAILED)
+                    .and()
+                .withExternal()
+                    .source(RappInstanceState.UNDEPLOYING).target(RappInstanceState.DEPLOYED).event(RappEvent.DMEUNDEPLOYFAILED)
                     .and()
                 .withExternal()
                     .source(RappInstanceState.DEPLOYED).target(RappInstanceState.UNDEPLOYING).event(RappEvent.UNDEPLOYING)
@@ -75,11 +81,19 @@ public class RappInstanceStateMachineConfig extends EnumStateMachineConfigurerAd
                     .guard(deployedGuard())
                     .and()
                 .withExternal()
+                    .source(RappInstanceState.DEPLOYING).target(RappInstanceState.DEPLOYED).event(RappEvent.DMEDEPLOYED)
+                    .guard(deployedGuard())
+                    .and()
+                .withExternal()
                     .source(RappInstanceState.UNDEPLOYING).target(RappInstanceState.UNDEPLOYED).event(RappEvent.ACMUNDEPLOYED)
                     .guard(undeployedGuard())
                     .and()
                 .withExternal()
                     .source(RappInstanceState.UNDEPLOYING).target(RappInstanceState.UNDEPLOYED).event(RappEvent.SMEUNDEPLOYED)
+                    .guard(undeployedGuard())
+                    .and()
+                .withExternal()
+                    .source(RappInstanceState.UNDEPLOYING).target(RappInstanceState.UNDEPLOYED).event(RappEvent.DMEUNDEPLOYED)
                     .guard(undeployedGuard());
 
     }
@@ -90,7 +104,8 @@ public class RappInstanceStateMachineConfig extends EnumStateMachineConfigurerAd
         return stateContext -> {
             stateContext.getExtendedState().getVariables().put(stateContext.getEvent(), true);
             return stateContext.getExtendedState().getVariables().get(RappEvent.ACMDEPLOYED) != null
-                           && stateContext.getExtendedState().getVariables().get(RappEvent.SMEDEPLOYED) != null;
+                           && stateContext.getExtendedState().getVariables().get(RappEvent.SMEDEPLOYED) != null
+                           && stateContext.getExtendedState().getVariables().get(RappEvent.DMEDEPLOYED) != null;
         };
     }
 
@@ -99,7 +114,8 @@ public class RappInstanceStateMachineConfig extends EnumStateMachineConfigurerAd
         return stateContext -> {
             stateContext.getExtendedState().getVariables().put(stateContext.getEvent(), true);
             return stateContext.getExtendedState().getVariables().get(RappEvent.ACMUNDEPLOYED) != null
-                           && stateContext.getExtendedState().getVariables().get(RappEvent.SMEUNDEPLOYED) != null;
+                           && stateContext.getExtendedState().getVariables().get(RappEvent.SMEUNDEPLOYED) != null
+                           && stateContext.getExtendedState().getVariables().get(RappEvent.DMEUNDEPLOYED) != null;
         };
     }
 }

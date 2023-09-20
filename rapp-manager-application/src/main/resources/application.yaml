@@ -1,23 +1,25 @@
 rappmanager:
   csarlocation: src/test/resources/csar
   acm:
-    baseurl: http://10.101.3.22:30442/onap/policy/clamp/acm/v2/
+    baseurl: http://10.101.2.41:30442/onap/policy/clamp/acm/v2/
     username: runtimeUser
     password: zb!XztG34
-    maxRetries: 3
+    maxRetries: 10
     retryInterval: 2 #seconds
   sme:
-    baseurl: http://localhost:60821 #http://10.101.3.22:61761
+    baseurl: http://localhost:56571 #http://10.101.3.22:61761
     providerBasePath: /api-provider-management/v1/
     invokerBasePath: /api-invoker-management/v1/
     publishApiBasePath: /published-apis/v1/
     maxRetries: 3
     retryInterval: 2 #seconds
+  dme:
+    baseurl: http://localhost:63475 #http://10.101.3.22:61761
 
 logging:
   level:
     root: INFO
-    com.oransc.rapps: DEBUG
+    com.oransc: DEBUG
     org.apache.http: DEBUG
     httpclient.wire: DEBUG
     org.springframework.web.client.RestTemplate: TRACE

@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import com.oransc.rappmanager.acm.service.AcmDeployer;
+import com.oransc.rappmanager.dme.service.DmeDeployer;
 import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappState;
 import com.oransc.rappmanager.models.rappinstance.RappInstance;
@@ -35,6 +36,9 @@ class RappServiceTest {
     SmeDeployer smeDeployer;
 
     @MockBean
+    DmeDeployer dmeDeployer;
+
+    @MockBean
     SmeLifecycleManager smeLifecycleManager;
 
     @Autowired
@@ -44,15 +48,15 @@ class RappServiceTest {
 
     private final String validRappFile = "valid-rapp-package.csar";
 
-    private final String invalidRappFile = "invalid-rapp-package.csar";
-
 
     @Test
     void testPrimeRapp() {
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
         when(acmDeployer.primeRapp(any())).thenReturn(true);
+        when(dmeDeployer.primeRapp(any())).thenReturn(true);
         assertEquals(HttpStatus.OK, rappService.primeRapp(rapp).getStatusCode());
+        assertEquals(RappState.PRIMED, rapp.getState());
     }
 
     @Test
@@ -67,23 +71,49 @@ class RappServiceTest {
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
         when(acmDeployer.primeRapp(any())).thenReturn(false);
+        when(dmeDeployer.primeRapp(any())).thenReturn(true);
         assertEquals(HttpStatus.OK, rappService.primeRapp(rapp).getStatusCode());
+        assertEquals(RappState.COMMISSIONED, rapp.getState());
     }
+    @Test
+    void testPrimeRappDmeFailure() {
+        Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
+                            .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
+        when(acmDeployer.primeRapp(any())).thenReturn(true);
+        when(dmeDeployer.primeRapp(any())).thenReturn(false);
+        assertEquals(HttpStatus.OK, rappService.primeRapp(rapp).getStatusCode());
+        assertEquals(RappState.COMMISSIONED, rapp.getState());
+    }
+
 
     @Test
     void testDeprimeRapp() {
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
         when(acmDeployer.deprimeRapp(any())).thenReturn(true);
+        when(dmeDeployer.deprimeRapp(any())).thenReturn(true);
         assertEquals(HttpStatus.OK, rappService.deprimeRapp(rapp).getStatusCode());
+        assertEquals(RappState.COMMISSIONED, rapp.getState());
     }
 
     @Test
-    void testDeprimeRappFailure() {
+    void testDeprimeRappAcmFailure() {
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
         when(acmDeployer.deprimeRapp(any())).thenReturn(false);
+        when(dmeDeployer.deprimeRapp(any())).thenReturn(true);
         assertEquals(HttpStatus.OK, rappService.deprimeRapp(rapp).getStatusCode());
+        assertEquals(RappState.PRIMED, rapp.getState());
+    }
+
+    @Test
+    void testDeprimeRappDmeFailure() {
+        Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
+                            .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
+        when(acmDeployer.deprimeRapp(any())).thenReturn(true);
+        when(dmeDeployer.deprimeRapp(any())).thenReturn(false);
+        assertEquals(HttpStatus.OK, rappService.deprimeRapp(rapp).getStatusCode());
+        assertEquals(RappState.PRIMED, rapp.getState());
     }
 
     @Test
@@ -91,14 +121,16 @@ class RappServiceTest {
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
         assertEquals(HttpStatus.BAD_REQUEST, rappService.deprimeRapp(rapp).getStatusCode());
+        assertEquals(RappState.COMMISSIONED, rapp.getState());
     }
 
     @Test
     void testDeprimeRappActiveInstances() {
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
-                            .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED)
+                            .packageLocation(validCsarFileLocation).state(RappState.PRIMED)
                             .rappInstances(Map.of(UUID.randomUUID(), new RappInstance())).build();
         assertEquals(HttpStatus.BAD_REQUEST, rappService.deprimeRapp(rapp).getStatusCode());
+        assertEquals(RappState.PRIMED, rapp.getState());
     }
 
     @Test
@@ -109,6 +141,7 @@ class RappServiceTest {
         rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
         when(acmDeployer.deployRappInstance(any(), any())).thenReturn(true);
         when(smeDeployer.deployRappInstance(any(), any())).thenReturn(true);
+        when(dmeDeployer.deployRappInstance(any(), any())).thenReturn(true);
         assertEquals(HttpStatus.ACCEPTED, rappService.deployRappInstance(rapp, rappInstance).getStatusCode());
     }
 
@@ -120,6 +153,19 @@ class RappServiceTest {
         rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
         when(acmDeployer.deployRappInstance(any(), any())).thenReturn(true);
         when(smeDeployer.deployRappInstance(any(), any())).thenReturn(false);
+        when(dmeDeployer.deployRappInstance(any(), any())).thenReturn(true);
+        assertEquals(HttpStatus.BAD_GATEWAY, rappService.deployRappInstance(rapp, rappInstance).getStatusCode());
+    }
+
+    @Test
+    void testDeployRappInstanceDmeFailure() {
+        Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
+                            .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
+        RappInstance rappInstance = new RappInstance();
+        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
+        when(acmDeployer.deployRappInstance(any(), any())).thenReturn(true);
+        when(smeDeployer.deployRappInstance(any(), any())).thenReturn(true);
+        when(dmeDeployer.deployRappInstance(any(), any())).thenReturn(false);
         assertEquals(HttpStatus.BAD_GATEWAY, rappService.deployRappInstance(rapp, rappInstance).getStatusCode());
     }
 
@@ -132,6 +178,7 @@ class RappServiceTest {
         rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
         when(acmDeployer.undeployRappInstance(any(), any())).thenReturn(true);
         when(smeDeployer.undeployRappInstance(any(), any())).thenReturn(true);
+        when(dmeDeployer.undeployRappInstance(any(), any())).thenReturn(true);
         assertEquals(HttpStatus.ACCEPTED, rappService.undeployRappInstance(rapp, rappInstance).getStatusCode());
     }
 
@@ -144,6 +191,20 @@ class RappServiceTest {
         rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
         when(acmDeployer.undeployRappInstance(any(), any())).thenReturn(true);
         when(smeDeployer.undeployRappInstance(any(), any())).thenReturn(false);
+        when(dmeDeployer.undeployRappInstance(any(), any())).thenReturn(true);
+        assertEquals(HttpStatus.BAD_GATEWAY, rappService.undeployRappInstance(rapp, rappInstance).getStatusCode());
+    }
+
+    @Test
+    void testUndeployRappInstanceDmeFailure() {
+        Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
+                            .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
+        RappInstance rappInstance = new RappInstance();
+        rappInstance.setState(RappInstanceState.DEPLOYED);
+        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
+        when(acmDeployer.undeployRappInstance(any(), any())).thenReturn(true);
+        when(smeDeployer.undeployRappInstance(any(), any())).thenReturn(true);
+        when(dmeDeployer.undeployRappInstance(any(), any())).thenReturn(false);
         assertEquals(HttpStatus.BAD_GATEWAY, rappService.undeployRappInstance(rapp, rappInstance).getStatusCode());
     }
 
@@ -156,6 +217,7 @@ class RappServiceTest {
         rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
         when(acmDeployer.undeployRappInstance(any(), any())).thenReturn(true);
         when(smeDeployer.undeployRappInstance(any(), any())).thenReturn(false);
+        when(dmeDeployer.undeployRappInstance(any(), any())).thenReturn(true);
         assertEquals(HttpStatus.BAD_REQUEST, rappService.undeployRappInstance(rapp, rappInstance).getStatusCode());
     }
 }
