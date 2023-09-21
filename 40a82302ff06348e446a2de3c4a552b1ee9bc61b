@@ -60,6 +60,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bb33ce0e_a791d3c8",
+        "filename": "rapp-manager-application/src/main/resources/application.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2023-09-21T09:33:10Z",
+      "side": 1,
+      "message": "It doesn\u0027t. Planning to remove the retry for SME as the response from SME/DME are instant.",
+      "parentUuid": "791e0836_e1378d7a",
+      "range": {
+        "startLine": 16,
+        "startChar": 2,
+        "endLine": 16,
+        "endChar": 5
+      },
+      "revId": "40a82302ff06348e446a2de3c4a552b1ee9bc61b",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7c9bce35_75def98f",
         "filename": "rapp-manager-application/src/main/resources/application.yaml",
         "patchSetId": 1
@@ -71,6 +95,30 @@
       "writtenOn": "2023-09-21T09:23:10Z",
       "side": 1,
       "message": "NB: Do we need this as \u0027DEBUG\u0027 for prod? same for line 22 and 24",
+      "range": {
+        "startLine": 23,
+        "startChar": 21,
+        "endLine": 23,
+        "endChar": 26
+      },
+      "revId": "40a82302ff06348e446a2de3c4a552b1ee9bc61b",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ccd99c35_d7011692",
+        "filename": "rapp-manager-application/src/main/resources/application.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2023-09-21T09:33:10Z",
+      "side": 1,
+      "message": "It doesn\u0027t needs to be DEBUG in production. This file can be configured when writing helm for production.",
+      "parentUuid": "7c9bce35_75def98f",
       "range": {
         "startLine": 23,
         "startChar": 21,
@@ -106,6 +154,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "be7f1df1_2381c161",
+        "filename": "rapp-manager-application/src/main/resources/resource-csar/Files/Acm/instances/k8s-instance.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2023-09-21T09:33:10Z",
+      "side": 1,
+      "message": "This is an example input file. In real time these files will be provided by the API user as an input to this application.",
+      "parentUuid": "dbd58e7a_a7d7909c",
+      "range": {
+        "startLine": 25,
+        "startChar": 31,
+        "endLine": 25,
+        "endChar": 42
+      },
+      "revId": "40a82302ff06348e446a2de3c4a552b1ee9bc61b",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f9decb89_85c52821",
         "filename": "rapp-manager-application/src/test/java/com/oransc/rappmanager/service/RappServiceTest.java",
         "patchSetId": 1
@@ -117,6 +189,30 @@
       "writtenOn": "2023-09-21T09:23:10Z",
       "side": 1,
       "message": "NB: Is this call primed in both acmDeployer and dmeDeployer?",
+      "range": {
+        "startLine": 58,
+        "startChar": 36,
+        "endLine": 58,
+        "endChar": 63
+      },
+      "revId": "40a82302ff06348e446a2de3c4a552b1ee9bc61b",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "52b3944b_ca60105b",
+        "filename": "rapp-manager-application/src/test/java/com/oransc/rappmanager/service/RappServiceTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2023-09-21T09:33:10Z",
+      "side": 1,
+      "message": "Yes it does.",
+      "parentUuid": "f9decb89_85c52821",
       "range": {
         "startLine": 58,
         "startChar": 36,
