@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "971dca23_538650f4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2023-09-22T12:11:43Z",
+      "side": 1,
+      "message": "Looks good. \nHowever, personally I don\u0027t like to add .ppt files to gerrit.",
+      "revId": "29e505b1658ba997d26b5512e0048c584214f1cd",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
