@@ -9,6 +9,7 @@ participant "A1PMS Participant"
 participant "Kserve Participant"
 participant "K8s Participant"
 participant "CAPIF"
+participant "ICS"
 
 autonumber
 group Create rApp Instance
@@ -32,9 +33,17 @@ group Deploy rApp Instance
     end
 
     group SME Deploy
-    "rApp Manager"->"CAPIF": Create CAPIF entities
-    "CAPIF"->"CAPIF": Create the entities as provided
-    "rApp Manager"<-"CAPIF": Response of CAPIF entities creation
+        "rApp Manager"->"CAPIF": Create CAPIF entities
+        "CAPIF"->"CAPIF": Create the entities as provided
+        "rApp Manager"<-"CAPIF": Response of CAPIF entities creation
+    end
+    group DME Deploy
+        "rApp Manager"->"ICS": Create Info types for producer and consumer
+        "rApp Manager"<--"ICS": Response
+        "rApp Manager"->"ICS": Create Info producer
+        "rApp Manager"<--"ICS": Response
+        "rApp Manager"->"ICS": Create Info consumer
+        "rApp Manager"<--"ICS": Response
     end
 "API User"<-"rApp Manager": Deploy rApp Instance Status
 end
@@ -57,9 +66,15 @@ group Undeploy rApp Instance
     end
 
     group SME Undeploy
-    "rApp Manager"->"CAPIF": Delete CAPIF entities
-    "CAPIF"->"CAPIF": Delete the entities as provided
-    "rApp Manager"<-"CAPIF": Response of CAPIF entities Deletion
+        "rApp Manager"->"CAPIF": Delete CAPIF entities
+        "CAPIF"->"CAPIF": Delete the entities as provided
+        "rApp Manager"<-"CAPIF": Response of CAPIF entities Deletion
+    end
+    group DME Undeploy
+        "rApp Manager"->"ICS": Delete Info consumer
+        "rApp Manager"<-"ICS": Response
+        "rApp Manager"->"ICS": Delete Info producer
+        "rApp Manager"<-"ICS": Response
     end
 "API User"<-"rApp Manager": Undeploy rApp Instance Status
 end

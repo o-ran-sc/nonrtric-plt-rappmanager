@@ -7,17 +7,25 @@ rApp manager is an application which lifecycle manages the rApp.
 
 ![Image](docs/images/architecture.png "Rapp Manager Architecture")
 
+### rApp Package (<mark>**It is a prototype**</mark>)
+
+![Image](docs/images/rApp-package.png "Rapp package")
+
 ### rApp States
 
-![Image](docs/images/rapp-states.png "Rapp States")
+![Image](docs/images/rApp-states.png "Rapp States")
 
 ### rApp Instance States
 
-![Image](docs/images/rapp-instance-states.png "Rapp Instance States")
+![Image](docs/images/rApp-instance-states.png "Rapp Instance States")
 
 ### Events responsible for rApp Instance State Transition
 
-![Image](docs/images/rapp-state-events.png "Rapp Manager State Events")
+![Image](docs/images/rApp-state-events.png "Rapp Manager State Events")
+
+### rApp Entity Relationship
+
+![Image](docs/images/rApp-entity-relationship.png "Rapp Entity Relationship")
 
 ## Integrations
 
@@ -32,6 +40,10 @@ ONAP ACM related details can be found [here](https://docs.onap.org/projects/onap
 
 This integration is based on the CAPIF function developed as part of O-RAN SC. It is available [here](https://github.com/o-ran-sc/nonrtric-plt-sme/blob/master/capifcore/README.md)
 
+### Integration of DME (ICS)
+
+This integration is based on the ICS as part of O-RAN SC NONRTRIC. It is available [here](https://docs.o-ran-sc.org/projects/o-ran-sc-nonrtric/en/latest/overview.html#information-coordination-service)
+
 ## Flow Diagrams
 
 ### Application Lifecycle
@@ -40,11 +52,11 @@ This integration is based on the CAPIF function developed as part of O-RAN SC. I
 
 ### rApp Flow
 
-![Image](docs/images/rapp-flow.png "Rapp Flow")
+![Image](docs/images/rApp-flow.png "Rapp Flow")
 
 ### rApp Instance Flow
 
-![Image](docs/images/rapp-instance-flow.png "Rapp Instance Flow")
+![Image](docs/images/rApp-instance-flow.png "Rapp Instance Flow")
 
 
 ## Maven Build
