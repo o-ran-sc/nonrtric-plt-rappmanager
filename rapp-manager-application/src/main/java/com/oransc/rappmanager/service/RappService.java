@@ -20,6 +20,7 @@ package com.oransc.rappmanager.service;
 
 import com.oransc.rappmanager.acm.service.AcmDeployer;
 import com.oransc.rappmanager.dme.service.DmeDeployer;
+import com.oransc.rappmanager.models.cache.RappCacheService;
 import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappEvent;
 import com.oransc.rappmanager.models.rapp.RappState;
@@ -40,6 +41,7 @@ public class RappService {
     private final SmeDeployer smeDeployer;
     private final DmeDeployer dmeDeployer;
     private final RappInstanceStateMachine rappInstanceStateMachine;
+    private final RappCacheService rappCacheService;
     private static final String STATE_TRANSITION_NOT_PERMITTED = "State transition from %s to %s is not permitted.";
 
     public ResponseEntity<String> primeRapp(Rapp rapp) {
@@ -74,6 +76,21 @@ public class RappService {
                 return ResponseEntity.badRequest()
                                .body(String.format(STATE_TRANSITION_NOT_PERMITTED, RappState.COMMISSIONED.name(),
                                        rapp.getState().name()));
+            }
+        }
+    }
+
+    public ResponseEntity<String> deleteRapp(Rapp rApp) {
+        if (rApp.getRappInstances().isEmpty() && rApp.getState().equals(RappState.COMMISSIONED)) {
+            rappCacheService.deleteRapp(rApp);
+            return ResponseEntity.ok().build();
+        } else {
+            if (!rApp.getRappInstances().isEmpty()) {
+                return ResponseEntity.badRequest()
+                               .body("Unable to delete '" + rApp.getName() + "' as there are active rApp instances.");
+            } else {
+                return ResponseEntity.badRequest().body("Unable to delete '" + rApp.getName()
+                                                                + "' as the rApp is not in COMMISSIONED state.");
             }
         }
     }

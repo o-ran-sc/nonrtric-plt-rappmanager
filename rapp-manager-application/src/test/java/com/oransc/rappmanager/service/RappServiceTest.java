@@ -21,6 +21,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -75,6 +76,7 @@ class RappServiceTest {
         assertEquals(HttpStatus.OK, rappService.primeRapp(rapp).getStatusCode());
         assertEquals(RappState.COMMISSIONED, rapp.getState());
     }
+
     @Test
     void testPrimeRappDmeFailure() {
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
@@ -170,6 +172,20 @@ class RappServiceTest {
     }
 
     @Test
+    void testDeployRappInstanceFailureWithState() {
+        Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
+                            .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
+        RappInstance rappInstance = new RappInstance();
+        RappInstanceState rappInstanceState = RappInstanceState.DEPLOYED;
+        rappInstance.setState(rappInstanceState);
+        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
+        ResponseEntity<String> responseEntity = rappService.deployRappInstance(rapp, rappInstance);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals("State transition from " + rappInstanceState + " to DEPLOYED is not permitted.",
+                responseEntity.getBody());
+    }
+
+    @Test
     void testUndeployRappInstance() {
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
@@ -219,5 +235,38 @@ class RappServiceTest {
         when(smeDeployer.undeployRappInstance(any(), any())).thenReturn(false);
         when(dmeDeployer.undeployRappInstance(any(), any())).thenReturn(true);
         assertEquals(HttpStatus.BAD_REQUEST, rappService.undeployRappInstance(rapp, rappInstance).getStatusCode());
+    }
+
+    @Test
+    void testDeleteRappSuccess() {
+        Rapp rApp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
+                            .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
+        assertEquals(HttpStatus.OK, rappService.deleteRapp(rApp).getStatusCode());
+    }
+
+    @Test
+    void testDeleteRappFailureWithState() {
+        String rAppName = "rAppInPrimed";
+        Rapp rApp = Rapp.builder().rappId(UUID.randomUUID()).name(rAppName).packageName(validRappFile)
+                            .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
+        ResponseEntity<String> responseEntity = rappService.deleteRapp(rApp);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals("Unable to delete '" + rAppName + "' as the rApp is not in COMMISSIONED state.",
+                responseEntity.getBody());
+    }
+
+    @Test
+    void testDeleteRappFailureWithInstances() {
+        String rAppName = "rAppWithInstances";
+        Rapp rApp = Rapp.builder().rappId(UUID.randomUUID()).name(rAppName).packageName(validRappFile)
+                            .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
+        RappInstance rappInstance = new RappInstance();
+        rappInstance.setState(RappInstanceState.DEPLOYED);
+        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
+        rApp.setRappInstances(Map.of(rappInstance.getRappInstanceId(), rappInstance));
+        ResponseEntity<String> responseEntity = rappService.deleteRapp(rApp);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals("Unable to delete '" + rAppName + "' as there are active rApp instances.",
+                responseEntity.getBody());
     }
 }

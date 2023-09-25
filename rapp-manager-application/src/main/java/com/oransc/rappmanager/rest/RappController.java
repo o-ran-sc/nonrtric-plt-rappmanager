@@ -108,14 +108,10 @@ public class RappController {
     }
 
     @DeleteMapping("{rapp_id}")
-    public ResponseEntity<Object> deleteRapp(@PathVariable("rapp_id") String rappId) {
+    public ResponseEntity<String> deleteRapp(@PathVariable("rapp_id") String rappId) {
         // @formatter:off
         return rappCacheService.getRapp(rappId)
-               .filter(rapp -> rapp.getRappInstances().isEmpty() && rapp.getState().equals(RappState.COMMISSIONED))
-               .map(rapp -> {
-                   rappCacheService.deleteRapp(rapp);
-                   return ResponseEntity.ok().build();
-               })
+               .map(rappService::deleteRapp)
                .orElseThrow(() -> new RappHandlerException(HttpStatus.NOT_FOUND,
                        String.format(RAPP_NOT_FOUND, rappId)));
         // @formatter:on
