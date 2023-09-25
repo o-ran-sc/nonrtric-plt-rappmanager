@@ -33,14 +33,14 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oransc.rappmanager.acm.configuration.ACMConfiguration;
-import com.oransc.rappmanager.models.rapp.Rapp;
+import com.oransc.rappmanager.models.cache.RappCacheService;
 import com.oransc.rappmanager.models.csar.RappCsarConfigurationHandler;
+import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappEvent;
-import com.oransc.rappmanager.models.rappinstance.RappInstance;
 import com.oransc.rappmanager.models.rapp.RappResourceBuilder;
 import com.oransc.rappmanager.models.rapp.RappResources;
 import com.oransc.rappmanager.models.rapp.RappState;
-import com.oransc.rappmanager.models.cache.RappCacheService;
+import com.oransc.rappmanager.models.rappinstance.RappInstance;
 import com.oransc.rappmanager.models.statemachine.RappInstanceStateMachine;
 import com.oransc.rappmanager.models.statemachine.RappInstanceStateMachineConfig;
 import java.io.IOException;
@@ -347,6 +347,14 @@ class AcmDeployerTest {
 
         boolean deprimeRapp = acmDeployer.deprimeRapp(rapp);
         mockServer.verify();
+        assertFalse(deprimeRapp);
+    }
+
+    @Test
+    void testDeprimeExceptionRapp() {
+        Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
+                            .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
+        boolean deprimeRapp = acmDeployer.deprimeRapp(rapp);
         assertFalse(deprimeRapp);
     }
 

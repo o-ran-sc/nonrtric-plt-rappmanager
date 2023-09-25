@@ -80,8 +80,6 @@ class SmeDeployerTest {
     @Autowired
     RappInstanceStateMachine rappInstanceStateMachine;
     @Autowired
-    RappCacheService rappCacheService;
-    @Autowired
     ObjectMapper objectMapper;
     private final String validRappFile = "valid-rapp-package.csar";
     String URI_PROVIDER_REGISTRATIONS, URI_PROVIDER_REGISTRATION, URI_PUBLISH_APIS, URI_PUBLISH_API, URI_INVOKERS,
@@ -365,7 +363,7 @@ class SmeDeployerTest {
     }
 
     @Test
-    void testUndeployRappInstanceFailure() throws Exception {
+    void testUndeployRappInstanceFailure() {
         UUID rappId = UUID.randomUUID();
         UUID apfId = UUID.randomUUID();
         List<String> invokers = List.of(String.valueOf(UUID.randomUUID()), String.valueOf(UUID.randomUUID()));
