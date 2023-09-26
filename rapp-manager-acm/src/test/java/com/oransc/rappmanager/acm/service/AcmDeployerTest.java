@@ -170,18 +170,36 @@ class AcmDeployerTest {
     }
 
     @Test
-    void testDeployRappInstanceFailure() throws Exception {
+    void testDeployRappInstanceFailureWithNoInstanceId() throws JsonProcessingException {
         UUID compositionId = UUID.randomUUID();
         UUID rappId = UUID.randomUUID();
-        UUID instanceId = UUID.randomUUID();
         Rapp rapp = Rapp.builder().name(rappId.toString()).packageName(validRappFile).compositionId(compositionId)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
+        RappInstance rappInstance = rappResourceBuilder.getRappInstance();
+        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
         InstantiationResponse instantiationResponse = new InstantiationResponse();
-        instantiationResponse.setInstanceId(instanceId);
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_INSTANCES, compositionId)))
+                .andExpect(method(HttpMethod.POST)).andRespond(
+                        withStatus(HttpStatus.ACCEPTED).contentType(MediaType.APPLICATION_JSON)
+                                .body(objectMapper.writeValueAsString(instantiationResponse)));
+
+        boolean rappDeployStateActual = acmDeployer.deployRappInstance(rapp, rappInstance);
+        mockServer.verify();
+        assertFalse(rappDeployStateActual);
+    }
+
+    @Test
+    void testDeployRappInstanceFailure() {
+        UUID compositionId = UUID.randomUUID();
+        UUID rappId = UUID.randomUUID();
+        Rapp rapp = Rapp.builder().name(rappId.toString()).packageName(validRappFile).compositionId(compositionId)
+                            .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
+        RappInstance rappInstance = rappResourceBuilder.getRappInstance();
+        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
         mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_INSTANCES, compositionId)))
                 .andExpect(method(HttpMethod.POST)).andRespond(withStatus(HttpStatus.BAD_GATEWAY));
 
-        boolean rappDeployStateActual = acmDeployer.deployRappInstance(rapp, rappResourceBuilder.getRappInstance());
+        boolean rappDeployStateActual = acmDeployer.deployRappInstance(rapp, rappInstance);
         mockServer.verify();
         assertFalse(rappDeployStateActual);
     }
@@ -308,6 +326,23 @@ class AcmDeployerTest {
         mockServer.verify();
         assertFalse(primeRapp);
         assertEquals(RappState.COMMISSIONED, rapp.getState());
+    }
+
+    @Test
+    void testPrimeRappFailureWithoutCompositionId() throws JsonProcessingException {
+        UUID compositionId = UUID.randomUUID();
+        RappResources rappResources = rappResourceBuilder.getResources();
+        Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
+                            .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED)
+                            .compositionId(compositionId).rappResources(rappResources).build();
+
+        CommissioningResponse commissioningResponseExpected = new CommissioningResponse();
+        mockServer.expect(ExpectedCount.once(), requestTo(URI_ACM_COMPOSITIONS)).andExpect(method(HttpMethod.POST))
+                .andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
+                                    .body(objectMapper.writeValueAsString(commissioningResponseExpected)));
+        boolean primeRapp = acmDeployer.primeRapp(rapp);
+        mockServer.verify();
+        assertFalse(primeRapp);
     }
 
     @Test

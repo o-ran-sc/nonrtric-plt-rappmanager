@@ -101,6 +101,7 @@ public class RappService {
 
     public ResponseEntity<String> deployRappInstance(Rapp rapp, RappInstance rappInstance) {
         if (rappInstance.getState().equals(RappInstanceState.UNDEPLOYED)) {
+            rappInstance.setReason(null);
             rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.DEPLOYING);
             if (acmDeployer.deployRappInstance(rapp, rappInstance) && smeDeployer.deployRappInstance(rapp, rappInstance)
                         && dmeDeployer.deployRappInstance(rapp, rappInstance)) {
@@ -116,6 +117,7 @@ public class RappService {
 
     public ResponseEntity<String> undeployRappInstance(Rapp rapp, RappInstance rappInstance) {
         if (rappInstance.getState().equals(RappInstanceState.DEPLOYED)) {
+            rappInstance.setReason(null);
             rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.UNDEPLOYING);
             if (acmDeployer.undeployRappInstance(rapp, rappInstance) && smeDeployer.undeployRappInstance(rapp,
                     rappInstance) && dmeDeployer.undeployRappInstance(rapp, rappInstance)) {

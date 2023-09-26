@@ -96,12 +96,15 @@ public class SmeDeployer implements RappDeployer {
             if (deployState) {
                 rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.SMEDEPLOYED);
             } else {
+                rappInstance.setReason("Unable to deploy SME");
                 rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.SMEDEPLOYFAILED);
             }
             return deployState;
         } catch (JsonProcessingException e) {
+            rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.SMEDEPLOYFAILED);
             logger.warn("Failed to deploy SME functions for Rapp {}", rapp.getName(), e);
         }
+        rappInstance.setReason("Unable to deploy SME");
         return false;
     }
 
@@ -116,8 +119,10 @@ public class SmeDeployer implements RappDeployer {
             rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.SMEUNDEPLOYED);
             return true;
         } catch (Exception e) {
+            rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.SMEUNDEPLOYFAILED);
             logger.warn("Failed to Undeploy SME functions for Rapp {}", rapp.getName(), e);
         }
+        rappInstance.setReason("Unable to undeploy SME");
         return false;
     }
 
