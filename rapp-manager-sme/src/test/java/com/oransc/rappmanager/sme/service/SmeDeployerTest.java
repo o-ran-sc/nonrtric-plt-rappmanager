@@ -391,6 +391,7 @@ class SmeDeployerTest {
         rappInstance.getSme().setProviderFunctionIds(providerFuncs.values().stream().toList());
         rappInstance.getSme().setServiceApiIds(serviceApis);
         rappInstance.getSme().setInvokerIds(invokers);
+        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
         boolean undeployRapp = smeDeployer.undeployRappInstance(rapp, rappInstance);
         mockServer.verify();
         assertFalse(undeployRapp);

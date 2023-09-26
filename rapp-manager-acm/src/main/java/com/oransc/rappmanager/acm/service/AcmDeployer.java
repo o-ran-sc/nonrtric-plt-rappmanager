@@ -139,6 +139,8 @@ public class AcmDeployer implements RappDeployer {
         } catch (Exception e) {
             logger.warn("Error in deploying Rapp", e);
         }
+        rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.ACMDEPLOYFAILED);
+        rappInstance.setReason("Unable to deploy ACM");
         return false;
     }
 
@@ -158,6 +160,8 @@ public class AcmDeployer implements RappDeployer {
                 return true;
             }
         }
+        rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.ACMUNDEPLOYFAILED);
+        rappInstance.setReason("Unable to undeploy ACM");
         return false;
     }
 
@@ -191,7 +195,7 @@ public class AcmDeployer implements RappDeployer {
                 return true;
             }
         } catch (Exception e) {
-            logger.error("Failed deprime automation composition", e);
+            logger.warn("Failed deprime automation composition", e);
         }
         rapp.setReason("Unable to delete automation composition");
         return false;

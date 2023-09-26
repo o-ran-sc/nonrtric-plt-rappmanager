@@ -80,6 +80,7 @@ public class DmeDeployer implements RappDeployer {
         if (deployState) {
             rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.DMEDEPLOYED);
         } else {
+            rappInstance.setReason("Unable to deploy DME");
             rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.DMEDEPLOYFAILED);
         }
         return deployState;
@@ -98,6 +99,7 @@ public class DmeDeployer implements RappDeployer {
         if (undeployState) {
             rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.DMEUNDEPLOYED);
         } else {
+            rappInstance.setReason("Unable to undeploy DME");
             rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.DMEUNDEPLOYFAILED);
         }
         return undeployState;

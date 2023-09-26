@@ -26,6 +26,7 @@ public class RappInstance {
 
     UUID rappInstanceId = UUID.randomUUID();
     RappInstanceState state = RappInstanceState.UNDEPLOYED;
+    String reason;
     RappACMInstance acm;
     RappSMEInstance sme;
     RappDMEInstance dme;
