@@ -34,6 +34,7 @@ public class Rapp {
     UUID rappId = UUID.randomUUID();
     String name;
     RappState state;
+    String reason;
     String packageLocation;
     String packageName;
     RappResources rappResources;
@@ -41,5 +42,4 @@ public class Rapp {
     Map<UUID, RappInstance> rappInstances = new HashMap<>();
 
     UUID compositionId;
-    Boolean isDmeValid;
 }

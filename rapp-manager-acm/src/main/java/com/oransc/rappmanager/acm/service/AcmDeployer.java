@@ -173,11 +173,12 @@ public class AcmDeployer implements RappDeployer {
                 primeACMComposition(commissioningResponse.getCompositionId(), PrimeOrder.PRIME);
                 return true;
             } else {
-                logger.error("Failed to create automation composition");
+                logger.warn("Failed to create automation composition");
             }
         } catch (Exception e) {
-            logger.error("Failed to create automation composition", e);
+            logger.warn("Error in creating automation composition", e);
         }
+        rapp.setReason("Unable to create automation composition");
         return false;
     }
 
@@ -192,6 +193,7 @@ public class AcmDeployer implements RappDeployer {
         } catch (Exception e) {
             logger.error("Failed deprime automation composition", e);
         }
+        rapp.setReason("Unable to delete automation composition");
         return false;
     }
 

@@ -18,8 +18,8 @@
 
 package com.oransc.rappmanager.dme.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
@@ -51,6 +51,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -103,7 +104,8 @@ class DmeDeployerTest {
 
     @ParameterizedTest
     @MethodSource("getSuccessParamsWithUnavailableInfoTypes")
-    void testPrimeRappSuccessWithUnavailableInfoType(String rappFile, boolean result) throws JsonProcessingException {
+    void testPrimeRappSuccessWithUnavailableInfoType(String rappFile, boolean isSuccess)
+            throws JsonProcessingException {
         RappResources rappResources = rappDmeResourceBuilder.getResources();
         Rapp rapp = getRapp(Optional.empty());
         rapp.setPackageName(rappFile);
@@ -116,7 +118,11 @@ class DmeDeployerTest {
         if (rappFile.equals(validRappFileNewInfoType)) {
             mockServer.verify();
         }
-        assertEquals(rapp.getIsDmeValid(), result);
+        if (isSuccess) {
+            assertNull(rapp.getReason());
+        } else {
+            assertNotNull(rapp.getReason());
+        }
     }
 
     private static Stream<Arguments> getSuccessParamsWithUnavailableInfoTypes() {
@@ -124,8 +130,8 @@ class DmeDeployerTest {
     }
 
     @ParameterizedTest
-    @MethodSource("getSuccessParamsWithAvailableInfoTypes")
-    void testPrimeRappSuccessWithValidInfoType(String rappFile, boolean result) throws JsonProcessingException {
+    @ValueSource(strings = {validRappFile, validRappFileNewInfoType})
+    void testPrimeRappSuccessWithValidInfoType(String rappFile) throws JsonProcessingException {
         RappResources rappResources = rappDmeResourceBuilder.getResources();
         Rapp rapp = getRapp(Optional.empty());
         rapp.setPackageName(rappFile);
@@ -138,11 +144,7 @@ class DmeDeployerTest {
         if (rappFile.equals(validRappFileNewInfoType)) {
             mockServer.verify();
         }
-        assertEquals(rapp.getIsDmeValid(), result);
-    }
-
-    private static Stream<Arguments> getSuccessParamsWithAvailableInfoTypes() {
-        return Stream.of(Arguments.of(validRappFile, true), Arguments.of(validRappFileNewInfoType, true));
+        assertNull(rapp.getReason());
     }
 
     @Test
@@ -156,15 +158,14 @@ class DmeDeployerTest {
         Rapp rapp = getRapp(Optional.empty());
         rapp.setRappResources(rappResources);
         assertFalse(dmeDeployer.primeRapp(rapp));
-        assertFalse(rapp.getIsDmeValid());
+        assertFalse(rapp.getReason().isEmpty());
     }
 
     @Test
     void testDeprimeRapp() {
         Rapp rapp = getRapp(Optional.empty());
-        rapp.setIsDmeValid(true);
         assertTrue(dmeDeployer.deprimeRapp(rapp));
-        assertNull(rapp.getIsDmeValid());
+        assertNull(rapp.getReason());
     }
 
     @Test

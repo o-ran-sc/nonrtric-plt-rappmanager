@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oransc.rappmanager.acm.service.AcmDeployer;
+import com.oransc.rappmanager.dme.service.DmeDeployer;
 import com.oransc.rappmanager.models.cache.RappCacheService;
 import com.oransc.rappmanager.models.rapp.PrimeOrder;
 import com.oransc.rappmanager.models.rapp.Rapp;
@@ -42,6 +43,9 @@ class RappControllerTest {
 
     @MockBean
     AcmDeployer acmDeployer;
+
+    @MockBean
+    DmeDeployer dmeDeployer;
 
     @MockBean
     SmeLifecycleManager smeLifecycleManager;
@@ -109,6 +113,7 @@ class RappControllerTest {
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
         rappCacheService.putRapp(rapp);
         when(acmDeployer.primeRapp(any())).thenReturn(true);
+        when(dmeDeployer.primeRapp(any())).thenReturn(true);
         RappPrimeOrder rappPrimeOrder = new RappPrimeOrder();
         rappPrimeOrder.setPrimeOrder(PrimeOrder.PRIME);
         mockMvc.perform(MockMvcRequestBuilders.put("/rapps/{rapp_id}", rappId).contentType(MediaType.APPLICATION_JSON)
@@ -133,6 +138,7 @@ class RappControllerTest {
                             .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
         rappCacheService.putRapp(rapp);
         when(acmDeployer.deprimeRapp(any())).thenReturn(true);
+        when(dmeDeployer.deprimeRapp(any())).thenReturn(true);
         RappPrimeOrder rappPrimeOrder = new RappPrimeOrder();
         rappPrimeOrder.setPrimeOrder(PrimeOrder.DEPRIME);
         mockMvc.perform(MockMvcRequestBuilders.put("/rapps/{rapp_id}", rappId).contentType(MediaType.APPLICATION_JSON)

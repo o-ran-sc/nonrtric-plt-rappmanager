@@ -47,12 +47,14 @@ public class RappService {
     public ResponseEntity<String> primeRapp(Rapp rapp) {
         if (rapp.getState().equals(RappState.COMMISSIONED)) {
             rapp.setState(RappState.PRIMING);
+            rapp.setReason(null);
             if (acmDeployer.primeRapp(rapp) && dmeDeployer.primeRapp(rapp)) {
                 rapp.setState(RappState.PRIMED);
+                return ResponseEntity.ok().build();
             } else {
                 rapp.setState(RappState.COMMISSIONED);
+                return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
             }
-            return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest()
                            .body(String.format(STATE_TRANSITION_NOT_PERMITTED, RappState.PRIMED.name(),
@@ -63,12 +65,14 @@ public class RappService {
     public ResponseEntity<String> deprimeRapp(Rapp rapp) {
         if (rapp.getState().equals(RappState.PRIMED) && rapp.getRappInstances().isEmpty()) {
             rapp.setState(RappState.DEPRIMING);
+            rapp.setReason(null);
             if (acmDeployer.deprimeRapp(rapp) && dmeDeployer.deprimeRapp(rapp)) {
                 rapp.setState(RappState.COMMISSIONED);
+                return ResponseEntity.ok().build();
             } else {
                 rapp.setState(RappState.PRIMED);
+                return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
             }
-            return ResponseEntity.ok().build();
         } else {
             if (!rapp.getRappInstances().isEmpty()) {
                 return ResponseEntity.badRequest().body("Unable to deprime as there are active rapp instances,");

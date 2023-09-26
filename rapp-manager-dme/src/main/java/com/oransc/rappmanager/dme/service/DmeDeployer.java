@@ -127,19 +127,14 @@ public class DmeDeployer implements RappDeployer {
                 allInfoTypes.addAll(dataProducerRegistrationApiClient.getInfoTypdentifiers());
                 requiredInfoTypes.removeAll(allInfoTypes);
                 if (!requiredInfoTypes.isEmpty()) {
-                    logger.info("Invalid rapp package as the following info types cannot be found {}",
-                            requiredInfoTypes);
-                    rapp.setIsDmeValid(false);
-                } else {
-                    rapp.setIsDmeValid(true);
+                    rapp.setReason(String.format("Invalid rapp package as the following info types cannot be found %s",
+                                    requiredInfoTypes));
                 }
-            } else {
-                rapp.setIsDmeValid(true);
             }
             return true;
         } catch (Exception e) {
             logger.warn("Failed to prime DME", e);
-            rapp.setIsDmeValid(false);
+            rapp.setReason("Failed to prime DME");
             return false;
         }
     }
@@ -147,7 +142,6 @@ public class DmeDeployer implements RappDeployer {
     @Override
     public boolean deprimeRapp(Rapp rapp) {
         logger.debug("Depriming DME functions for rApp {}", rapp.getRappId());
-        rapp.setIsDmeValid(null);
         return true;
     }
 

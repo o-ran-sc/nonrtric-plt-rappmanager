@@ -16,7 +16,6 @@ class RappCacheServiceTest {
     @Autowired
     RappCacheService rappCacheService;
 
-
     @Test
     void testPutRapp() {
         UUID rappId = UUID.randomUUID();

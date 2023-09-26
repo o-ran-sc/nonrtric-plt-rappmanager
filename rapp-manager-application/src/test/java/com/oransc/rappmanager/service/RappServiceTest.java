@@ -73,7 +73,7 @@ class RappServiceTest {
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
         when(acmDeployer.primeRapp(any())).thenReturn(false);
         when(dmeDeployer.primeRapp(any())).thenReturn(true);
-        assertEquals(HttpStatus.OK, rappService.primeRapp(rapp).getStatusCode());
+        assertEquals(HttpStatus.BAD_GATEWAY, rappService.primeRapp(rapp).getStatusCode());
         assertEquals(RappState.COMMISSIONED, rapp.getState());
     }
 
@@ -83,7 +83,7 @@ class RappServiceTest {
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
         when(acmDeployer.primeRapp(any())).thenReturn(true);
         when(dmeDeployer.primeRapp(any())).thenReturn(false);
-        assertEquals(HttpStatus.OK, rappService.primeRapp(rapp).getStatusCode());
+        assertEquals(HttpStatus.BAD_GATEWAY, rappService.primeRapp(rapp).getStatusCode());
         assertEquals(RappState.COMMISSIONED, rapp.getState());
     }
 
@@ -104,7 +104,7 @@ class RappServiceTest {
                             .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
         when(acmDeployer.deprimeRapp(any())).thenReturn(false);
         when(dmeDeployer.deprimeRapp(any())).thenReturn(true);
-        assertEquals(HttpStatus.OK, rappService.deprimeRapp(rapp).getStatusCode());
+        assertEquals(HttpStatus.BAD_GATEWAY, rappService.deprimeRapp(rapp).getStatusCode());
         assertEquals(RappState.PRIMED, rapp.getState());
     }
 
@@ -114,7 +114,7 @@ class RappServiceTest {
                             .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
         when(acmDeployer.deprimeRapp(any())).thenReturn(true);
         when(dmeDeployer.deprimeRapp(any())).thenReturn(false);
-        assertEquals(HttpStatus.OK, rappService.deprimeRapp(rapp).getStatusCode());
+        assertEquals(HttpStatus.BAD_GATEWAY, rappService.deprimeRapp(rapp).getStatusCode());
         assertEquals(RappState.PRIMED, rapp.getState());
     }
 
