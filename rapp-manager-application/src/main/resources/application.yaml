@@ -16,6 +16,10 @@ rappmanager:
   dme:
     baseurl: http://localhost:63475 #http://10.101.3.22:61761
 
+spring:
+  jackson:
+    default-property-inclusion: non_null
+
 logging:
   level:
     root: INFO
