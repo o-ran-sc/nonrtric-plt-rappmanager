@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "afc1d111_5c49b5b1",
+        "filename": "rapp-manager-acm/src/main/java/com/oransc/rappmanager/acm/service/AcmDeployer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1002243
+      },
+      "writtenOn": "2023-09-27T13:55:11Z",
+      "side": 1,
+      "message": "Do we need an else after a return statement? https://eslint.org/docs/latest/rules/no-else-return",
+      "revId": "52bfd9fbf736944168c47e153f32350994a8f39e",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
