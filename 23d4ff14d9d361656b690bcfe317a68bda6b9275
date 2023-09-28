@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9090be82_4115bec1",
+        "filename": "rapp-manager-application/src/main/java/com/oransc/rappmanager/service/RappService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1002202
+      },
+      "writtenOn": "2023-09-28T16:18:25Z",
+      "side": 1,
+      "message": "Trivial: Please declare this String as final static.",
+      "range": {
+        "startLine": 142,
+        "startChar": 8,
+        "endLine": 143,
+        "endChar": 117
+      },
+      "revId": "23d4ff14d9d361656b690bcfe317a68bda6b9275",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
