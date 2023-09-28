@@ -21,6 +21,7 @@ package com.oransc.rappmanager.service;
 import com.oransc.rappmanager.acm.service.AcmDeployer;
 import com.oransc.rappmanager.dme.service.DmeDeployer;
 import com.oransc.rappmanager.models.cache.RappCacheService;
+import com.oransc.rappmanager.models.exception.RappHandlerException;
 import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappEvent;
 import com.oransc.rappmanager.models.rapp.RappState;
@@ -28,6 +29,7 @@ import com.oransc.rappmanager.models.rappinstance.RappInstance;
 import com.oransc.rappmanager.models.rappinstance.RappInstanceState;
 import com.oransc.rappmanager.models.statemachine.RappInstanceStateMachine;
 import com.oransc.rappmanager.sme.service.SmeDeployer;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -129,6 +131,16 @@ public class RappService {
                            .body(String.format(STATE_TRANSITION_NOT_PERMITTED, rappInstance.getState().name(),
                                    RappInstanceState.UNDEPLOYED.name()));
         }
+    }
+
+    public ResponseEntity<Object> deleteRappInstance(Rapp rApp, UUID rappInstanceId) {
+        if (rApp.getRappInstances().get(rappInstanceId).getState().equals(RappInstanceState.UNDEPLOYED)) {
+            rappInstanceStateMachine.deleteRappInstance(rApp.getRappInstances().get(rappInstanceId));
+            rApp.getRappInstances().remove(rappInstanceId);
+            return ResponseEntity.noContent().build();
+        }
+        throw new RappHandlerException(HttpStatus.BAD_REQUEST,
+                String.format("Unable to delete rApp instance %s as it is not in UNDEPLOYED state", rappInstanceId));
     }
 
     public void updateRappInstanceState(Rapp rapp, RappInstance rappInstance) {

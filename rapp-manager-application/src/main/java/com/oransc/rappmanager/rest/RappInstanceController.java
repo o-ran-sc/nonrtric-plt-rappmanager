@@ -24,7 +24,6 @@ import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rappinstance.DeployOrder;
 import com.oransc.rappmanager.models.rappinstance.RappInstance;
 import com.oransc.rappmanager.models.rappinstance.RappInstanceDeployOrder;
-import com.oransc.rappmanager.models.rappinstance.RappInstanceState;
 import com.oransc.rappmanager.models.statemachine.RappInstanceStateMachine;
 import com.oransc.rappmanager.service.RappService;
 import java.util.Map;
@@ -80,7 +79,7 @@ public class RappInstanceController {
                            rappInstance.setState(rappInstanceStateMachine.getRappInstanceState(rappInstanceId));
                            return rappInstance;
                        }).map(ResponseEntity::ok).orElseThrow(() -> new RappHandlerException(HttpStatus.NOT_FOUND,
-                        String.format(RAPP_INSTANCE_NOT_FOUND, rappId)));
+                        String.format(RAPP_INSTANCE_NOT_FOUND, rappInstanceId)));
     }
 
     @PutMapping("{rapp_instance_id}")
@@ -103,18 +102,10 @@ public class RappInstanceController {
     @DeleteMapping("{rapp_instance_id}")
     public ResponseEntity<Object> deleteRappInstance(@PathVariable("rapp_id") String rappId,
             @PathVariable("rapp_instance_id") UUID rappInstanceId) {
-        return rappCacheService.getRapp(rappId).map(rapp -> Pair.of(rapp, rapp.getRappInstances()))
-                       .filter(rappPair -> rappPair.getRight().containsKey(rappInstanceId) && rappPair.getRight()
-                                                                                                      .get(rappInstanceId)
-                                                                                                      .getState()
-                                                                                                      .equals(RappInstanceState.UNDEPLOYED))
-                       .map(rappPair -> {
-                           rappInstanceStateMachine.deleteRappInstance(
-                                   rappPair.getLeft().getRappInstances().get(rappInstanceId));
-                           rappPair.getLeft().getRappInstances().remove(rappInstanceId);
-                           return ResponseEntity.noContent().build();
-                       }).orElseThrow(() -> new RappHandlerException(HttpStatus.NOT_FOUND,
-                        String.format(RAPP_INSTANCE_NOT_FOUND, rappId)));
+        return rappCacheService.getRapp(rappId).filter(rApp -> rApp.getRappInstances().containsKey(rappInstanceId))
+                       .map(rApp -> rappService.deleteRappInstance(rApp, rappInstanceId)).orElseThrow(
+                        () -> new RappHandlerException(HttpStatus.NOT_FOUND,
+                                String.format(RAPP_INSTANCE_NOT_FOUND, rappId)));
     }
 
 }

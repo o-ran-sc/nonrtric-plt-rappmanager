@@ -1,11 +1,13 @@
 package com.oransc.rappmanager.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import com.oransc.rappmanager.acm.service.AcmDeployer;
 import com.oransc.rappmanager.dme.service.DmeDeployer;
+import com.oransc.rappmanager.models.exception.RappHandlerException;
 import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappState;
 import com.oransc.rappmanager.models.rappinstance.RappInstance;
@@ -13,6 +15,7 @@ import com.oransc.rappmanager.models.rappinstance.RappInstanceState;
 import com.oransc.rappmanager.models.statemachine.RappInstanceStateMachine;
 import com.oransc.rappmanager.sme.service.SmeDeployer;
 import com.oransc.rappmanager.sme.service.SmeLifecycleManager;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -235,6 +238,34 @@ class RappServiceTest {
         when(smeDeployer.undeployRappInstance(any(), any())).thenReturn(false);
         when(dmeDeployer.undeployRappInstance(any(), any())).thenReturn(true);
         assertEquals(HttpStatus.BAD_REQUEST, rappService.undeployRappInstance(rapp, rappInstance).getStatusCode());
+    }
+
+    @Test
+    void testDeleteRappInstance() {
+        Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
+                            .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
+        RappInstance rappInstance = new RappInstance();
+        rappInstance.setState(RappInstanceState.UNDEPLOYED);
+        HashMap<UUID, RappInstance> rAppInstanceMap = new HashMap<>();
+        rAppInstanceMap.put(rappInstance.getRappInstanceId(), rappInstance);
+        rapp.setRappInstances(rAppInstanceMap);
+        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
+        assertEquals(HttpStatus.NO_CONTENT,
+                rappService.deleteRappInstance(rapp, rappInstance.getRappInstanceId()).getStatusCode());
+    }
+
+    @Test
+    void testDeleteRappInstanceFailure() {
+        Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
+                            .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
+        RappInstance rappInstance = new RappInstance();
+        rappInstance.setState(RappInstanceState.DEPLOYED);
+        HashMap<UUID, RappInstance> rAppInstanceMap = new HashMap<>();
+        rAppInstanceMap.put(rappInstance.getRappInstanceId(), rappInstance);
+        rapp.setRappInstances(rAppInstanceMap);
+        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
+        assertThrows(RappHandlerException.class,
+                () -> rappService.deleteRappInstance(rapp, rappInstance.getRappInstanceId()));
     }
 
     @Test
