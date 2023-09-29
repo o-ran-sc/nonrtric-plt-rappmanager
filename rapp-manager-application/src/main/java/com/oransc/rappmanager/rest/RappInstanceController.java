@@ -100,7 +100,7 @@ public class RappInstanceController {
     }
 
     @DeleteMapping("{rapp_instance_id}")
-    public ResponseEntity<Object> deleteRappInstance(@PathVariable("rapp_id") String rappId,
+    public ResponseEntity<String> deleteRappInstance(@PathVariable("rapp_id") String rappId,
             @PathVariable("rapp_instance_id") UUID rappInstanceId) {
         return rappCacheService.getRapp(rappId).filter(rApp -> rApp.getRappInstances().containsKey(rappInstanceId))
                        .map(rApp -> rappService.deleteRappInstance(rApp, rappInstanceId)).orElseThrow(

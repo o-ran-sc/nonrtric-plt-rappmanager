@@ -24,7 +24,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -52,6 +51,8 @@ class RappServiceTest {
 
     private final String validRappFile = "valid-rapp-package.csar";
 
+    private final String STATE_TRANSITION_NOT_PERMITTED = "State transition from %s to %s is not permitted.";
+
 
     @Test
     void testPrimeRapp() {
@@ -67,7 +68,12 @@ class RappServiceTest {
     void testPrimeRappInvalidState() {
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.PRIMING).build();
-        assertEquals(HttpStatus.BAD_REQUEST, rappService.primeRapp(rapp).getStatusCode());
+        RappHandlerException rappHandlerException =
+                assertThrows(RappHandlerException.class, () -> rappService.primeRapp(rapp));
+        assertEquals(HttpStatus.BAD_REQUEST, rappHandlerException.getStatusCode());
+        assertEquals(String.format(STATE_TRANSITION_NOT_PERMITTED, RappState.PRIMING, RappState.PRIMED),
+                rappHandlerException.getMessage());
+        assertEquals(RappState.PRIMING, rapp.getState());
     }
 
     @Test
@@ -125,7 +131,11 @@ class RappServiceTest {
     void testDeprimeRappInvalidState() {
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
-        assertEquals(HttpStatus.BAD_REQUEST, rappService.deprimeRapp(rapp).getStatusCode());
+        RappHandlerException rappHandlerException =
+                assertThrows(RappHandlerException.class, () -> rappService.deprimeRapp(rapp));
+        assertEquals(HttpStatus.BAD_REQUEST, rappHandlerException.getStatusCode());
+        assertEquals(String.format(STATE_TRANSITION_NOT_PERMITTED, RappState.COMMISSIONED, RappState.COMMISSIONED),
+                rappHandlerException.getMessage());
         assertEquals(RappState.COMMISSIONED, rapp.getState());
     }
 
@@ -134,7 +144,9 @@ class RappServiceTest {
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.PRIMED)
                             .rappInstances(Map.of(UUID.randomUUID(), new RappInstance())).build();
-        assertEquals(HttpStatus.BAD_REQUEST, rappService.deprimeRapp(rapp).getStatusCode());
+        RappHandlerException rappHandlerException =
+                assertThrows(RappHandlerException.class, () -> rappService.deprimeRapp(rapp));
+        assertEquals(HttpStatus.BAD_REQUEST, rappHandlerException.getStatusCode());
         assertEquals(RappState.PRIMED, rapp.getState());
     }
 
@@ -179,13 +191,15 @@ class RappServiceTest {
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
         RappInstance rappInstance = new RappInstance();
-        RappInstanceState rappInstanceState = RappInstanceState.DEPLOYED;
-        rappInstance.setState(rappInstanceState);
+        rappInstance.setState(RappInstanceState.DEPLOYED);
         rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
-        ResponseEntity<String> responseEntity = rappService.deployRappInstance(rapp, rappInstance);
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        assertEquals("State transition from " + rappInstanceState + " to DEPLOYED is not permitted.",
-                responseEntity.getBody());
+        RappHandlerException rappHandlerException =
+                assertThrows(RappHandlerException.class, () -> rappService.deployRappInstance(rapp, rappInstance));
+        assertEquals(HttpStatus.BAD_REQUEST, rappHandlerException.getStatusCode());
+        assertEquals(String.format("Unable to deploy rApp instance %s as it is not in UNDEPLOYED state",
+                rappInstance.getRappInstanceId()), rappHandlerException.getMessage());
+        assertEquals(RappState.PRIMED, rapp.getState());
+
     }
 
     @Test
@@ -237,7 +251,9 @@ class RappServiceTest {
         when(acmDeployer.undeployRappInstance(any(), any())).thenReturn(true);
         when(smeDeployer.undeployRappInstance(any(), any())).thenReturn(false);
         when(dmeDeployer.undeployRappInstance(any(), any())).thenReturn(true);
-        assertEquals(HttpStatus.BAD_REQUEST, rappService.undeployRappInstance(rapp, rappInstance).getStatusCode());
+        RappHandlerException rappHandlerException =
+                assertThrows(RappHandlerException.class, () -> rappService.undeployRappInstance(rapp, rappInstance));
+        assertEquals(HttpStatus.BAD_REQUEST, rappHandlerException.getStatusCode());
     }
 
     @Test
@@ -260,12 +276,17 @@ class RappServiceTest {
                             .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
         RappInstance rappInstance = new RappInstance();
         rappInstance.setState(RappInstanceState.DEPLOYED);
+        UUID rappInstanceId = rappInstance.getRappInstanceId();
         HashMap<UUID, RappInstance> rAppInstanceMap = new HashMap<>();
-        rAppInstanceMap.put(rappInstance.getRappInstanceId(), rappInstance);
+        rAppInstanceMap.put(rappInstanceId, rappInstance);
         rapp.setRappInstances(rAppInstanceMap);
         rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
-        assertThrows(RappHandlerException.class,
-                () -> rappService.deleteRappInstance(rapp, rappInstance.getRappInstanceId()));
+        RappHandlerException rappHandlerException =
+                assertThrows(RappHandlerException.class, () -> rappService.deleteRappInstance(rapp, rappInstanceId));
+        assertEquals(HttpStatus.BAD_REQUEST, rappHandlerException.getStatusCode());
+        assertEquals(String.format("Unable to delete rApp instance %s as it is not in UNDEPLOYED state",
+                rappInstance.getRappInstanceId()), rappHandlerException.getMessage());
+        assertEquals(RappState.PRIMED, rapp.getState());
     }
 
     @Test
@@ -280,10 +301,12 @@ class RappServiceTest {
         String rAppName = "rAppInPrimed";
         Rapp rApp = Rapp.builder().rappId(UUID.randomUUID()).name(rAppName).packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
-        ResponseEntity<String> responseEntity = rappService.deleteRapp(rApp);
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        assertEquals("Unable to delete '" + rAppName + "' as the rApp is not in COMMISSIONED state.",
-                responseEntity.getBody());
+        RappHandlerException rappHandlerException =
+                assertThrows(RappHandlerException.class, () -> rappService.deleteRapp(rApp));
+        assertEquals(HttpStatus.BAD_REQUEST, rappHandlerException.getStatusCode());
+        assertEquals(String.format("Unable to delete %s as the rApp is not in COMMISSIONED state.", rAppName),
+                rappHandlerException.getMessage());
+        assertEquals(RappState.PRIMED, rApp.getState());
     }
 
     @Test
@@ -295,9 +318,11 @@ class RappServiceTest {
         rappInstance.setState(RappInstanceState.DEPLOYED);
         rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
         rApp.setRappInstances(Map.of(rappInstance.getRappInstanceId(), rappInstance));
-        ResponseEntity<String> responseEntity = rappService.deleteRapp(rApp);
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        assertEquals("Unable to delete '" + rAppName + "' as there are active rApp instances.",
-                responseEntity.getBody());
+        RappHandlerException rappHandlerException =
+                assertThrows(RappHandlerException.class, () -> rappService.deleteRapp(rApp));
+        assertEquals(HttpStatus.BAD_REQUEST, rappHandlerException.getStatusCode());
+        assertEquals(String.format("Unable to delete %s as there are active rApp instances.", rAppName),
+                rappHandlerException.getMessage());
+        assertEquals(RappState.PRIMED, rApp.getState());
     }
 }

@@ -53,15 +53,13 @@ public class RappService {
             if (acmDeployer.primeRapp(rapp) && dmeDeployer.primeRapp(rapp)) {
                 rapp.setState(RappState.PRIMED);
                 return ResponseEntity.ok().build();
-            } else {
-                rapp.setState(RappState.COMMISSIONED);
-                return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
             }
-        } else {
-            return ResponseEntity.badRequest()
-                           .body(String.format(STATE_TRANSITION_NOT_PERMITTED, RappState.PRIMED.name(),
-                                   rapp.getState().name()));
+            rapp.setState(RappState.COMMISSIONED);
+            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
         }
+        throw new RappHandlerException(HttpStatus.BAD_REQUEST,
+                String.format(STATE_TRANSITION_NOT_PERMITTED, rapp.getState().name(), RappState.PRIMED.name()));
+
     }
 
     public ResponseEntity<String> deprimeRapp(Rapp rapp) {
@@ -71,18 +69,17 @@ public class RappService {
             if (acmDeployer.deprimeRapp(rapp) && dmeDeployer.deprimeRapp(rapp)) {
                 rapp.setState(RappState.COMMISSIONED);
                 return ResponseEntity.ok().build();
-            } else {
-                rapp.setState(RappState.PRIMED);
-                return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
             }
+            rapp.setState(RappState.PRIMED);
+            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
+        }
+        if (!rapp.getRappInstances().isEmpty()) {
+            throw new RappHandlerException(HttpStatus.BAD_REQUEST,
+                    "Unable to deprime as there are active rapp instances.");
         } else {
-            if (!rapp.getRappInstances().isEmpty()) {
-                return ResponseEntity.badRequest().body("Unable to deprime as there are active rapp instances,");
-            } else {
-                return ResponseEntity.badRequest()
-                               .body(String.format(STATE_TRANSITION_NOT_PERMITTED, RappState.COMMISSIONED.name(),
-                                       rapp.getState().name()));
-            }
+            throw new RappHandlerException(HttpStatus.BAD_REQUEST,
+                    String.format(STATE_TRANSITION_NOT_PERMITTED, RappState.COMMISSIONED.name(),
+                            rapp.getState().name()));
         }
     }
 
@@ -90,15 +87,15 @@ public class RappService {
         if (rApp.getRappInstances().isEmpty() && rApp.getState().equals(RappState.COMMISSIONED)) {
             rappCacheService.deleteRapp(rApp);
             return ResponseEntity.ok().build();
-        } else {
-            if (!rApp.getRappInstances().isEmpty()) {
-                return ResponseEntity.badRequest()
-                               .body("Unable to delete '" + rApp.getName() + "' as there are active rApp instances.");
-            } else {
-                return ResponseEntity.badRequest().body("Unable to delete '" + rApp.getName()
-                                                                + "' as the rApp is not in COMMISSIONED state.");
-            }
         }
+        if (!rApp.getRappInstances().isEmpty()) {
+            throw new RappHandlerException(HttpStatus.BAD_REQUEST,
+                    String.format("Unable to delete %s as there are active rApp instances.", rApp.getName()));
+        } else {
+            throw new RappHandlerException(HttpStatus.BAD_REQUEST,
+                    String.format("Unable to delete %s as the rApp is not in COMMISSIONED state.", rApp.getName()));
+        }
+
     }
 
     public ResponseEntity<String> deployRappInstance(Rapp rapp, RappInstance rappInstance) {
@@ -110,11 +107,11 @@ public class RappService {
                 return ResponseEntity.accepted().build();
             }
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
-        } else {
-            return ResponseEntity.badRequest()
-                           .body(String.format(STATE_TRANSITION_NOT_PERMITTED, rappInstance.getState().name(),
-                                   RappInstanceState.DEPLOYED.name()));
         }
+        throw new RappHandlerException(HttpStatus.BAD_REQUEST,
+                String.format("Unable to deploy rApp instance %s as it is not in UNDEPLOYED state",
+                        rappInstance.getRappInstanceId()));
+
     }
 
     public ResponseEntity<String> undeployRappInstance(Rapp rapp, RappInstance rappInstance) {
@@ -126,14 +123,13 @@ public class RappService {
                 return ResponseEntity.accepted().build();
             }
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
-        } else {
-            return ResponseEntity.badRequest()
-                           .body(String.format(STATE_TRANSITION_NOT_PERMITTED, rappInstance.getState().name(),
-                                   RappInstanceState.UNDEPLOYED.name()));
         }
+        throw new RappHandlerException(HttpStatus.BAD_REQUEST,
+                String.format("Unable to undeploy rApp instance %s as it is not in DEPLOYED state",
+                        rappInstance.getRappInstanceId()));
     }
 
-    public ResponseEntity<Object> deleteRappInstance(Rapp rApp, UUID rappInstanceId) {
+    public ResponseEntity<String> deleteRappInstance(Rapp rApp, UUID rappInstanceId) {
         if (rApp.getRappInstances().get(rappInstanceId).getState().equals(RappInstanceState.UNDEPLOYED)) {
             rappInstanceStateMachine.deleteRappInstance(rApp.getRappInstances().get(rappInstanceId));
             rApp.getRappInstances().remove(rappInstanceId);
