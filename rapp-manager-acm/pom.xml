@@ -80,6 +80,11 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 
@@ -110,7 +115,7 @@
                                 ToscaNodeTemplate=org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate,
                                 AutomationCompositions=org.onap.policy.clamp.models.acm.concepts.AutomationCompositions,
                                 AutomationComposition=org.onap.policy.clamp.models.acm.concepts.AutomationComposition,
-                                <!--                                AutomationCompositionDefinition=org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition,-->
+                                AutomationCompositionDefinition=org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition,
                                 SimpleResponse=org.onap.policy.clamp.models.acm.messages.rest.SimpleResponse,
                                 AcTypeStateUpdate=org.onap.policy.clamp.models.acm.messages.rest.commissioning.AcTypeStateUpdate,
                                 AcInstanceStateUpdate=org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate,

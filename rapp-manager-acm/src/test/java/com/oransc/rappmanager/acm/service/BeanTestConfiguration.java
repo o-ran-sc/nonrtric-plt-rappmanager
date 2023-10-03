@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oransc.rappmanager.acm.ApiClient;
 import com.oransc.rappmanager.acm.configuration.ACMConfiguration;
+import com.oransc.rappmanager.acm.configuration.JacksonMessageConverterConfiguration;
 import com.oransc.rappmanager.acm.rest.AutomationCompositionDefinitionApiClient;
 import com.oransc.rappmanager.acm.rest.AutomationCompositionInstanceApiClient;
 import com.oransc.rappmanager.acm.rest.ParticipantMonitoringApiClient;
@@ -40,8 +41,10 @@ public class BeanTestConfiguration {
     }
 
     @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        return builder.build();
+    public RestTemplate restTemplate(RestTemplateBuilder builder, ObjectMapper objectMapper) {
+        RestTemplate restTemplate = builder.build();
+        restTemplate.getMessageConverters().add(new JacksonMessageConverterConfiguration(objectMapper));
+        return restTemplate;
     }
 
     @Bean("acmApiClient")

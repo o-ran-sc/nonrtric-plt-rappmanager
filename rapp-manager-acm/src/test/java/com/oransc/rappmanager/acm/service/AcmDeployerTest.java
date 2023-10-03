@@ -28,6 +28,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withServerError;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -45,16 +46,23 @@ import com.oransc.rappmanager.models.statemachine.RappInstanceStateMachine;
 import com.oransc.rappmanager.models.statemachine.RappInstanceStateMachineConfig;
 import java.io.IOException;
 import java.util.UUID;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.PrimeOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -84,11 +92,12 @@ class AcmDeployerTest {
     RappInstanceStateMachine rappInstanceStateMachine;
     @Autowired
     RappCsarConfigurationHandler rappCsarConfigurationHandler;
+    @Autowired
+    ObjectMapper objectMapper;
 
     RappResourceBuilder rappResourceBuilder = new RappResourceBuilder();
     private final String validRappFile = "valid-rapp-package.csar";
     String validCsarFileLocation = "src/test/resources/";
-    ObjectMapper objectMapper = new ObjectMapper();
     String URI_ACM_COMPOSITIONS, URI_ACM_COMPOSITION, URI_ACM_INSTANCES, URI_ACM_INSTANCE;
 
     @BeforeAll
@@ -258,17 +267,47 @@ class AcmDeployerTest {
     }
 
     @Test
-    void testSyncRappInstanceStatus() throws JsonProcessingException {
+    void testUndeployRappInstanceACMErrorFailure() throws JsonProcessingException {
+        UUID compositionId = UUID.randomUUID();
+        UUID rappId = UUID.randomUUID();
+        UUID instanceId = UUID.randomUUID();
+        Rapp rapp = Rapp.builder().name(rappId.toString()).packageName(validRappFile).compositionId(compositionId)
+                            .state(RappState.PRIMED).build();
+        expectAcmGetInstanceToReturnState(compositionId, instanceId, DeployState.DEPLOYED, LockState.LOCKED,
+                ExpectedCount.once());
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_INSTANCE, compositionId, instanceId)))
+                .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.ACCEPTED));
+        mockServer.expect(ExpectedCount.manyTimes(),
+                        requestTo(String.format(URI_ACM_INSTANCE, compositionId, instanceId))).andExpect(method(HttpMethod.GET))
+                .andRespond(withServerError());
+        RappInstance rappInstance = rappResourceBuilder.getRappInstance();
+        rappInstance.getAcm().setAcmInstanceId(instanceId);
+        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
+        boolean rappUndeployStateActual = acmDeployer.undeployRappInstance(rapp, rappInstance);
+        mockServer.verify();
+        assertFalse(rappUndeployStateActual);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getAcmStatusEventMap")
+    void testSyncRappInstanceStatus(DeployState deployState, LockState lockState, RappEvent rappEvent)
+            throws JsonProcessingException {
         UUID compositionId = UUID.randomUUID();
         UUID instanceId = UUID.randomUUID();
-        expectAcmGetInstanceToReturnState(compositionId, instanceId, DeployState.UNDEPLOYING, LockState.UNLOCKING,
-                ExpectedCount.once());
+        expectAcmGetInstanceToReturnState(compositionId, instanceId, deployState, lockState, ExpectedCount.once());
         RappInstance rappInstance = rappResourceBuilder.getRappInstance();
         rappInstance.getAcm().setAcmInstanceId(instanceId);
         rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
         acmDeployer.syncRappInstanceStatus(compositionId, rappInstance);
         mockServer.verify();
-        verify(rappInstanceStateMachine, times(1)).sendRappInstanceEvent(rappInstance, RappEvent.UNDEPLOYING);
+        verify(rappInstanceStateMachine, times(1)).sendRappInstanceEvent(rappInstance, rappEvent);
+    }
+
+    private static Stream<Arguments> getAcmStatusEventMap() {
+        return Stream.of(Arguments.of(DeployState.UNDEPLOYING, LockState.UNLOCKING, RappEvent.UNDEPLOYING),
+                Arguments.of(DeployState.DEPLOYED, LockState.LOCKED, RappEvent.ACMDEPLOYED),
+                Arguments.of(DeployState.DEPLOYING, LockState.LOCKING, RappEvent.DEPLOYING),
+                Arguments.of(DeployState.UNDEPLOYED, LockState.UNLOCKED, RappEvent.ACMUNDEPLOYED));
     }
 
     @Test
@@ -357,6 +396,12 @@ class AcmDeployerTest {
         commissioningResponseExpected.setCompositionId(compositionId);
         mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
                 .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.OK));
+        AutomationCompositionDefinition automationCompositionDefinition =
+                getAutomationCompositionDefinition(compositionId, AcTypeState.COMMISSIONED);
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+                .andExpect(method(HttpMethod.GET)).andRespond(
+                        withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
+                                .body(objectMapper.writeValueAsString(automationCompositionDefinition)));
         mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(
                         withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
@@ -368,7 +413,40 @@ class AcmDeployerTest {
     }
 
     @Test
-    void testDeprimeFailureRapp() {
+    void testDeprimeRappClientRetry() throws JsonProcessingException {
+        UUID compositionId = UUID.randomUUID();
+        RappResources rappResources = rappResourceBuilder.getResources();
+        Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
+                            .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED)
+                            .compositionId(compositionId).rappResources(rappResources).build();
+
+        CommissioningResponse commissioningResponseExpected = new CommissioningResponse();
+        commissioningResponseExpected.setCompositionId(compositionId);
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+                .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.OK));
+        AutomationCompositionDefinition automationCompositionDefinition =
+                getAutomationCompositionDefinition(compositionId, AcTypeState.DEPRIMING);
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+                .andExpect(method(HttpMethod.GET)).andRespond(
+                        withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
+                                .body(objectMapper.writeValueAsString(automationCompositionDefinition)));
+        automationCompositionDefinition = getAutomationCompositionDefinition(compositionId, AcTypeState.COMMISSIONED);
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+                .andExpect(method(HttpMethod.GET)).andRespond(
+                        withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
+                                .body(objectMapper.writeValueAsString(automationCompositionDefinition)));
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+                .andExpect(method(HttpMethod.DELETE)).andRespond(
+                        withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
+                                .body(objectMapper.writeValueAsString(commissioningResponseExpected)));
+
+        boolean deprimeRapp = acmDeployer.deprimeRapp(rapp);
+        mockServer.verify();
+        assertTrue(deprimeRapp);
+    }
+
+    @Test
+    void testDeprimeFailureRapp() throws JsonProcessingException {
         UUID compositionId = UUID.randomUUID();
         RappResources rappResources = rappResourceBuilder.getResources();
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
@@ -377,9 +455,54 @@ class AcmDeployerTest {
 
         mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
                 .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.OK));
+        AutomationCompositionDefinition automationCompositionDefinition =
+                getAutomationCompositionDefinition(compositionId, AcTypeState.COMMISSIONED);
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+                .andExpect(method(HttpMethod.GET)).andRespond(
+                        withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
+                                .body(objectMapper.writeValueAsString(automationCompositionDefinition)));
         mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
 
+        boolean deprimeRapp = acmDeployer.deprimeRapp(rapp);
+        mockServer.verify();
+        assertFalse(deprimeRapp);
+    }
+
+    @Test
+    void testDeprimeACMStatusFailureRapp() throws JsonProcessingException {
+        UUID compositionId = UUID.randomUUID();
+        RappResources rappResources = rappResourceBuilder.getResources();
+        Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
+                            .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED)
+                            .compositionId(compositionId).rappResources(rappResources).build();
+
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+                .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.OK));
+        AutomationCompositionDefinition automationCompositionDefinition =
+                getAutomationCompositionDefinition(compositionId, AcTypeState.DEPRIMING);
+        mockServer.expect(ExpectedCount.manyTimes(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+                .andExpect(method(HttpMethod.GET)).andRespond(
+                        withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
+                                .body(objectMapper.writeValueAsString(automationCompositionDefinition)));
+
+        boolean deprimeRapp = acmDeployer.deprimeRapp(rapp);
+        mockServer.verify();
+        assertFalse(deprimeRapp);
+    }
+
+    @Test
+    void testDeprimeACMStatusErrorRapp() {
+        UUID compositionId = UUID.randomUUID();
+        RappResources rappResources = rappResourceBuilder.getResources();
+        Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
+                            .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED)
+                            .compositionId(compositionId).rappResources(rappResources).build();
+
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+                .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.OK));
+        mockServer.expect(ExpectedCount.manyTimes(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+                .andExpect(method(HttpMethod.GET)).andRespond(withServerError());
         boolean deprimeRapp = acmDeployer.deprimeRapp(rapp);
         mockServer.verify();
         assertFalse(deprimeRapp);
@@ -431,5 +554,13 @@ class AcmDeployerTest {
                 .andExpect(method(HttpMethod.GET)).andRespond(
                         withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                 .body(objectMapper.writeValueAsString(automationCompositionDeployed)));
+    }
+
+    AutomationCompositionDefinition getAutomationCompositionDefinition(UUID compositionId, AcTypeState acTypeState) {
+        AutomationCompositionDefinition automationCompositionDefinition = new AutomationCompositionDefinition();
+        automationCompositionDefinition.setCompositionId(compositionId);
+        automationCompositionDefinition.setState(acTypeState);
+        automationCompositionDefinition.setServiceTemplate(new ToscaServiceTemplate());
+        return automationCompositionDefinition;
     }
 }

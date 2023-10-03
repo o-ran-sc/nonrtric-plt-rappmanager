@@ -31,6 +31,7 @@ import com.oransc.rappmanager.models.statemachine.RappInstanceStateMachine;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
@@ -190,15 +191,43 @@ public class AcmDeployer implements RappDeployer {
     public boolean deprimeRapp(Rapp rapp) {
         try {
             primeACMComposition(rapp.getCompositionId(), PrimeOrder.DEPRIME);
-            CommissioningResponse commissioningResponse = deleteComposition(rapp.getCompositionId());
-            if (commissioningResponse != null) {
-                return true;
+            if (waitForCompositionTargetState(rapp.getCompositionId(), AcTypeState.COMMISSIONED)) {
+                CommissioningResponse commissioningResponse = deleteComposition(rapp.getCompositionId());
+                if (commissioningResponse != null) {
+                    rapp.setCompositionId(null);
+                    return true;
+                }
             }
         } catch (Exception e) {
             logger.warn("Failed deprime automation composition", e);
         }
         rapp.setReason("Unable to delete automation composition");
         return false;
+    }
+
+    boolean waitForCompositionTargetState(UUID compositionId, AcTypeState acTypeState) {
+        boolean targetCompositionStateTransition = false;
+        try {
+            for (int i = 0; i < acmConfiguration.getMaxRetries(); i++) {
+                logger.debug("Composition state check {}", i + 1);
+                if (isCompositionStateEquals(compositionId, acTypeState)) {
+                    logger.debug("Composition {} state is {}", compositionId, acTypeState);
+                    targetCompositionStateTransition = true;
+                    break;
+                } else {
+                    TimeUnit.SECONDS.sleep(acmConfiguration.getRetryInterval());
+                }
+            }
+        } catch (Exception e) {
+            logger.warn("Unable to get composition state for composition {}", compositionId, e);
+            Thread.currentThread().interrupt();
+        }
+        return targetCompositionStateTransition;
+    }
+
+    boolean isCompositionStateEquals(UUID compositionId, AcTypeState acTypeState) {
+        return automationCompositionDefinitionApiClient.getCompositionDefinition(compositionId, UUID.randomUUID())
+                       .getState().equals(acTypeState);
     }
 
     public void syncRappInstanceStatus(UUID compositionId, RappInstance rappInstance) {
