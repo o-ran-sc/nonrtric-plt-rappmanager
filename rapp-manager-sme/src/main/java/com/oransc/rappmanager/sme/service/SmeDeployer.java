@@ -18,7 +18,6 @@
 
 package com.oransc.rappmanager.sme.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oransc.rappmanager.models.RappDeployer;
@@ -89,19 +88,10 @@ public class SmeDeployer implements RappDeployer {
     @Override
     public boolean deployRappInstance(Rapp rapp, RappInstance rappInstance) {
         logger.debug("Deploying SME functions for RappInstance {}", rappInstance.getRappInstanceId());
-        try {
-            boolean deployState =
-                    createProviderDomain(rapp, rappInstance) && createPublishApi(rapp, rappInstance) && createInvoker(
-                            rapp, rappInstance);
-            if (deployState) {
-                rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.SMEDEPLOYED);
-            } else {
-                rappInstance.setReason("Unable to deploy SME");
-                rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.SMEDEPLOYFAILED);
-            }
-            return deployState;
-        } catch (JsonProcessingException e) {
-            logger.warn("Failed to deploy SME functions for Rapp {}", rapp.getName(), e);
+        if (createProviderDomain(rapp, rappInstance) && createPublishApi(rapp, rappInstance) && createInvoker(rapp,
+                rappInstance)) {
+            rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.SMEDEPLOYED);
+            return true;
         }
         rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.SMEDEPLOYFAILED);
         rappInstance.setReason("Unable to deploy SME");
@@ -138,7 +128,7 @@ public class SmeDeployer implements RappDeployer {
         return true;
     }
 
-    boolean createProviderDomain(Rapp rapp, RappInstance rappInstance) throws JsonProcessingException {
+    boolean createProviderDomain(Rapp rapp, RappInstance rappInstance) {
         logger.debug("Creating provider domain for Rapp {}", rapp.getName());
         try {
             String providerDomainPayload =
@@ -185,7 +175,7 @@ public class SmeDeployer implements RappDeployer {
     }
 
 
-    boolean createPublishApi(Rapp rapp, RappInstance rappInstance) throws JsonProcessingException {
+    boolean createPublishApi(Rapp rapp, RappInstance rappInstance) {
         logger.debug("Creating publish api for Rapp {}", rapp.getName());
         try {
             String providerApiPayload =
@@ -214,7 +204,7 @@ public class SmeDeployer implements RappDeployer {
         publishServiceDefaultApiClient.deleteApfIdServiceApisServiceApiId(serviceApiId, apfId);
     }
 
-    boolean createInvoker(Rapp rapp, RappInstance rappInstance) throws JsonProcessingException {
+    boolean createInvoker(Rapp rapp, RappInstance rappInstance) {
         logger.debug("Creating provider domain for Rapp {}", rapp.getName());
         try {
             String invokerPayload = rappCsarConfigurationHandler.getSmeInvokerPayload(rapp, rappInstance.getSme());

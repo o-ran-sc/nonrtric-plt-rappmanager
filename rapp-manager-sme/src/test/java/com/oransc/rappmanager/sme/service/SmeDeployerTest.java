@@ -28,12 +28,12 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.oransc.rappmanager.models.rapp.Rapp;
+import com.oransc.rappmanager.models.cache.RappCacheService;
 import com.oransc.rappmanager.models.csar.RappCsarConfigurationHandler;
+import com.oransc.rappmanager.models.rapp.Rapp;
+import com.oransc.rappmanager.models.rapp.RappState;
 import com.oransc.rappmanager.models.rappinstance.RappInstance;
 import com.oransc.rappmanager.models.rappinstance.RappSMEInstance;
-import com.oransc.rappmanager.models.rapp.RappState;
-import com.oransc.rappmanager.models.cache.RappCacheService;
 import com.oransc.rappmanager.models.statemachine.RappInstanceStateMachine;
 import com.oransc.rappmanager.models.statemachine.RappInstanceStateMachineConfig;
 import com.oransc.rappmanager.sme.configuration.SmeConfiguration;
@@ -243,7 +243,7 @@ class SmeDeployerTest {
     }
 
     @Test
-    void testCreateInvokerFailure() throws Exception {
+    void testCreateInvokerFailure() {
         UUID rappId = UUID.randomUUID();
         Rapp rapp =
                 Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
@@ -395,6 +395,12 @@ class SmeDeployerTest {
         boolean undeployRapp = smeDeployer.undeployRappInstance(rapp, rappInstance);
         mockServer.verify();
         assertFalse(undeployRapp);
+    }
+
+    @Test
+    void testPrimingAndDeprimingDoesNothing() {
+        assertTrue(smeDeployer.primeRapp(null));
+        assertTrue(smeDeployer.deprimeRapp(null));
     }
 
     RappInstance getRappInstance() {
