@@ -1,0 +1,8 @@
+{
+  "info_job_data_schema": {
+    "schema": "http://json-schema.org/draft-07/schema#",
+    "title": "xml-file-data-to-filestore",
+    "description": "xml-file-data-to-filestore",
+    "type": "object"
+  }
+}

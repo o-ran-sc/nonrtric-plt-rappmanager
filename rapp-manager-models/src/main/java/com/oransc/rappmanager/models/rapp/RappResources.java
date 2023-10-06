@@ -50,7 +50,8 @@ public class RappResources {
     @Builder
     public static class DMEResources {
 
-        Set<String> infoTypes;
+        Set<String> producerInfoTypes;
+        Set<String> consumerInfoTypes;
         Set<String> infoProducers;
         Set<String> infoConsumers;
     }

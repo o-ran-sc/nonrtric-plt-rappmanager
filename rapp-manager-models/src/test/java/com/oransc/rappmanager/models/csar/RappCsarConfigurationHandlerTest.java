@@ -134,7 +134,8 @@ class RappCsarConfigurationHandlerTest {
         assertThat(rappResources.getSme().getProviderFunctions()).hasSize(4);
         assertThat(rappResources.getSme().getServiceApis()).hasSize(2);
         assertThat(rappResources.getSme().getInvokers()).hasSize(2);
-        assertThat(rappResources.getDme().getInfoTypes()).hasSize(2);
+        assertThat(rappResources.getDme().getProducerInfoTypes()).hasSize(2);
+        assertThat(rappResources.getDme().getConsumerInfoTypes()).hasSize(2);
         assertThat(rappResources.getDme().getInfoProducers()).hasSize(2);
         assertThat(rappResources.getDme().getInfoConsumers()).hasSize(2);
     }
@@ -214,15 +215,28 @@ class RappCsarConfigurationHandlerTest {
     }
 
     @Test
-    void testGetDmeInfoTypePayload() {
+    void testGetDmeProducerInfoTypePayload() {
         UUID rappId = UUID.randomUUID();
         RappDMEInstance rappDMEInstance = new RappDMEInstance();
         rappDMEInstance.setInfoTypesProducer(Set.of("json-file-data-from-filestore"));
         Rapp rapp =
                 Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
                         .build();
-        String dmeInfoTypePayload = rappCsarConfigurationHandler.getDmeInfoTypePayload(rapp,
+        String dmeInfoTypePayload = rappCsarConfigurationHandler.getDmeProducerInfoTypePayload(rapp,
                 rappDMEInstance.getInfoTypesProducer().iterator().next());
+        assertNotNull(dmeInfoTypePayload);
+    }
+
+    @Test
+    void testGetDmeConsumerInfoTypePayload() {
+        UUID rappId = UUID.randomUUID();
+        RappDMEInstance rappDMEInstance = new RappDMEInstance();
+        rappDMEInstance.setInfoTypeConsumer("json-file-data-from-filestore");
+        Rapp rapp =
+                Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
+                        .build();
+        String dmeInfoTypePayload =
+                rappCsarConfigurationHandler.getDmeConsumerInfoTypePayload(rapp, rappDMEInstance.getInfoTypeConsumer());
         assertNotNull(dmeInfoTypePayload);
     }
 

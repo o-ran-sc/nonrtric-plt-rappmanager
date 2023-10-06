@@ -50,7 +50,8 @@ public class RappCsarConfigurationHandler {
     private static final String SME_PROVIDER_FUNCS_LOCATION = "Files/Sme/providers";
     private static final String SME_SERVICE_APIS_LOCATION = "Files/Sme/serviceapis";
     private static final String SME_INVOKERS_LOCATION = "Files/Sme/invokers";
-    private static final String DME_INFO_TYPES_LOCATION = "Files/Dme/infotypes";
+    private static final String DME_PRODUCER_INFO_TYPES_LOCATION = "Files/Dme/producerinfotypes";
+    private static final String DME_CONSUMER_INFO_TYPES_LOCATION = "Files/Dme/consumerinfotypes";
     private static final String DME_INFO_PRODUCERS_LOCATION = "Files/Dme/infoproducers";
     private static final String DME_INFO_CONSUMERS_LOCATION = "Files/Dme/infoconsumers";
 
@@ -141,8 +142,12 @@ public class RappCsarConfigurationHandler {
         return getPayload(rapp, getResourceUri(DME_INFO_PRODUCERS_LOCATION, producerIdentifier));
     }
 
-    public String getDmeInfoTypePayload(Rapp rapp, String infoTypeIdentifier) {
-        return getPayload(rapp, getResourceUri(DME_INFO_TYPES_LOCATION, infoTypeIdentifier));
+    public String getDmeProducerInfoTypePayload(Rapp rapp, String infoTypeIdentifier) {
+        return getPayload(rapp, getResourceUri(DME_PRODUCER_INFO_TYPES_LOCATION, infoTypeIdentifier));
+    }
+
+    public String getDmeConsumerInfoTypePayload(Rapp rapp, String infoTypeIdentifier) {
+        return getPayload(rapp, getResourceUri(DME_CONSUMER_INFO_TYPES_LOCATION, infoTypeIdentifier));
     }
 
     public String getDmeInfoConsumerPayload(Rapp rapp, String infoConsumerIdentifier) {
@@ -165,10 +170,12 @@ public class RappCsarConfigurationHandler {
                                 getFileListFromCsar(csarFile, SME_PROVIDER_FUNCS_LOCATION))
                                              .serviceApis(getFileListFromCsar(csarFile, SME_SERVICE_APIS_LOCATION))
                                              .invokers(getFileListFromCsar(csarFile, SME_INVOKERS_LOCATION)).build());
-                rappResources.setDme(RappResources.DMEResources.builder()
-                                             .infoTypes(getFileListFromCsar(csarFile, DME_INFO_TYPES_LOCATION))
+                rappResources.setDme(RappResources.DMEResources.builder().producerInfoTypes(
+                                getFileListFromCsar(csarFile, DME_PRODUCER_INFO_TYPES_LOCATION)).consumerInfoTypes(
+                                getFileListFromCsar(csarFile, DME_CONSUMER_INFO_TYPES_LOCATION))
                                              .infoProducers(getFileListFromCsar(csarFile, DME_INFO_PRODUCERS_LOCATION))
-                                             .infoConsumers(getFileListFromCsar(csarFile, DME_INFO_CONSUMERS_LOCATION)).build());
+                                             .infoConsumers(getFileListFromCsar(csarFile, DME_INFO_CONSUMERS_LOCATION))
+                                             .build());
             }
         } catch (Exception e) {
             logger.warn("Error in getting the rapp resources", e);

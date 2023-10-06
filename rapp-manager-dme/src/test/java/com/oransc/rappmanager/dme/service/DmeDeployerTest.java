@@ -173,6 +173,7 @@ class DmeDeployerTest {
         Rapp rapp = getRapp(Optional.empty());
         RappInstance rappInstance = rappDmeResourceBuilder.getRappInstance();
         getMockServerClientCreateInfoType(rappInstance.getDme().getInfoTypesProducer().toArray()[0].toString(), true);
+        getMockServerClientCreateInfoType(rappInstance.getDme().getInfoTypeConsumer(), true);
         getMockServerClientCreateInfoProducer(rappInstance.getDme().getInfoProducer(), true);
         getMockServerClientCreateInfoConsumer(rappInstance.getDme().getInfoConsumer(), true);
         rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
@@ -221,6 +222,7 @@ class DmeDeployerTest {
         Rapp rapp = getRapp(Optional.empty());
         RappInstance rappInstance = rappDmeResourceBuilder.getRappInstance();
         getMockServerClientCreateInfoType(rappInstance.getDme().getInfoTypesProducer().toArray()[0].toString(), true);
+        getMockServerClientCreateInfoType(rappInstance.getDme().getInfoTypeConsumer(), true);
         getMockServerClientCreateInfoProducer(rappInstance.getDme().getInfoProducer(), false);
         rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
         assertFalse(dmeDeployer.deployRappInstance(rapp, rappInstance));
@@ -232,6 +234,7 @@ class DmeDeployerTest {
         Rapp rapp = getRapp(Optional.empty());
         RappInstance rappInstance = rappDmeResourceBuilder.getRappInstance();
         getMockServerClientCreateInfoType(rappInstance.getDme().getInfoTypesProducer().toArray()[0].toString(), true);
+        getMockServerClientCreateInfoType(rappInstance.getDme().getInfoTypeConsumer(), true);
         getMockServerClientCreateInfoProducer(rappInstance.getDme().getInfoProducer(), true);
         getMockServerClientCreateInfoConsumer(rappInstance.getDme().getInfoConsumer(), false);
         rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
@@ -278,7 +281,8 @@ class DmeDeployerTest {
     @Test
     void testCreateInfoTypeFailureInvalidInfoType() {
         Rapp rapp = getRapp(Optional.empty());
-        assertFalse(dmeDeployer.createInfoTypes(rapp, null));
+        assertFalse(dmeDeployer.createProducerInfoTypes(rapp, null));
+        assertFalse(dmeDeployer.createConsumerInfoTypes(rapp, null));
     }
 
     @Test

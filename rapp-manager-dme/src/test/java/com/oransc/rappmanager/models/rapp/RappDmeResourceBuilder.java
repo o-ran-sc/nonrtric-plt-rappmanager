@@ -27,7 +27,8 @@ public class RappDmeResourceBuilder {
     public RappResources getResources() {
         RappResources rappResources = new RappResources();
         RappResources.DMEResources dmeResources =
-                new RappResources.DMEResources(Set.of("json-file-data-from-filestore", "xml-file-data-from-filestore"),
+                new RappResources.DMEResources(Set.of("json-file-data-from-filestore"),
+                        Set.of("xml-file-data-from-filestore"),
                         Set.of("json-file-data-producer", "xml-file-data-producer"),
                         Set.of("json-file-consumer", "xml-file-consumer"));
         rappResources.setDme(dmeResources);
@@ -39,7 +40,7 @@ public class RappDmeResourceBuilder {
         RappDMEInstance rappDMEInstance = new RappDMEInstance();
         rappDMEInstance.setInfoTypesProducer(Set.of("json-file-data-from-filestore"));
         rappDMEInstance.setInfoProducer("json-file-data-producer");
-        rappDMEInstance.setInfoTypeConsumer("json-file-data-from-filestore");
+        rappDMEInstance.setInfoTypeConsumer("xml-file-data-from-filestore");
         rappDMEInstance.setInfoConsumer("json-file-consumer");
         rappInstance.setDme(rappDMEInstance);
         return rappInstance;

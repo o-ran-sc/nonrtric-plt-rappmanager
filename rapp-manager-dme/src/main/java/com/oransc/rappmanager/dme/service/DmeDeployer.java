@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,16 +61,12 @@ public class DmeDeployer implements RappDeployer {
     public boolean deployRappInstance(Rapp rapp, RappInstance rappInstance) {
         logger.debug("Deploying DME functions for RappInstance {}", rappInstance.getRappInstanceId());
         boolean deployState = true;
-        if (rappInstance.getDme().getInfoTypesProducer() != null
-                    || rappInstance.getDme().getInfoTypeConsumer() != null) {
-            Set<String> infoTypes = new HashSet<>();
-            if (rappInstance.getDme().getInfoTypesProducer() != null) {
-                infoTypes.addAll(rappInstance.getDme().getInfoTypesProducer());
-            }
-            if (rappInstance.getDme().getInfoTypeConsumer() != null) {
-                infoTypes.add(rappInstance.getDme().getInfoTypeConsumer());
-            }
-            deployState = createInfoTypes(rapp, infoTypes);
+        if (rappInstance.getDme().getInfoTypesProducer() != null) {
+            deployState = createProducerInfoTypes(rapp, rappInstance.getDme().getInfoTypesProducer());
+        }
+        if (rappInstance.getDme().getInfoTypeConsumer() != null) {
+            deployState =
+                    deployState && createConsumerInfoTypes(rapp, Set.of(rappInstance.getDme().getInfoTypeConsumer()));
         }
         if (rappInstance.getDme().getInfoProducer() != null) {
             deployState = deployState && createInfoProducer(rapp, rappInstance.getDme().getInfoProducer());
@@ -123,14 +120,15 @@ public class DmeDeployer implements RappDeployer {
                 ConsumerJob consumerJob = objectMapper.readValue(consumerPayload, ConsumerJob.class);
                 requiredInfoTypes.add(consumerJob.getInfoTypeId());
             }
-            Set<String> allInfoTypes = new HashSet<>(rapp.getRappResources().getDme().getInfoTypes());
+            Set<String> allInfoTypes = new HashSet<>(rapp.getRappResources().getDme().getProducerInfoTypes());
+            allInfoTypes.addAll(rapp.getRappResources().getDme().getConsumerInfoTypes());
             requiredInfoTypes.removeAll(allInfoTypes);
             if (!requiredInfoTypes.isEmpty()) {
                 allInfoTypes.addAll(dataProducerRegistrationApiClient.getInfoTypdentifiers());
                 requiredInfoTypes.removeAll(allInfoTypes);
                 if (!requiredInfoTypes.isEmpty()) {
                     rapp.setReason(String.format("Invalid rapp package as the following info types cannot be found %s",
-                                    requiredInfoTypes));
+                            requiredInfoTypes));
                 }
             }
             return true;
@@ -147,12 +145,21 @@ public class DmeDeployer implements RappDeployer {
         return true;
     }
 
-    boolean createInfoTypes(Rapp rApp, Set<String> infoTypes) {
-        logger.debug("Creating DME info types {} for rApp {}", infoTypes, rApp.getRappId());
+    boolean createProducerInfoTypes(Rapp rApp, Set<String> infoTypes) {
+        logger.debug("Creating DME producer info types {} for rApp {}", infoTypes, rApp.getRappId());
+        return createInfoTypes(rApp, infoTypes, rappCsarConfigurationHandler::getDmeProducerInfoTypePayload);
+    }
+
+    boolean createConsumerInfoTypes(Rapp rApp, Set<String> infoTypes) {
+        logger.debug("Creating DME consumer info types {} for rApp {}", infoTypes, rApp.getRappId());
+        return createInfoTypes(rApp, infoTypes, rappCsarConfigurationHandler::getDmeConsumerInfoTypePayload);
+    }
+
+    boolean createInfoTypes(Rapp rApp, Set<String> infoTypes, BiFunction<Rapp, String, String> payloadReader) {
         try {
             Map<String, ProducerInfoTypeInfo> producerInfoTypeInfoMap = new HashMap<>();
             for (String infoType : infoTypes) {
-                String infoTypePayload = rappCsarConfigurationHandler.getDmeInfoTypePayload(rApp, infoType);
+                String infoTypePayload = payloadReader.apply(rApp, infoType);
                 if (infoTypePayload != null && !infoTypePayload.isEmpty()) {
                     producerInfoTypeInfoMap.put(infoType,
                             objectMapper.readValue(infoTypePayload, ProducerInfoTypeInfo.class));
