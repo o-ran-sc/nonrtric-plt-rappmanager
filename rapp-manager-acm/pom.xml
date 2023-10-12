@@ -101,7 +101,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapi/acm-spec.yaml</inputSpec>
+                            <inputSpec>${project.parent.basedir}/openapi/acm/acm-spec.yaml</inputSpec>
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
                             <generateApiTests>false</generateApiTests>

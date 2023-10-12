@@ -18,6 +18,7 @@
 #
 
 SME_LOCATION="../sme/capifcore"
+SME_OPENAPI_LOCATION="../../openapi/sme"
 cp ../scripts/init/getsmeswagger.go $SME_LOCATION
 cd $SME_LOCATION
 
@@ -28,19 +29,19 @@ if [ -f "getsmeswagger.go" ]; then
   go run getsmeswagger.go
 
   echo "Copying generated specs..."
-  mkdir -p ../../rapp-manager-sme/src/main/resources/openapi
+  mkdir -p $SME_OPENAPI_LOCATION
   echo "Copying CommonData.yaml"
-  mv CommonData.yaml ../../rapp-manager-sme/src/main/resources/openapi
+  mv CommonData.yaml $SME_OPENAPI_LOCATION
   echo "Copying TS29122_CommonData.yaml"
-  mv TS29122_CommonData.yaml ../../rapp-manager-sme/src/main/resources/openapi
+  mv TS29122_CommonData.yaml $SME_OPENAPI_LOCATION
   echo "Copying TS29571_CommonData.yaml"
-  mv TS29571_CommonData.yaml ../../rapp-manager-sme/src/main/resources/openapi
+  mv TS29571_CommonData.yaml $SME_OPENAPI_LOCATION
   echo "Copying TS29222_CAPIF_API_Invoker_Management_API.yaml"
-  mv TS29222_CAPIF_API_Invoker_Management_API.yaml ../../rapp-manager-sme/src/main/resources/openapi
+  mv TS29222_CAPIF_API_Invoker_Management_API.yaml $SME_OPENAPI_LOCATION
   echo "Copying TS29222_CAPIF_API_Provider_Management_API.yaml"
-  mv TS29222_CAPIF_API_Provider_Management_API.yaml ../../rapp-manager-sme/src/main/resources/openapi
+  mv TS29222_CAPIF_API_Provider_Management_API.yaml $SME_OPENAPI_LOCATION
   echo "Copying TS29222_CAPIF_Publish_Service_API.yaml"
-  mv TS29222_CAPIF_Publish_Service_API.yaml ../../rapp-manager-sme/src/main/resources/openapi
+  mv TS29222_CAPIF_Publish_Service_API.yaml $SME_OPENAPI_LOCATION
 else
   echo "Unable to find the openapi spec generator."
 fi
