@@ -1,0 +1,199 @@
+# ============LICENSE_START=======================================================
+# Copyright (C) 2023 Nordix Foundation.
+# ================================================================================
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+# ============LICENSE_END=========================================================
+tosca_definitions_version: tosca_simple_yaml_1_3
+data_types:
+  onap.datatypes.ToscaConceptIdentifier:
+    derived_from: tosca.datatypes.Root
+    properties:
+      name:
+        type: string
+        required: true
+      version:
+        type: string
+        required: true
+  org.onap.datatypes.policy.clamp.acm.DMEAutomationCompositionElement.InfoTypeEntity:
+    version: 1.0.0
+    derived_from: tosca.datatypes.Root
+    properties:
+      infoTypeEntityId:
+        type: onap.datatypes.ToscaConceptIdentifier
+        required: true
+        description: The name and version of a Configuration Entity to be handled by
+          the DME Automation Composition Element
+      infoTypeId:
+        type: string
+        required: true
+        description: Id of the info type
+      payload:
+        type: string
+        required: true
+        description: Json payload of info type
+  org.onap.datatypes.policy.clamp.acm.DMEAutomationCompositionElement.DataProducerEntity:
+    version: 1.0.0
+    derived_from: tosca.datatypes.Root
+    properties:
+      dataProducerEntityId:
+        type: onap.datatypes.ToscaConceptIdentifier
+        required: true
+        description: The name and version of a Configuration Entity to be handled by
+          the DME Automation Composition Element
+      dataProducerId:
+        type: string
+        required: true
+        description: Id of the info type
+      payload:
+        type: string
+        required: true
+        description: Json payload of info type
+  org.onap.datatypes.policy.clamp.acm.DMEAutomationCompositionElement.DataConsumerEntity:
+    version: 1.0.0
+    derived_from: tosca.datatypes.Root
+    properties:
+      dataConsumerEntityId:
+        type: onap.datatypes.ToscaConceptIdentifier
+        required: true
+        description: The name and version of a Configuration Entity to be handled by
+          the DME Automation Composition Element
+      dataConsumerId:
+        type: string
+        required: true
+        description: Id of the info type
+      payload:
+        type: string
+        required: true
+        description: Json payload of info type
+
+node_types:
+  org.onap.policy.clamp.acm.Participant:
+    version: 1.0.1
+    derived_from: tosca.nodetypes.Root
+    properties:
+      provider:
+        type: string
+        required: false
+  org.onap.policy.clamp.acm.AutomationCompositionElement:
+    version: 1.0.1
+    derived_from: tosca.nodetypes.Root
+    properties:
+      provider:
+        type: string
+        required: false
+      startPhase:
+        type: integer
+        required: false
+        constraints:
+          - greater-or-equal: 0
+        metadata:
+          common: true
+        description: A value indicating the start phase in which this automation composition element will be started, the
+          first start phase is zero. Automation Composition Elements are started in their start_phase order and stopped
+          in reverse start phase order. Automation Composition Elements with the same start phase are started and
+          stopped simultaneously
+  org.onap.policy.clamp.acm.AutomationComposition:
+    version: 1.0.1
+    derived_from: tosca.nodetypes.Root
+    properties:
+      provider:
+        type: string
+        required: false
+      elements:
+        type: list
+        required: true
+        entry_schema:
+          type: onap.datatypes.ToscaConceptIdentifier
+  org.onap.policy.clamp.acm.DMEAutomationCompositionElement:
+    version: 1.0.1
+    derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
+    properties:
+      infoTypeEntities:
+        type: list
+        required: true
+        entry_schema:
+          type: org.onap.datatypes.policy.clamp.acm.DMEAutomationCompositionElement.InfoTypeEntity
+          type_version: 1.0.0
+        description: The configuration entities of DME
+      dataProducerEntities:
+        type: list
+        required: true
+        entry_schema:
+          type: org.onap.datatypes.policy.clamp.acm.DMEAutomationCompositionElement.DataProducerEntity
+          type_version: 1.0.0
+        description: The configuration entities of DME
+      dataConsumerEntities:
+        type: list
+        required: true
+        entry_schema:
+          type: org.onap.datatypes.policy.clamp.acm.DMEAutomationCompositionElement.DataConsumerEntity
+          type_version: 1.0.0
+        description: The configuration entities of DME
+topology_template:
+  node_templates:
+    org.onap.policy.clamp.acm.DMEAutomationCompositionParticipant:
+      version: 2.3.4
+      type: org.onap.policy.clamp.acm.Participant
+      type_version: 1.0.1
+      description: Participant for DME
+      properties:
+        provider: ONAP
+
+    onap.policy.clamp.ac.element.DMEAutomationCompositionElement:
+      version: 1.2.3
+      type: org.onap.policy.clamp.acm.DMEAutomationCompositionElement
+      type_version: 1.0.1
+      description: Automation composition element for the DME Requests
+      properties:
+        provider: ONAP
+        participantType:
+          name: org.onap.policy.clamp.acm.DMEParticipant
+          version: 2.3.4
+        infoTypeEntities:
+          - infoTypeEntityId:
+              name: infoType1
+              version: 1.0.1
+            infoTypeId: json-file-data-from-filestore
+            payload: '{"info_job_data_schema": {"schema": "http://json-schema.org/draft-07/schema#","title":
+            "json-file-data-from-filestore","description": "json-file-data-from-filestore","type":
+            "object"}}'
+        dataProducerEntities:
+          - dataProducerEntityId:
+              name: producerType1
+              version: 1.0.1
+            dataProducerId: json-file-data-producer
+            payload: '{"info_job_callback_url": "http://localhost/jsonproducerjobcallback","info_producer_supervision_callback_url":
+            "http://localhost/jsonproducersupervisioncallback","supported_info_types": ["json-file-data-from-filestore"]}'
+        dataConsumerEntities:
+          - dataConsumerEntityId:
+              name: consumerType1
+              version: 1.0.1
+            dataConsumerId: json-file-consumer
+            payload: '{"info_type_id": "json-file-data-from-filestore","job_owner": "console","status_notification_uri":
+            "http://callback.nonrtric:80/post","job_definition": {"db-url": "http://influxdb2.nonrtric:8086","db-org":
+            "est","db-bucket": "pm-bucket","db-token": "token","filterType": "pmdata","filter":
+            {}}}'
+
+
+    onap.policy.clamp.ac.element.AutomationCompositionDefinition:
+      version: 1.2.3
+      type: org.onap.policy.clamp.acm.AutomationComposition
+      type_version: 1.0.1
+      description: Automation composition for DME request
+      properties:
+        provider: ONAP
+        elements:
+          - name: onap.policy.clamp.ac.element.DMEAutomationCompositionElement
+            version: 1.2.3

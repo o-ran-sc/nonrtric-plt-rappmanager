@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+* ========================LICENSE_START=================================
+* O-RAN-SC
+* %%
+* Copyright (C) 2023 Nordix Foundation
+* %%
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* ========================LICENSE_END===================================
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.1.5</version>
+        <relativePath/>
+    </parent>
+    <groupId>org.o-ran-sc.nonrtric.plt</groupId>
+    <artifactId>participants</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>NONRTRIC ACM Participants</name>
+    <description>O-RAN SC ACM Participants.</description>
+    <modules>
+        <module>participant-impl-dme</module>
+    </modules>
+    <repositories>
+        <repository>
+            <id>onap-releases</id>
+            <name>onap-releases</name>
+            <url>https://nexus.onap.org/content/repositories/releases/</url>
+        </repository>
+    </repositories>
+    <properties>
+        <java.version>17</java.version>
+        <openapi.maven.version>7.0.1</openapi.maven.version>
+        <docker-maven-plugin>0.30.0</docker-maven-plugin>
+        <jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
+        <onap.acm.models.version>7.0.1-SNAPSHOT</onap.acm.models.version>
+        <openapi.jackson.databind.nullable.version>0.2.6</openapi.jackson.databind.nullable.version>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>false</skipTests>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>default-prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <issueManagement>
+        <system>JIRA</system>
+        <url>https://jira.o-ran-sc.org/</url>
+    </issueManagement>
+</project>
