@@ -18,25 +18,26 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.oransc.participant.dme.models;
+package org.oransc.participant.dme.validator;
 
-import jakarta.validation.Valid;
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import org.oransc.participant.dme.validator.AtleastOneNonNullField;
+import jakarta.validation.Constraint;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@Data
-@AllArgsConstructor
-@AtleastOneNonNullField(fieldNames = {"infoTypeEntities", "dataProducerEntities", "dataConsumerEntities"})
-public class ConfigurationEntity {
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Constraint(validatedBy = AtleastOneNonNullFieldValidator.class)
+public @interface AtleastOneNonNullField {
 
-    @Valid
-    List<InfoTypeEntity> infoTypeEntities;
+    String message() default "Atleast one field should not be null.";
 
-    @Valid
-    List<DataProducerEntity> dataProducerEntities;
+    Class<?>[] groups() default {};
 
-    @Valid
-    List<DataConsumerEntity> dataConsumerEntities;
+    Class<?>[] payload() default {};
+
+    String[] fieldNames();
 }

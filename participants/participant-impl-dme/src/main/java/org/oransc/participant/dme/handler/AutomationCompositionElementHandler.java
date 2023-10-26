@@ -103,9 +103,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
             var configurationEntity = CODER.convert(properties, ConfigurationEntity.class);
             var violations = Validation.buildDefaultValidatorFactory().getValidator().validate(configurationEntity);
             if (violations.isEmpty()) {
-                if ((configurationEntity.getInfoTypeEntities() != null
-                             || configurationEntity.getDataProducerEntities() != null
-                             || configurationEntity.getDataConsumerEntities() != null) && acDmeClient.isDmeHealthy()) {
+                if (acDmeClient.isDmeHealthy()) {
                     if (configurationEntity.getInfoTypeEntities() != null) {
                         acDmeClient.createInfoType(configurationEntity.getInfoTypeEntities().stream().collect(
                                 Collectors.toMap(InfoTypeEntity::getInfoTypeId, InfoTypeEntity::getPayload)));
