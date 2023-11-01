@@ -9,7 +9,8 @@ rApp manager is an application which lifecycle manages the rApp.
 
 ### rApp Package (<mark>**It is a prototype**</mark>)
 
-![Image](docs/images/rApp-package.png "Rapp package")
+![Image](docs/images/rApp-package-1.png "Rapp package")
+![Image](docs/images/rApp-package-2.png "Rapp package")
 
 ### rApp States
 
