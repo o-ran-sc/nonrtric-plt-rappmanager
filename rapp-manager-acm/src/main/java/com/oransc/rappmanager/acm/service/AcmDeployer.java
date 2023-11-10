@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START======================================================================
  * Copyright (C) 2023 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2023 OpenInfra Foundation Europe. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +19,11 @@
 
 package com.oransc.rappmanager.acm.service;
 
+import com.google.gson.Gson;
 import com.oransc.rappmanager.acm.configuration.ACMConfiguration;
 import com.oransc.rappmanager.acm.rest.AutomationCompositionDefinitionApiClient;
 import com.oransc.rappmanager.acm.rest.AutomationCompositionInstanceApiClient;
+import com.oransc.rappmanager.dme.service.DmeAcmInterceptor;
 import com.oransc.rappmanager.models.RappDeployer;
 import com.oransc.rappmanager.models.csar.RappCsarConfigurationHandler;
 import com.oransc.rappmanager.models.rapp.Rapp;
@@ -41,6 +44,7 @@ import org.onap.policy.clamp.models.acm.messages.rest.commissioning.PrimeOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -57,6 +61,8 @@ public class AcmDeployer implements RappDeployer {
     private final RappCsarConfigurationHandler rappCsarConfigurationHandler;
     private final RappInstanceStateMachine rappInstanceStateMachine;
     private final ACMConfiguration acmConfiguration;
+    private final Gson gson;
+    private final DmeAcmInterceptor dmeAcmInterceptor;
 
     void updateACMInstanceState(UUID compositionId, RappACMInstance rappACMInstance, DeployOrder deployOrder) {
         AcInstanceStateUpdate acInstanceStateUpdate = new AcInstanceStateUpdate();
@@ -75,9 +81,10 @@ public class AcmDeployer implements RappDeployer {
     public CommissioningResponse createComposition(String compositionPayload) {
         CommissioningResponse commissioningResponse = null;
         try {
-            commissioningResponse =
-                    automationCompositionDefinitionApiClient.createCompositionDefinitions(compositionPayload,
-                            UUID.randomUUID());
+            ToscaServiceTemplate toscaServiceTemplate = gson.fromJson(compositionPayload, ToscaServiceTemplate.class);
+            dmeAcmInterceptor.injectToscaServiceTemplate(toscaServiceTemplate);
+            commissioningResponse = automationCompositionDefinitionApiClient.createCompositionDefinitions(
+                    gson.toJson(toscaServiceTemplate), UUID.randomUUID());
         } catch (Exception e) {
             logger.warn("Error in creating composition", e);
         }
@@ -129,9 +136,13 @@ public class AcmDeployer implements RappDeployer {
             String instantiationPayload =
                     rappCsarConfigurationHandler.getInstantiationPayload(rapp, rappInstance.getAcm(),
                             rapp.getCompositionId());
+            AutomationComposition automationComposition =
+                    gson.fromJson(instantiationPayload, AutomationComposition.class);
+            dmeAcmInterceptor.injectAutomationComposition(automationComposition, rapp, rappInstance);
+
             InstantiationResponse instantiationResponse =
                     automationCompositionInstanceApiClient.createCompositionInstance(rapp.getCompositionId(),
-                            instantiationPayload, UUID.randomUUID());
+                            gson.toJson(automationComposition), UUID.randomUUID());
             if (instantiationResponse.getInstanceId() != null) {
                 rappInstance.getAcm().setAcmInstanceId(instantiationResponse.getInstanceId());
                 updateACMInstanceState(rapp.getCompositionId(), rappInstance.getAcm(), DeployOrder.DEPLOY);
@@ -246,8 +257,10 @@ public class AcmDeployer implements RappDeployer {
     void sendRappInstanceStateEvent(RappInstance rappInstance, DeployState deployState) {
         if (deployState.equals(DeployState.DEPLOYED)) {
             rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.ACMDEPLOYED);
+            rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.DMEDEPLOYED);
         } else if (deployState.equals(DeployState.UNDEPLOYED)) {
             rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.ACMUNDEPLOYED);
+            rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.DMEUNDEPLOYED);
         } else if (deployState.equals(DeployState.DEPLOYING)) {
             rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.DEPLOYING);
         } else if (deployState.equals(DeployState.UNDEPLOYING)) {

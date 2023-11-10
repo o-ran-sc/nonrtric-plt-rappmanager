@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START======================================================================
  * Copyright (C) 2023 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2023 OpenInfra Foundation Europe. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +35,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oransc.rappmanager.acm.configuration.ACMConfiguration;
+import com.oransc.rappmanager.dme.service.DmeAcmInterceptor;
 import com.oransc.rappmanager.models.cache.RappCacheService;
 import com.oransc.rappmanager.models.csar.RappCsarConfigurationHandler;
 import com.oransc.rappmanager.models.rapp.Rapp;
@@ -74,9 +76,10 @@ import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
-@SpringBootTest(classes = {BeanTestConfiguration.class, ACMConfiguration.class, AcmDeployer.class,
-        RappCsarConfigurationHandler.class, RappCacheService.class, RappInstanceStateMachineConfig.class,
-        RappInstanceStateMachine.class})
+@SpringBootTest(
+        classes = {BeanTestConfiguration.class, ACMConfiguration.class, AcmDeployer.class, DmeAcmInterceptor.class,
+                RappCsarConfigurationHandler.class, RappCacheService.class, RappInstanceStateMachineConfig.class,
+                RappInstanceStateMachine.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureMockMvc
 class AcmDeployerTest {
@@ -162,8 +165,10 @@ class AcmDeployerTest {
         UUID compositionId = UUID.randomUUID();
         UUID rappId = UUID.randomUUID();
         UUID instanceId = UUID.randomUUID();
-        Rapp rapp = Rapp.builder().name(rappId.toString()).packageName(validRappFile).compositionId(compositionId)
+        Rapp rapp = Rapp.builder().name("").packageName(validRappFile).compositionId(compositionId)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
+        RappInstance rappInstance = rappResourceBuilder.getRappInstance();
+        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
         InstantiationResponse instantiationResponse = new InstantiationResponse();
         instantiationResponse.setInstanceId(instanceId);
         mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_INSTANCES, compositionId)))
@@ -173,7 +178,7 @@ class AcmDeployerTest {
         mockServer.expect(ExpectedCount.once(),
                         requestTo(acmConfiguration.getBaseUrl() + "compositions/" + compositionId + "/instances/" + instanceId))
                 .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.ACCEPTED));
-        boolean rappDeployStateActual = acmDeployer.deployRappInstance(rapp, rappResourceBuilder.getRappInstance());
+        boolean rappDeployStateActual = acmDeployer.deployRappInstance(rapp, rappInstance);
         assertTrue(rappDeployStateActual);
         mockServer.verify();
     }
@@ -182,7 +187,7 @@ class AcmDeployerTest {
     void testDeployRappInstanceFailureWithNoInstanceId() throws JsonProcessingException {
         UUID compositionId = UUID.randomUUID();
         UUID rappId = UUID.randomUUID();
-        Rapp rapp = Rapp.builder().name(rappId.toString()).packageName(validRappFile).compositionId(compositionId)
+        Rapp rapp = Rapp.builder().name("").packageName(validRappFile).compositionId(compositionId)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
         RappInstance rappInstance = rappResourceBuilder.getRappInstance();
         rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
@@ -201,7 +206,7 @@ class AcmDeployerTest {
     void testDeployRappInstanceFailure() {
         UUID compositionId = UUID.randomUUID();
         UUID rappId = UUID.randomUUID();
-        Rapp rapp = Rapp.builder().name(rappId.toString()).packageName(validRappFile).compositionId(compositionId)
+        Rapp rapp = Rapp.builder().name("").packageName(validRappFile).compositionId(compositionId)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
         RappInstance rappInstance = rappResourceBuilder.getRappInstance();
         rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());

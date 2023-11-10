@@ -1,3 +1,22 @@
+/*-
+ * ============LICENSE_START======================================================================
+ * Copyright (C) 2023 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2023 OpenInfra Foundation Europe. All rights reserved.
+ * ===============================================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ============LICENSE_END========================================================================
+ */
+
 package com.oransc.rappmanager.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -175,18 +194,6 @@ class RappServiceTest {
     }
 
     @Test
-    void testDeployRappInstanceDmeFailure() {
-        Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
-                            .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
-        RappInstance rappInstance = new RappInstance();
-        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
-        when(acmDeployer.deployRappInstance(any(), any())).thenReturn(true);
-        when(smeDeployer.deployRappInstance(any(), any())).thenReturn(true);
-        when(dmeDeployer.deployRappInstance(any(), any())).thenReturn(false);
-        assertEquals(HttpStatus.BAD_GATEWAY, rappService.deployRappInstance(rapp, rappInstance).getStatusCode());
-    }
-
-    @Test
     void testDeployRappInstanceFailureWithState() {
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
@@ -225,19 +232,6 @@ class RappServiceTest {
         when(acmDeployer.undeployRappInstance(any(), any())).thenReturn(true);
         when(smeDeployer.undeployRappInstance(any(), any())).thenReturn(false);
         when(dmeDeployer.undeployRappInstance(any(), any())).thenReturn(true);
-        assertEquals(HttpStatus.BAD_GATEWAY, rappService.undeployRappInstance(rapp, rappInstance).getStatusCode());
-    }
-
-    @Test
-    void testUndeployRappInstanceDmeFailure() {
-        Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
-                            .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
-        RappInstance rappInstance = new RappInstance();
-        rappInstance.setState(RappInstanceState.DEPLOYED);
-        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
-        when(acmDeployer.undeployRappInstance(any(), any())).thenReturn(true);
-        when(smeDeployer.undeployRappInstance(any(), any())).thenReturn(true);
-        when(dmeDeployer.undeployRappInstance(any(), any())).thenReturn(false);
         assertEquals(HttpStatus.BAD_GATEWAY, rappService.undeployRappInstance(rapp, rappInstance).getStatusCode());
     }
 
