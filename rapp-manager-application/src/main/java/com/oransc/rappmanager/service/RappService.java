@@ -102,8 +102,8 @@ public class RappService {
         if (rappInstance.getState().equals(RappInstanceState.UNDEPLOYED)) {
             rappInstance.setReason(null);
             rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.DEPLOYING);
-            if (acmDeployer.deployRappInstance(rapp, rappInstance) && smeDeployer.deployRappInstance(rapp, rappInstance)
-                        && dmeDeployer.deployRappInstance(rapp, rappInstance)) {
+            if (acmDeployer.deployRappInstance(rapp, rappInstance) && smeDeployer.deployRappInstance(rapp,
+                    rappInstance)) {
                 return ResponseEntity.accepted().build();
             }
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
@@ -119,7 +119,7 @@ public class RappService {
             rappInstance.setReason(null);
             rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.UNDEPLOYING);
             if (acmDeployer.undeployRappInstance(rapp, rappInstance) && smeDeployer.undeployRappInstance(rapp,
-                    rappInstance) && dmeDeployer.undeployRappInstance(rapp, rappInstance)) {
+                    rappInstance)) {
                 return ResponseEntity.accepted().build();
             }
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();

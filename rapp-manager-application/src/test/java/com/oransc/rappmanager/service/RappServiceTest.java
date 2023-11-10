@@ -175,18 +175,6 @@ class RappServiceTest {
     }
 
     @Test
-    void testDeployRappInstanceDmeFailure() {
-        Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
-                            .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
-        RappInstance rappInstance = new RappInstance();
-        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
-        when(acmDeployer.deployRappInstance(any(), any())).thenReturn(true);
-        when(smeDeployer.deployRappInstance(any(), any())).thenReturn(true);
-        when(dmeDeployer.deployRappInstance(any(), any())).thenReturn(false);
-        assertEquals(HttpStatus.BAD_GATEWAY, rappService.deployRappInstance(rapp, rappInstance).getStatusCode());
-    }
-
-    @Test
     void testDeployRappInstanceFailureWithState() {
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
@@ -225,19 +213,6 @@ class RappServiceTest {
         when(acmDeployer.undeployRappInstance(any(), any())).thenReturn(true);
         when(smeDeployer.undeployRappInstance(any(), any())).thenReturn(false);
         when(dmeDeployer.undeployRappInstance(any(), any())).thenReturn(true);
-        assertEquals(HttpStatus.BAD_GATEWAY, rappService.undeployRappInstance(rapp, rappInstance).getStatusCode());
-    }
-
-    @Test
-    void testUndeployRappInstanceDmeFailure() {
-        Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
-                            .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
-        RappInstance rappInstance = new RappInstance();
-        rappInstance.setState(RappInstanceState.DEPLOYED);
-        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
-        when(acmDeployer.undeployRappInstance(any(), any())).thenReturn(true);
-        when(smeDeployer.undeployRappInstance(any(), any())).thenReturn(true);
-        when(dmeDeployer.undeployRappInstance(any(), any())).thenReturn(false);
         assertEquals(HttpStatus.BAD_GATEWAY, rappService.undeployRappInstance(rapp, rappInstance).getStatusCode());
     }
 
