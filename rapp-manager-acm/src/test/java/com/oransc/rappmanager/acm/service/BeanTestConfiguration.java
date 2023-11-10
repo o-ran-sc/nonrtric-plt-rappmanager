@@ -2,6 +2,7 @@ package com.oransc.rappmanager.acm.service;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.oransc.rappmanager.acm.ApiClient;
 import com.oransc.rappmanager.acm.configuration.ACMConfiguration;
 import com.oransc.rappmanager.acm.configuration.JacksonMessageConverterConfiguration;
@@ -28,6 +29,11 @@ public class BeanTestConfiguration {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return objectMapper;
+    }
+
+    @Bean
+    public Gson gson() {
+        return new Gson();
     }
 
     @Bean
