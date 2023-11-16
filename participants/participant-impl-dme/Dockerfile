@@ -1,6 +1,7 @@
 #
 # ============LICENSE_START=======================================================
 #  Copyright (C) 2023 Nordix Foundation.
+#  Copyright (C) 2023 OpenInfra Foundation Europe. All rights reserved.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -43,7 +44,7 @@ WORKDIR /opt/app/participant/dme
 
 EXPOSE 8080
 
-ADD src/main/resources/application.yaml /opt/app/participant/dme/application.yaml
+ADD src/main/resources/application.yaml /opt/app/participant/dme/config/application.yaml
 ADD target/${JAR} /opt/app/participant/dme/participant-impl-dme.jar
 
 ARG user=nonrtric
