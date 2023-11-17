@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83eb14c5_aa78dd91",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2023-11-17T17:24:13Z",
+      "side": 1,
+      "message": "rApp-Flow.png: Does rApp flow need a check if there are any instances before delete ... (I guess ACM handles that?)\n\nrApp-Instance-Flow.png: Steps 4-10. If only the participant-specific part of the instance informationis passed to each participant, then maybe these steps could be re-labelled to 4: Deploy ACM Instance (A1 part), 6: Deploy ACM Instance (KServe part), 8: Deploy ACM Instance (SME part), 10: Deploy ACM Instance (DME part)",
+      "revId": "f5ad5ea9f27478f05c5b9cc69084082290bbb3d0",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2bf767d3_cfbf40ba",
+        "filename": "docs/uml/rApp-flow.puml",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2023-11-17T17:24:13Z",
+      "side": 1,
+      "message": "See comment in main comment about checking if there are any instances.",
+      "range": {
+        "startLine": 25,
+        "startChar": 7,
+        "endLine": 25,
+        "endChar": 17
+      },
+      "revId": "f5ad5ea9f27478f05c5b9cc69084082290bbb3d0",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bacdb6fc_fdcc67bf",
+        "filename": "docs/uml/rApp-instance-flow.puml",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2023-11-17T17:24:13Z",
+      "side": 1,
+      "message": "See comment in main comment. \nSame for undeploy below.",
+      "range": {
+        "startLine": 26,
+        "startChar": 44,
+        "endLine": 26,
+        "endChar": 63
+      },
+      "revId": "f5ad5ea9f27478f05c5b9cc69084082290bbb3d0",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
