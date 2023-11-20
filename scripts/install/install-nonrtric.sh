@@ -2,6 +2,7 @@
 
 #  ============LICENSE_START===============================================
 #  Copyright (C) 2023 Nordix Foundation. All rights reserved.
+#  Copyright (C) 2023 OpenInfra Foundation Europe. All rights reserved.
 #  ========================================================================
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -21,7 +22,7 @@ echo "######### Installing NONRTRIC components #########"
 
 git clone "https://gerrit.o-ran-sc.org/r/it/dep"
 
-ENABLED_SERVICES=(installPms installA1controller installA1simulator installInformationservice)
+ENABLED_SERVICES=(installPms installA1controller installA1simulator installInformationservice installrAppmanager installDmeParticipant)
 DISABLED_SERVICES=(installControlpanel installRappcatalogueservice installRappcatalogueenhancedservice installNonrtricgateway installKong installDmaapadapterservice installDmaapmediatorservice installHelmmanager installOrufhrecovery installRansliceassurance installRanpm)
 
 RECEIPE_FILE="dep/nonrtric/RECIPE_EXAMPLE/example_recipe.yaml"

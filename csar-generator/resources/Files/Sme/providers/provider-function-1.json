@@ -14,20 +14,6 @@
       "regInfo": {
         "apiProvPubKey": "AEF-PublicKey"
       }
-    },
-    {
-      "apiProvFuncInfo": "rApp as AMF",
-      "apiProvFuncRole": "AMF",
-      "regInfo": {
-        "apiProvPubKey": "AMF-PublicKey"
-      }
-    },
-    {
-      "apiProvFuncInfo": "Gateway as entrypoint AEF",
-      "apiProvFuncRole": "AEF",
-      "regInfo": {
-        "apiProvPubKey": "AEF-Gateway-PublicKey"
-      }
     }
   ],
   "regSec": "PSK"
