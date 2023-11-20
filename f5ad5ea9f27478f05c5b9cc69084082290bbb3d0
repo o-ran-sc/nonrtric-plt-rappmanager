@@ -41,6 +41,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "8fe780fa_2a3daad7",
+        "filename": "docs/uml/rApp-flow.puml",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2023-11-20T09:40:30Z",
+      "side": 1,
+      "message": "Delete rApp flow check whether the rApp instances are empty and rApp is in COMMISSIONED state. rApp moved to PRIMED to COMMISSIONED state during depriming of rApp. DEPRIMING of rApp is not allowed when there are rApp instances.\n\nUpdated the flow to show these checks.",
+      "parentUuid": "2bf767d3_cfbf40ba",
+      "range": {
+        "startLine": 25,
+        "startChar": 7,
+        "endLine": 25,
+        "endChar": 17
+      },
+      "revId": "f5ad5ea9f27478f05c5b9cc69084082290bbb3d0",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "bacdb6fc_fdcc67bf",
@@ -54,6 +78,30 @@
       "writtenOn": "2023-11-17T17:24:13Z",
       "side": 1,
       "message": "See comment in main comment. \nSame for undeploy below.",
+      "range": {
+        "startLine": 26,
+        "startChar": 44,
+        "endLine": 26,
+        "endChar": 63
+      },
+      "revId": "f5ad5ea9f27478f05c5b9cc69084082290bbb3d0",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8427dabd_a2170d35",
+        "filename": "docs/uml/rApp-instance-flow.puml",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2023-11-20T09:40:30Z",
+      "side": 1,
+      "message": "ACM instance deploy/undeploy steps re-labelled.",
+      "parentUuid": "bacdb6fc_fdcc67bf",
       "range": {
         "startLine": 26,
         "startChar": 44,
