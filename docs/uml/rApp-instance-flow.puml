@@ -22,7 +22,9 @@ group Deploy rApp Instance
 "API User"->"rApp Manager": Deploy rApp Instance
 "rApp Manager"->"File System": Fetch rApp Package and Instance details
     group ACM Deploy
-        "rApp Manager"->"ACM Runtime": Instantiate and Deploy ACM Instance
+        "rApp Manager"->"ACM Runtime": Instantiate ACM Instance
+        "rApp Manager"<-"ACM Runtime": Instantiate ACM Instance response
+        "rApp Manager"->"ACM Runtime": Deploy ACM Instance
         group Deploy A1 Part
             "ACM Runtime"->"A1PMS Participant": Deploy ACM Instance
             "ACM Runtime"<--"A1PMS Participant": Response
@@ -53,7 +55,7 @@ end
 autonumber
 group Undeploy rApp Instance
 "API User"->"rApp Manager": Undeploy rApp Instance
-"rApp Manager"->"File System": Fetch rApp Package and Instance details
+"rApp Manager"->"rApp Manager": Fetch rApp Package and Instance details
     group ACM Undeploy
         "rApp Manager"->"ACM Runtime": Undeploy ACM Instance
         group Undeploy A1 Part

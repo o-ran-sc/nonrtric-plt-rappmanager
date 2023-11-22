@@ -11,7 +11,7 @@ group Create rApp
 "API User"->"rApp Manager": Create rApp
 "rApp Manager"->"rApp Manager": Validate rApp
 "rApp Manager"->"File System": Store rApp Package
-"rApp Manager"->"API User": Onboard rApp Status
+"rApp Manager"->"API User": Create rApp Status
 "API User"->"rApp Manager": Prime rApp
 "rApp Manager"->"ACM Runtime": Create ACM composition
 "ACM Runtime"->"rApp Manager": Create ACM composition Status
@@ -19,6 +19,7 @@ group Create rApp
 "ACM Runtime"->"rApp Manager": Prime ACM composition Status
 "rApp Manager"->"DME": Check information type availability
 "DME"->"rApp Manager": Information type availability Status
+"rApp Manager"->"API User": Prime rApp Status
 end
 
 autonumber
@@ -28,6 +29,7 @@ group Delete rApp
 "ACM Runtime"->"rApp Manager": Deprime ACM composition Status
 "rApp Manager"->"ACM Runtime": Delete ACM composition
 "ACM Runtime"->"rApp Manager": Delete ACM composition Status
+"rApp Manager"->"API User": Deprime rApp Status
 "API User"->"rApp Manager": Delete rApp
 "rApp Manager"->"rApp Manager": Validate rApp is in COMMISSIONED state \n and no rApp Instances
 "rApp Manager"->"API User": Delete rApp Status
