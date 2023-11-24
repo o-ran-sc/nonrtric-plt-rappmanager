@@ -1,7 +1,5 @@
 #!/bin/bash
-
 #  ============LICENSE_START===============================================
-#  Copyright (C) 2023 Nordix Foundation. All rights reserved.
 #  Copyright (C) 2023 OpenInfra Foundation Europe. All rights reserved.
 #  ========================================================================
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,20 +16,8 @@
 #  ============LICENSE_END=================================================
 #
 
-echo "######### Installing Rapp Manager #########"
-
-./install-base.sh
-
-echo "Installing Kserve components..."
-./install-kserve.sh
-
-echo "Installing NONRTRIC components..."
-./install-nonrtric.sh
-
-echo "Installing ACM components..."
-./install-acm.sh
-
-echo "Patching Kserve..."
-./patch-kserve.sh
-
-echo "Rapp Manager installation completed."
+echo "######### Patching Kserve #########"
+kubectl apply -f https://github.com/kserve/kserve/releases/download/v0.10.0/kserve.yaml
+kubectl delete po -l control-plane=kserve-controller-manager -n kserve
+kubectl patch configmap/inferenceservice-config -n kserve --type=strategic -p '{"data": {"deploy": "{\"defaultDeploymentMode\": \"RawDeployment\"}"}}'
+echo "Kserve patching completed."

@@ -2,6 +2,7 @@
 
 #  ============LICENSE_START===============================================
 #  Copyright (C) 2023 Nordix Foundation. All rights reserved.
+#  Copyright (C) 2023 OpenInfra Foundation Europe. All rights reserved.
 #  ========================================================================
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -30,6 +31,9 @@ K8S_VERSIONS_FILE="docker/compose/get-k8s-versions.sh"
 IP_ADDRESS=$(hostname -I | awk '{print $1}')
 echo "IP Address : $IP_ADDRESS"
 
+A1PMS_HOST=${A1PMS_HOST:-http://policymanagementservice.nonrtric:9080}
+CHART_REPO_HOST=${CHART_REPO_HOST:-'http://'$IP_ADDRESS':8879/charts'}
+
 git clone "https://gerrit.onap.org/r/policy/docker"
 
 CWD=$(pwd)
@@ -38,9 +42,6 @@ export WORKSPACE="$CWD/docker"
 #Temporary workaround. Should be removed once this gets fixed in policy/docker repo
 echo "Update policy-db-migrator version..."
 yq eval '.dbmigrator.image="onap/policy-db-migrator:3.0-SNAPSHOT-latest"' -i $ACM_VALUES_FILE
-sed -i 's/component=policy-clamp-ac-kserve-ppnt/component=policy-clamp-ac-sim-ppnt/g' $K8S_VERSIONS_FILE
-PARAMETER_STRING="metrics:\n  security:\n    disabled: false"
-echo -e "$PARAMETER_STRING" >> docker/helm/policy/components/policy-clamp-runtime-acm/resources/config/acRuntimeParameters.yaml
 
 echo "Updating policy docker image versions..."
 bash $K8S_VERSIONS_FILE
@@ -59,10 +60,10 @@ for element in "${DISABLE_COMPONENTS[@]}"; do
 done
 
 echo "Updating A1PMS Participant"
-yq eval '.a1pms.baseUrl="http://policymanagementservice.nonrtric:9080"' -i $A1PMS_CONFIGURATION_FILE
+yq eval '.a1pms.baseUrl="'$A1PMS_HOST'"' -i $A1PMS_CONFIGURATION_FILE
 
 echo "Updating the k8s participant repo list"
-yq eval '.repoList.helm.repos += {"repoName":"local","address":"http://'$IP_ADDRESS':8879/charts"}' -i $K8S_CONFIGURATION_FILE
+yq eval '.repoList.helm.repos += {"repoName":"local","address":"'$CHART_REPO_HOST'"}' -i $K8S_CONFIGURATION_FILE
 
 echo "Building policy helm charts..."
 helm dependency build docker/helm/policy/
