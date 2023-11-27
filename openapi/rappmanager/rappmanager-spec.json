@@ -1,0 +1,663 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "rApp Manager",
+    "description": "The rApp Manager is a lifecycle management service for rApps. It gets the rApp as ASD formatted package and lifecycle manages it based on it instance configuration.",
+    "license": {
+      "name": "Copyright (C) 2023 OpenInfra Foundation Europe. Licensed under the Apache License.",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    },
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "rApp",
+      "description": "API for rApps"
+    },
+    {
+      "name": "rApp Instance",
+      "description": "API for rApp Instances"
+    }
+  ],
+  "paths": {
+    "/rapps/{rapp_id}": {
+      "get": {
+        "tags": [
+          "rApp"
+        ],
+        "summary": "Get specific rApp details",
+        "operationId": "getRapp",
+        "parameters": [
+          {
+            "name": "rapp_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rapp"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "rApp"
+        ],
+        "summary": "Prime/Deprime rApp",
+        "operationId": "primeRapp",
+        "parameters": [
+          {
+            "name": "rapp_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RappPrimeOrder"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "502": {
+            "description": "Bad Gateway"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "rApp"
+        ],
+        "summary": "Create rApp",
+        "operationId": "createRapp",
+        "parameters": [
+          {
+            "name": "rapp_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "rApp"
+        ],
+        "summary": "Delete rApp",
+        "operationId": "deleteRapp",
+        "parameters": [
+          {
+            "name": "rapp_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/rapps/{rapp_id}/instance/{rapp_instance_id}": {
+      "get": {
+        "tags": [
+          "rApp Instance"
+        ],
+        "summary": "Get specific rApp instance details",
+        "operationId": "getRappInstance",
+        "parameters": [
+          {
+            "name": "rapp_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rapp_instance_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RappInstance"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "rApp Instance"
+        ],
+        "summary": "Deploy/Undeploy rApp instance",
+        "operationId": "deployRappInstance",
+        "parameters": [
+          {
+            "name": "rapp_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rapp_instance_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RappInstanceDeployOrder"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "502": {
+            "description": "Bad Gateway"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "rApp Instance"
+        ],
+        "summary": "Delete rApp instance",
+        "operationId": "deleteRappInstance",
+        "parameters": [
+          {
+            "name": "rapp_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rapp_instance_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/rapps/{rapp_id}/instance": {
+      "get": {
+        "tags": [
+          "rApp Instance"
+        ],
+        "summary": "Get all instances of rApp",
+        "operationId": "getAllRappInstances",
+        "parameters": [
+          {
+            "name": "rapp_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "$ref": "#/components/schemas/RappInstance"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "rApp Instance"
+        ],
+        "summary": "Create rApp instance",
+        "operationId": "createRappInstance",
+        "parameters": [
+          {
+            "name": "rapp_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RappInstance"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RappInstance"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/rapps": {
+      "get": {
+        "tags": [
+          "rApp"
+        ],
+        "summary": "Get All rApps",
+        "operationId": "getRapps",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Rapp"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RappPrimeOrder": {
+        "type": "object",
+        "properties": {
+          "primeOrder": {
+            "type": "string",
+            "enum": [
+              "PRIME",
+              "DEPRIME"
+            ]
+          }
+        }
+      },
+      "RappInstanceDeployOrder": {
+        "type": "object",
+        "properties": {
+          "deployOrder": {
+            "type": "string",
+            "enum": [
+              "DEPLOY",
+              "UNDEPLOY"
+            ]
+          }
+        }
+      },
+      "ACMResources": {
+        "type": "object",
+        "properties": {
+          "compositionDefinitions": {
+            "type": "string"
+          },
+          "compositionInstances": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "DMEResources": {
+        "type": "object",
+        "properties": {
+          "producerInfoTypes": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "consumerInfoTypes": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "infoProducers": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "infoConsumers": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Rapp": {
+        "type": "object",
+        "properties": {
+          "rappId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "COMMISSIONED",
+              "PRIMING",
+              "PRIMED",
+              "DEPRIMING"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          },
+          "packageLocation": {
+            "type": "string"
+          },
+          "packageName": {
+            "type": "string"
+          },
+          "rappResources": {
+            "$ref": "#/components/schemas/RappResources"
+          },
+          "rappInstances": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/RappInstance"
+            }
+          },
+          "compositionId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "RappACMInstance": {
+        "type": "object",
+        "properties": {
+          "instance": {
+            "type": "string"
+          },
+          "acmInstanceId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "RappDMEInstance": {
+        "type": "object",
+        "properties": {
+          "infoTypesProducer": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "infoProducer": {
+            "type": "string"
+          },
+          "infoTypeConsumer": {
+            "type": "string"
+          },
+          "infoConsumer": {
+            "type": "string"
+          }
+        }
+      },
+      "RappInstance": {
+        "type": "object",
+        "properties": {
+          "rappInstanceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "DEPLOYED",
+              "DEPLOYING",
+              "UNDEPLOYED",
+              "UNDEPLOYING"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          },
+          "acm": {
+            "$ref": "#/components/schemas/RappACMInstance"
+          },
+          "sme": {
+            "$ref": "#/components/schemas/RappSMEInstance"
+          },
+          "dme": {
+            "$ref": "#/components/schemas/RappDMEInstance"
+          }
+        }
+      },
+      "RappResources": {
+        "type": "object",
+        "properties": {
+          "acm": {
+            "$ref": "#/components/schemas/ACMResources"
+          },
+          "sme": {
+            "$ref": "#/components/schemas/SMEResources"
+          },
+          "dme": {
+            "$ref": "#/components/schemas/DMEResources"
+          }
+        }
+      },
+      "RappSMEInstance": {
+        "type": "object",
+        "properties": {
+          "providerFunction": {
+            "type": "string"
+          },
+          "providerFunctionIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "serviceApis": {
+            "type": "string"
+          },
+          "serviceApiIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "invokers": {
+            "type": "string"
+          },
+          "invokerIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "aefId": {
+            "type": "string"
+          },
+          "apfId": {
+            "type": "string"
+          }
+        }
+      },
+      "SMEResources": {
+        "type": "object",
+        "properties": {
+          "providerFunctions": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "serviceApis": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "invokers": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
