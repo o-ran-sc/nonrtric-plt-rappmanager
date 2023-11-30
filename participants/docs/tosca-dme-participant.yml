@@ -1,0 +1,163 @@
+---
+tosca_definitions_version: tosca_simple_yaml_1_3
+data_types:
+  onap.datatypes.ToscaConceptIdentifier:
+    derived_from: tosca.datatypes.Root
+    properties:
+      name:
+        type: string
+        required: true
+      version:
+        type: string
+        required: true
+  org.onap.datatypes.policy.clamp.acm.DMEAutomationCompositionElement.InfoTypeEntity:
+    version: 1.0.0
+    derived_from: tosca.datatypes.Root
+    properties:
+      infoTypeEntityId:
+        type: onap.datatypes.ToscaConceptIdentifier
+        required: true
+        description: The name and version of a Configuration Entity to be handled
+          by the DME Automation Composition Element
+      infoTypeId:
+        type: string
+        required: true
+        description: Id of the info type
+      payload:
+        type: string
+        required: true
+        description: Json payload of info type
+  org.onap.datatypes.policy.clamp.acm.DMEAutomationCompositionElement.DataProducerEntity:
+    version: 1.0.0
+    derived_from: tosca.datatypes.Root
+    properties:
+      dataProducerEntityId:
+        type: onap.datatypes.ToscaConceptIdentifier
+        required: true
+        description: The name and version of a Configuration Entity to be handled
+          by the DME Automation Composition Element
+      dataProducerId:
+        type: string
+        required: true
+        description: Id of the info type
+      payload:
+        type: string
+        required: true
+        description: Json payload of info type
+  org.onap.datatypes.policy.clamp.acm.DMEAutomationCompositionElement.DataConsumerEntity:
+    version: 1.0.0
+    derived_from: tosca.datatypes.Root
+    properties:
+      dataConsumerEntityId:
+        type: onap.datatypes.ToscaConceptIdentifier
+        required: true
+        description: The name and version of a Configuration Entity to be handled
+          by the DME Automation Composition Element
+      dataConsumerId:
+        type: string
+        required: true
+        description: Id of the info type
+      payload:
+        type: string
+        required: true
+        description: Json payload of info type
+node_types:
+  org.onap.policy.clamp.acm.Participant:
+    version: 1.0.1
+    derived_from: tosca.nodetypes.Root
+    properties:
+      provider:
+        type: string
+        required: false
+  org.onap.policy.clamp.acm.AutomationCompositionElement:
+    version: 1.0.1
+    derived_from: tosca.nodetypes.Root
+    properties:
+      provider:
+        type: string
+        required: false
+      participantType:
+        type: onap.datatypes.ToscaConceptIdentifier
+        required: true
+      startPhase:
+        type: integer
+        required: false
+        constraints:
+          - greater-or-equal: 0
+        metadata:
+          common: true
+        description: A value indicating the start phase in which this automation composition
+          element will be started, the first start phase is zero. Automation Composition
+          Elements are started in their start_phase order and stopped in reverse start
+          phase order. Automation Composition Elements with the same start phase are
+          started and stopped simultaneously
+  org.onap.policy.clamp.acm.AutomationComposition:
+    version: 1.0.1
+    derived_from: tosca.nodetypes.Root
+    properties:
+      provider:
+        type: string
+        required: false
+        metadata:
+          common: true
+      elements:
+        type: list
+        required: true
+        metadata:
+          common: true
+        entry_schema:
+          type: onap.datatypes.ToscaConceptIdentifier
+  org.onap.policy.clamp.acm.DMEAutomationCompositionElement:
+    version: 1.0.1
+    derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
+    properties:
+      infoTypeEntities:
+        type: list
+        required: true
+        entry_schema:
+          type: org.onap.datatypes.policy.clamp.acm.DMEAutomationCompositionElement.InfoTypeEntity
+          type_version: 1.0.0
+        description: The configuration entities of DME
+      dataProducerEntities:
+        type: list
+        required: true
+        entry_schema:
+          type: org.onap.datatypes.policy.clamp.acm.DMEAutomationCompositionElement.DataProducerEntity
+          type_version: 1.0.0
+        description: The configuration entities of DME
+      dataConsumerEntities:
+        type: list
+        required: true
+        entry_schema:
+          type: org.onap.datatypes.policy.clamp.acm.DMEAutomationCompositionElement.DataConsumerEntity
+          type_version: 1.0.0
+        description: The configuration entities of DME
+topology_template:
+  node_templates:
+    org.onap.policy.clamp.acm.DMEAutomationCompositionParticipant:
+      version: 2.3.4
+      type: org.onap.policy.clamp.acm.Participant
+      type_version: 1.0.1
+      description: Participant for DME
+      properties:
+        provider: ONAP
+    onap.policy.clamp.ac.element.DMEAutomationCompositionElement:
+      version: 1.2.3
+      type: org.onap.policy.clamp.acm.DMEAutomationCompositionElement
+      type_version: 1.0.1
+      description: Automation composition element for the DME Requests
+      properties:
+        provider: ONAP
+        participantType:
+          name: org.onap.policy.clamp.acm.DMEParticipant
+          version: 2.3.4
+    onap.policy.clamp.ac.element.AutomationCompositionDefinition:
+      version: 1.2.3
+      type: org.onap.policy.clamp.acm.AutomationComposition
+      type_version: 1.0.1
+      description: Automation composition for DME request
+      properties:
+        provider: ONAP
+        elements:
+          - name: onap.policy.clamp.ac.element.DMEAutomationCompositionElement
+            version: 1.2.3

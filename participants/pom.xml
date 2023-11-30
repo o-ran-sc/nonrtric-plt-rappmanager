@@ -54,7 +54,7 @@
         <openapi.maven.version>7.0.1</openapi.maven.version>
         <docker-maven-plugin>0.30.0</docker-maven-plugin>
         <jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
-        <onap.acm.models.version>7.0.3-SNAPSHOT</onap.acm.models.version>
+        <onap.acm.models.version>7.0.4-SNAPSHOT</onap.acm.models.version>
         <openapi.jackson.databind.nullable.version>0.2.6</openapi.jackson.databind.nullable.version>
     </properties>
     <build>
