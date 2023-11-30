@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "886fb62a_5a39a3a6",
+        "filename": "docs/overview.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1002243
+      },
+      "writtenOn": "2023-11-30T12:01:30Z",
+      "side": 1,
+      "message": "an unlimited",
+      "revId": "1501c3336070f538280a4f9767dc4e7c598b0669",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fea76159_59d9054b",
+        "filename": "docs/overview.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1002243
+      },
+      "writtenOn": "2023-11-30T12:01:30Z",
+      "side": 1,
+      "message": "Information type, and Data producer/consumer information",
+      "revId": "1501c3336070f538280a4f9767dc4e7c598b0669",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "756d73d7_e5499ebf",
+        "filename": "docs/overview.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1002243
+      },
+      "writtenOn": "2023-11-30T12:01:30Z",
+      "side": 1,
+      "message": "CAPIF stands for Common API framework",
+      "revId": "1501c3336070f538280a4f9767dc4e7c598b0669",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e94d8180_0e0ac8b6",
+        "filename": "docs/release-notes.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1002243
+      },
+      "writtenOn": "2023-11-30T12:01:30Z",
+      "side": 1,
+      "message": "I Release",
+      "revId": "1501c3336070f538280a4f9767dc4e7c598b0669",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
