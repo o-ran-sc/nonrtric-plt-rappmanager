@@ -1,0 +1,37 @@
+name: DMEInstance0
+version: 1.0.1
+compositionId: {{compositionId}}
+description: Demo automation composition instance 0
+elements:
+  709c62b3-8918-41b9-a747-d21eb79d9c12:
+    id: 709c62b3-8918-41b9-a747-d21eb79d9c12
+    definition:
+      name: onap.policy.clamp.ac.element.DMEAutomationCompositionElement
+      version: 1.2.3
+    description: Starter Automation Composition Element for the Demo
+    properties:
+      infoTypeEntities:
+        - infoTypeEntityId:
+            name: infoType1
+            version: 1.0.1
+          infoTypeId: json-file-data-from-filestore
+          payload: '{"info_job_data_schema": {"schema": "http://json-schema.org/draft-07/schema#","title":
+          "json-file-data-from-filestore","description": "json-file-data-from-filestore","type":
+          "object"}}'
+      dataProducerEntities:
+        - dataProducerEntityId:
+            name: producerType1
+            version: 1.0.1
+          dataProducerId: json-file-data-producer
+          payload: '{"info_job_callback_url": "http://localhost/jsonproducerjobcallback","info_producer_supervision_callback_url":
+          "http://localhost/jsonproducersupervisioncallback","supported_info_types":
+          ["json-file-data-from-filestore"]}'
+      dataConsumerEntities:
+        - dataConsumerEntityId:
+            name: consumerType1
+            version: 1.0.1
+          dataConsumerId: json-file-consumer
+          payload: '{"info_type_id": "json-file-data-from-filestore","job_owner": "console","status_notification_uri":
+          "http://callback.nonrtric:80/post","job_definition": {"db-url": "http://influxdb2.nonrtric:8086","db-org":
+          "est","db-bucket": "pm-bucket","db-token": "token","filterType": "pmdata","filter":
+          {}}}'
