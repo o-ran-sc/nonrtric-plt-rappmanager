@@ -19,32 +19,18 @@ from docs_conf.conf import *
 #branch configuration
 
 branch = 'latest'
-baseurl = 'https://docs.o-ran-sc.org/projects/'
-selfurl = '%s/o-ran-sc-nonrtric-plt-rappmanager/en/%s' %(baseurl, branch)
 
 linkcheck_ignore = [
     'http://localhost.*',
     'http://127.0.0.1.*',
     'https://gerrit.o-ran-sc.org.*',
-    './rappmanager-api.html', #Generated file that doesn't exist at link check.
 ]
 
-extensions = ['sphinxcontrib.redoc', 'sphinx.ext.intersphinx',]
+extensions = ['sphinx.ext.intersphinx',]
 
-redoc = [
-            {
-                'name': 'rApp Manager API',
-                'page': 'rappmanager-api',
-                'spec': '../openapi/rappmanager/rappmanager-spec.yaml',
-                'embed': True,
-            }
-        ]
-
-redoc_uri = 'https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js'
 
 #intershpinx mapping with other projects
 intersphinx_mapping = {}
 
-intersphinx_mapping['nonrtric'] = ('%s/o-ran-sc-nonrtric/en/%s' %(baseurl, branch), None)
-# intersphinx_mapping['participants'] = ('%s/participants' % selfurl, None)
-intersphinx_disabled_reftypes = ["*"]
+intersphinx_mapping['nonrtric'] = ('https://docs.o-ran-sc.org/projects/o-ran-sc-nonrtric/en/%s' % branch, None)
+
