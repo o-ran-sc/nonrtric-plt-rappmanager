@@ -1,0 +1,192 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2e333923_55359af7",
+        "filename": "docs/developer-guide.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1002243
+      },
+      "writtenOn": "2023-11-30T09:52:13Z",
+      "side": 1,
+      "message": "rApps",
+      "revId": "839ce3926429b1111a13a3f9e1a08adf8a8f3a5e",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a4a170ac_f80249aa",
+        "filename": "docs/installation-guide.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1002243
+      },
+      "writtenOn": "2023-11-30T09:52:13Z",
+      "side": 1,
+      "message": "the below",
+      "range": {
+        "startLine": 35,
+        "startChar": 90,
+        "endLine": 35,
+        "endChar": 91
+      },
+      "revId": "839ce3926429b1111a13a3f9e1a08adf8a8f3a5e",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9db8a209_ecfe66a4",
+        "filename": "docs/overview.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1002243
+      },
+      "writtenOn": "2023-11-30T09:52:13Z",
+      "side": 1,
+      "message": "an ASD",
+      "revId": "839ce3926429b1111a13a3f9e1a08adf8a8f3a5e",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "56c6daa6_5f5f4739",
+        "filename": "docs/overview.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1002243
+      },
+      "writtenOn": "2023-11-30T09:52:13Z",
+      "side": 1,
+      "message": "The ASD package",
+      "revId": "839ce3926429b1111a13a3f9e1a08adf8a8f3a5e",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1dd2d4e_d8fac26f",
+        "filename": "docs/overview.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1002243
+      },
+      "writtenOn": "2023-11-30T09:52:13Z",
+      "side": 1,
+      "message": "one",
+      "revId": "839ce3926429b1111a13a3f9e1a08adf8a8f3a5e",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ccff3b84_568b231b",
+        "filename": "docs/overview.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1002243
+      },
+      "writtenOn": "2023-11-30T09:52:13Z",
+      "side": 1,
+      "message": "the rApp package",
+      "revId": "839ce3926429b1111a13a3f9e1a08adf8a8f3a5e",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ca6dd8d_f48fb525",
+        "filename": "docs/overview.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1002243
+      },
+      "writtenOn": "2023-11-30T09:52:13Z",
+      "side": 1,
+      "message": "multi-vendor",
+      "range": {
+        "startLine": 54,
+        "startChar": 180,
+        "endLine": 54,
+        "endChar": 181
+      },
+      "revId": "839ce3926429b1111a13a3f9e1a08adf8a8f3a5e",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "17f355e7_c83bc0ce",
+        "filename": "docs/overview.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1002243
+      },
+      "writtenOn": "2023-11-30T09:52:13Z",
+      "side": 1,
+      "message": "to produce/consume",
+      "revId": "839ce3926429b1111a13a3f9e1a08adf8a8f3a5e",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac53d76b_999b742a",
+        "filename": "docs/overview.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1002243
+      },
+      "writtenOn": "2023-11-30T09:52:13Z",
+      "side": 1,
+      "message": "to expose/access/discover",
+      "revId": "839ce3926429b1111a13a3f9e1a08adf8a8f3a5e",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf355a44_f3b62c66",
+        "filename": "docs/overview.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1002243
+      },
+      "writtenOn": "2023-11-30T09:52:13Z",
+      "side": 1,
+      "message": "Spring Boot",
+      "range": {
+        "startLine": 104,
+        "startChar": 41,
+        "endLine": 104,
+        "endChar": 53
+      },
+      "revId": "839ce3926429b1111a13a3f9e1a08adf8a8f3a5e",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
