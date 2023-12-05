@@ -52,12 +52,15 @@ Sample tosca template defining a participant and a AC element definition ':downl
 
 
 **************************************************************************************************
-Configuring a Automation Composition Element on the A1PMS participant for a Automation Composition
+Configuring a Automation Composition Element on the DME participant for a Automation Composition
 **************************************************************************************************
 
 The user defines the following properties in the TOSCA template for the DME participant
 
-.. list-table:: Information Type Entities
+
+*Information Type Entities*
+
+.. list-table::
    :header-rows: 1
 
    * - Property
@@ -73,7 +76,9 @@ The user defines the following properties in the TOSCA template for the DME part
      - String
      - The payload of the information type entity. This will be used as  payload to call DME API
 
-.. list-table:: Data Producer Entities
+*Data Producer Entities*
+
+.. list-table::
    :header-rows: 1
 
    * - Property
@@ -89,7 +94,9 @@ The user defines the following properties in the TOSCA template for the DME part
      - String
      - The payload of the data producer entity. This will be used as  payload to call DME API
 
-.. list-table:: Data Consumer Entities
+*Data Consumer Entities*
+
+.. list-table::
    :header-rows: 1
 
    * - Property
