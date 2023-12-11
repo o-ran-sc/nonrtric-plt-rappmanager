@@ -70,6 +70,10 @@ Service exposure/access related configurations can be provided as part of rApp p
 *****************************
 Sample rApp package structure
 *****************************
+
+.. warning::
+    This packaging structure is a prototype and subject to change
+
 The sample rApp package structure shown below and the location of relevant files for each integration is provided.
 
 .. list-table::
