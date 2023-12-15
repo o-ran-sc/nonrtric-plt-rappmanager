@@ -12,3 +12,4 @@ Non-RT RIC DME Participant
    ./overview.rst
    ./developer-guide.rst
    ./installation-guide.rst
+   ./release-notes.rst
