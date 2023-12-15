@@ -26,7 +26,7 @@ linkcheck_ignore = [
     'http://localhost.*',
     'http://127.0.0.1.*',
     'https://gerrit.o-ran-sc.org.*',
-    '.*participants.*',  # Participants site may not be built yet
+    # '.*participants.*',  # Participants site may not be built yet
     './rappmanager-api.html', # Generated file that doesn't exist at link check.
 ]
 
@@ -47,5 +47,5 @@ redoc_uri = 'https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js
 intersphinx_mapping = {}
 
 intersphinx_mapping['nonrtric'] = ('%s/o-ran-sc-nonrtric/en/%s' %(baseurl, branch), None)
-#intersphinx_mapping['participants'] = ('%s/participants' % selfurl, None)
+intersphinx_mapping['participants'] = ('%s/participants' % selfurl, None)
 intersphinx_disabled_reftypes = ["*"]
