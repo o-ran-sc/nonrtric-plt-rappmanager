@@ -41,7 +41,7 @@ export WORKSPACE="$CWD/docker"
 
 #Temporary workaround. Should be removed once this gets fixed in policy/docker repo
 echo "Update policy-db-migrator version..."
-yq eval '.dbmigrator.image="onap/policy-db-migrator:3.0-SNAPSHOT-latest"' -i $ACM_VALUES_FILE
+yq eval '.dbmigrator.image="onap/policy-db-migrator:3.1-SNAPSHOT-latest"' -i $ACM_VALUES_FILE
 
 echo "Updating policy docker image versions..."
 bash $K8S_VERSIONS_FILE
