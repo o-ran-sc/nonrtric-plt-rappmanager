@@ -4,7 +4,7 @@
 * O-RAN-SC
 * %%
 * Copyright (C) 2023 Nordix Foundation
-* Copyright (C) 2023 OpenInfra Foundation Europe. All rights reserved.
+* Copyright (C) 2023-2024 OpenInfra Foundation Europe. All rights reserved.
 * %%
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.0</version>
+        <version>3.2.1</version>
         <relativePath/>
     </parent>
     <groupId>org.o-ran-sc.nonrtric.plt</groupId>
