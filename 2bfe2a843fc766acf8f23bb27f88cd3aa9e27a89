@@ -54,6 +54,24 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "87f8587f_304e09bb",
+        "filename": "participants/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2024-01-05T09:06:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1da36e22_dc5a609e",
+      "revId": "2bfe2a843fc766acf8f23bb27f88cd3aa9e27a89",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "34879dc3_f69b5d2b",
