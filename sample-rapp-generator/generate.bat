@@ -1,5 +1,6 @@
 :: ============LICENSE_START===============================================
 ::  Copyright (C) 2023 Nordix Foundation. All rights reserved.
+::  Copyright (C) 2024 OpenInfra Foundation Europe. All rights reserved.
 ::  ========================================================================
 ::  Licensed under the Apache License, Version 2.0 (the "License");
 ::  you may not use this file except in compliance with the License.
@@ -16,10 +17,25 @@
 ::
 
 @echo off
-SET CSARFILE=rapp.csar
-SET ZIPFILE=rapp.zip
-del %CSARFILE% 2>nul
-pushd resources
-tar -a -cf ..\%ZIPFILE% *
-popd
-rename %ZIPFILE% %CSARFILE%
+
+if [%1]==[] goto usage
+SET DIRECTORY=%1
+if %DIRECTORY:~-1%==\ (
+    SET DIRECTORY=%DIRECTORY:~0,-1%
+)
+if exist %DIRECTORY% (
+    SET CSARFILE=%DIRECTORY%.csar
+    SET ZIPFILE=%DIRECTORY%.zip
+    del %CSARFILE% 2>nul
+    pushd %DIRECTORY%
+    tar -a -cf ..\%ZIPFILE% *
+    popd
+    rename %ZIPFILE% %CSARFILE%
+    @echo rApp package %CSARFILE% generated.
+) else (
+    @echo Directory %DIRECTORY% doesn't exists.
+)
+goto :eof
+
+:usage
+@echo USAGE: %0% ^<rApp-resource-folder-name^>

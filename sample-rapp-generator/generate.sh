@@ -2,6 +2,7 @@
 
 #  ============LICENSE_START===============================================
 #  Copyright (C) 2023 Nordix Foundation. All rights reserved.
+#  Copyright (C) 2024 OpenInfra Foundation Europe. All rights reserved.
 #  ========================================================================
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -17,7 +18,20 @@
 #  ============LICENSE_END=================================================
 #
 
-rm rapp.csar
-pushd resources
-zip -r ../rapp.csar *
-popd
+if [[ $# -ne 1 ]]; then
+  echo "USAGE: $0 <rApp-resource-folder-name>"
+  exit 1
+fi
+
+DIRECTORY=${1%/}
+PACKAGENAME="$DIRECTORY.csar"
+
+if [ -d "$DIRECTORY" ]; then
+  rm $PACKAGENAME 2> /dev/null
+  pushd $DIRECTORY
+  zip -r ../$PACKAGENAME *
+  popd
+  echo -e "rApp package $PACKAGENAME generated."
+else
+  echo "Directory $DIRECTORY doesn't exists."
+fi
