@@ -23,6 +23,11 @@ if [[ $# -ne 1 ]]; then
   exit 1
 fi
 
+if ! command -v zip &> /dev/null; then
+  echo "Zip command not found. Please install zip to proceed."
+  exit 1
+fi
+
 DIRECTORY=${1%/}
 PACKAGENAME="$DIRECTORY.csar"
 
