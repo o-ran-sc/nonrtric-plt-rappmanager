@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b8a1df26_3855d5b9",
+        "filename": "sample-rapp-generator/rapp-all/asd.mf",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-01-15T16:59:03Z",
+      "side": 0,
+      "message": "You could keep this one, as an an example of an \u0027extra\u0027 file packaged in the ASD. \nAlot of stuff will eventually get added \u0027non_man_artifact_sets\u0027:\u0027onap_others\u0027 or :\u0027onap_vendor_artifacts\u0027 ... so having a sample file might be useful. But not necessary!\nCan add later if you wish.",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 44
+      },
+      "revId": "4cebf29b398c6dfd1e2e77998e3c339d814521d7",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
