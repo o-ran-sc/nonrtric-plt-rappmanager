@@ -1,22 +1,14 @@
 metadata:
-  application_name: Free5gc-APP
-  application_provider: MyCompany
-  release_date_time: 2021-10-21T11:30:00+05:00
+  application_name: rapp-all
+  application_provider: EST
+  release_date_time: 2024-01-12T11:30:00+00:00
   entry_definition_type: asd
 
 Source: asd.mf
 Source: Definitions/asd.yaml
 Source: Definitions/asd_types.yaml
-Source: Files/ChangeLog.txt
-Source: Files/Events/MyASD_v1.yaml
 Source: Files/Guides/user_guide.txt
-Source: Files/Measurements/PM_Dictionary.yaml
-Source: Files/Scripts/my_script.sh
-Source: Files/Yang_module/mynetconf.yang
 Source: TOSCA-Metadata/TOSCA.meta
-Source: Artifacts/Deployment/HELM/free5gc-1.1.3.tgz
-Source: Artifacts/Deployment/HELM/ueransim-2.0.14.tgz
-Source: Files/rapp1/rapp.zip
 Source: Files/Acm/definition/compositions.json
 Source: Files/Acm/instances/a1pms-instance.json
 Source: Files/Acm/instances/k8s-instance.json
@@ -37,16 +29,5 @@ Source: Files/Sme/serviceapis/api-set-1.json
 Source: Files/Sme/serviceapis/api-set-2.json
 
 non_mano_artifact_sets:
-    onap_ves_events:
-        Source: Files/Events/MyASD_v1.yaml
-    onap_pm_dictionary:
-        Source: Files/Measurements/PM_Dictionary.yaml
-    onap_yang_modules:
-        Source: Files/Yang_module/mynetconf.yang
     onap_others:
         Source: Files/Guides/user_guide.txt
-    onap_vendor_artifacts:
-        vendor_name: Ericsson
-        artifact_type: rApp_name1
-        source:Files/rapp1/rapp.zip
-
