@@ -2,7 +2,7 @@
 
 #  ============LICENSE_START===============================================
 #  Copyright (C) 2023 Nordix Foundation. All rights reserved.
-#  Copyright (C) 2023 OpenInfra Foundation Europe. All rights reserved.
+#  Copyright (C) 2023-2024 OpenInfra Foundation Europe. All rights reserved.
 #  ========================================================================
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ ACM_VALUES_FILE="docker/helm/policy/values.yaml"
 A1PMS_CONFIGURATION_FILE="docker/helm/policy/components/policy-clamp-ac-a1pms-ppnt/resources/config/A1pmsParticipantParameters.yaml"
 K8S_CONFIGURATION_FILE="docker/helm/policy/components/policy-clamp-ac-k8s-ppnt/values.yaml"
 K8S_VERSIONS_FILE="docker/compose/get-k8s-versions.sh"
+KAFKA_DIR="docker/helm/cp-kafka"
 
 IP_ADDRESS=$(hostname -I | awk '{print $1}')
 echo "IP Address : $IP_ADDRESS"
@@ -34,10 +35,36 @@ echo "IP Address : $IP_ADDRESS"
 A1PMS_HOST=${A1PMS_HOST:-http://policymanagementservice.nonrtric:9080}
 CHART_REPO_HOST=${CHART_REPO_HOST:-'http://'$IP_ADDRESS':8879/charts'}
 
+function wait_for_pods_to_be_running() {
+    while [[ $TIME -lt 2000 ]]; do
+      NONRTRIC_PODS=$(kubectl get pods -n default --field-selector=status.phase!=Running,status.phase!=Succeeded --no-headers)
+      if [[ -z "$NONRTRIC_PODS" ]]; then
+        echo "All Components are running."
+        kubectl get pods -n default
+        break
+      fi
+
+      echo "Waiting for the below Components to be running..."
+      echo "$NONRTRIC_PODS"
+      TIME=$(expr $TIME + 5)
+      sleep 5
+    done
+}
+
 git clone "https://gerrit.onap.org/r/policy/docker"
 
 CWD=$(pwd)
 export WORKSPACE="$CWD/docker"
+
+#Temporary workaround, Should be removed once https://gerrit.onap.org/r/c/policy/docker/+/137075 or similar change is merged
+echo "Updating kafka advertised listeners..."
+sed -i 's|PLAINTEXT_INTERNAL://kafka:9092|PLAINTEXT_INTERNAL://kafka.default.svc.cluster.local:9092|g' $KAFKA_DIR/kafka.yaml
+
+# Kafka installation
+echo "Installing Confluent kafka"
+kubectl apply -f $KAFKA_DIR/zookeeper.yaml
+kubectl apply -f $KAFKA_DIR/kafka.yaml
+wait_for_pods_to_be_running
 
 #Temporary workaround. Should be removed once this gets fixed in policy/docker repo
 echo "Update policy-db-migrator version..."
@@ -60,6 +87,10 @@ for element in "${DISABLE_COMPONENTS[@]}"; do
 done
 
 echo "Updating A1PMS Participant"
+
+#Temporary workaround, Should be removed once https://gerrit.onap.org/r/c/policy/docker/+/137075 or similar change is merged
+sed -i 's|{{ \.Values\.global\.kafkaServer }}:9092|"\0"|g' $A1PMS_CONFIGURATION_FILE
+
 yq eval '.a1pms.baseUrl="'$A1PMS_HOST'"' -i $A1PMS_CONFIGURATION_FILE
 
 echo "Updating the k8s participant repo list"
@@ -71,19 +102,6 @@ helm dependency build docker/helm/policy/
 echo "Installing policy helm charts..."
 helm install csit-policy docker/helm/policy/ -n default
 
-while [[ $TIME -lt 2000 ]]; do
-  NONRTRIC_PODS=$(kubectl get pods -n default --field-selector=status.phase!=Running,status.phase!=Succeeded --no-headers)
-  if [[ -z "$NONRTRIC_PODS" ]]; then
-    echo "All ACM Components are running."
-    kubectl get pods -n default
-    break
-  fi
-
-  echo "Waiting for ACM Components to be running..."
-  echo "These pods are not running"
-  echo "$NONRTRIC_PODS"
-  TIME=$(expr $TIME + 5)
-  sleep 5
-done
+wait_for_pods_to_be_running
 
 echo "ACM Components Installation Completed."
