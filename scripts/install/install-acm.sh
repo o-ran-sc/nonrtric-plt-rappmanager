@@ -56,19 +56,11 @@ git clone "https://gerrit.onap.org/r/policy/docker"
 CWD=$(pwd)
 export WORKSPACE="$CWD/docker"
 
-#Temporary workaround, Should be removed once https://gerrit.onap.org/r/c/policy/docker/+/137075 or similar change is merged
-echo "Updating kafka advertised listeners..."
-sed -i 's|PLAINTEXT_INTERNAL://kafka:9092|PLAINTEXT_INTERNAL://kafka.default.svc.cluster.local:9092|g' $KAFKA_DIR/kafka.yaml
-
 # Kafka installation
 echo "Installing Confluent kafka"
 kubectl apply -f $KAFKA_DIR/zookeeper.yaml
 kubectl apply -f $KAFKA_DIR/kafka.yaml
 wait_for_pods_to_be_running
-
-#Temporary workaround. Should be removed once this gets fixed in policy/docker repo
-echo "Update policy-db-migrator version..."
-yq eval '.dbmigrator.image="onap/policy-db-migrator:3.1-SNAPSHOT-latest"' -i $ACM_VALUES_FILE
 
 echo "Updating policy docker image versions..."
 bash $K8S_VERSIONS_FILE
@@ -87,10 +79,6 @@ for element in "${DISABLE_COMPONENTS[@]}"; do
 done
 
 echo "Updating A1PMS Participant"
-
-#Temporary workaround, Should be removed once https://gerrit.onap.org/r/c/policy/docker/+/137075 or similar change is merged
-sed -i 's|{{ \.Values\.global\.kafkaServer }}:9092|"\0"|g' $A1PMS_CONFIGURATION_FILE
-
 yq eval '.a1pms.baseUrl="'$A1PMS_HOST'"' -i $A1PMS_CONFIGURATION_FILE
 
 echo "Updating the k8s participant repo list"
