@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START======================================================================
  * Copyright (C) 2023 Nordix Foundation. All rights reserved.
- * Copyright (C) 2023 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2023-2024 OpenInfra Foundation Europe. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 package com.oransc.rappmanager.service;
 
 import com.oransc.rappmanager.acm.service.AcmDeployer;
-import com.oransc.rappmanager.dme.service.DmeDeployer;
+import com.oransc.rappmanager.models.RappDeployer;
 import com.oransc.rappmanager.models.cache.RappCacheService;
 import com.oransc.rappmanager.models.exception.RappHandlerException;
 import com.oransc.rappmanager.models.rapp.Rapp;
@@ -29,7 +29,7 @@ import com.oransc.rappmanager.models.rapp.RappState;
 import com.oransc.rappmanager.models.rappinstance.RappInstance;
 import com.oransc.rappmanager.models.rappinstance.RappInstanceState;
 import com.oransc.rappmanager.models.statemachine.RappInstanceStateMachine;
-import com.oransc.rappmanager.sme.service.SmeDeployer;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,8 +41,7 @@ import org.springframework.stereotype.Service;
 public class RappService {
 
     private final AcmDeployer acmDeployer;
-    private final SmeDeployer smeDeployer;
-    private final DmeDeployer dmeDeployer;
+    private final List<RappDeployer> rappDeployers;
     private final RappInstanceStateMachine rappInstanceStateMachine;
     private final RappCacheService rappCacheService;
     private static final String STATE_TRANSITION_NOT_PERMITTED = "State transition from %s to %s is not permitted.";
@@ -51,7 +50,7 @@ public class RappService {
         if (rapp.getState().equals(RappState.COMMISSIONED)) {
             rapp.setState(RappState.PRIMING);
             rapp.setReason(null);
-            if (acmDeployer.primeRapp(rapp) && dmeDeployer.primeRapp(rapp)) {
+            if (rappDeployers.parallelStream().allMatch(rappDeployer -> rappDeployer.primeRapp(rapp))) {
                 rapp.setState(RappState.PRIMED);
                 return ResponseEntity.ok().build();
             }
@@ -67,7 +66,7 @@ public class RappService {
         if (rapp.getState().equals(RappState.PRIMED) && rapp.getRappInstances().isEmpty()) {
             rapp.setState(RappState.DEPRIMING);
             rapp.setReason(null);
-            if (acmDeployer.deprimeRapp(rapp) && dmeDeployer.deprimeRapp(rapp)) {
+            if (rappDeployers.parallelStream().allMatch(rappDeployer -> rappDeployer.deprimeRapp(rapp))) {
                 rapp.setState(RappState.COMMISSIONED);
                 return ResponseEntity.ok().build();
             }
@@ -103,8 +102,8 @@ public class RappService {
         if (rappInstance.getState().equals(RappInstanceState.UNDEPLOYED)) {
             rappInstance.setReason(null);
             rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.DEPLOYING);
-            if (acmDeployer.deployRappInstance(rapp, rappInstance) && smeDeployer.deployRappInstance(rapp,
-                    rappInstance)) {
+            if (rappDeployers.parallelStream()
+                        .allMatch(rappDeployer -> rappDeployer.deployRappInstance(rapp, rappInstance))) {
                 return ResponseEntity.accepted().build();
             }
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
@@ -119,8 +118,8 @@ public class RappService {
         if (rappInstance.getState().equals(RappInstanceState.DEPLOYED)) {
             rappInstance.setReason(null);
             rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.UNDEPLOYING);
-            if (acmDeployer.undeployRappInstance(rapp, rappInstance) && smeDeployer.undeployRappInstance(rapp,
-                    rappInstance)) {
+            if (rappDeployers.parallelStream()
+                        .allMatch(rappDeployer -> rappDeployer.undeployRappInstance(rapp, rappInstance))) {
                 return ResponseEntity.accepted().build();
             }
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();

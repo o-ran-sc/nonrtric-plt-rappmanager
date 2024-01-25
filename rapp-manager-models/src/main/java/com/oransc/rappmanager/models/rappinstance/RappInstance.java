@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START======================================================================
  * Copyright (C) 2023 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2024 OpenInfra Foundation Europe. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +20,7 @@
 package com.oransc.rappmanager.models.rappinstance;
 
 import java.util.UUID;
+import java.util.stream.Stream;
 import lombok.Data;
 
 @Data
@@ -30,4 +32,22 @@ public class RappInstance {
     RappACMInstance acm;
     RappSMEInstance sme;
     RappDMEInstance dme;
+
+    public boolean isSMEEnabled() {
+        if (sme != null) {
+            return Stream.of(sme.getInvokers(), sme.getServiceApis(), sme.getProviderFunction())
+                           .anyMatch(smeResource -> smeResource != null && !smeResource.isEmpty());
+        }
+        return false;
+    }
+
+    public boolean isDMEEnabled() {
+        if (dme != null) {
+            return Stream.concat(
+                            dme.getInfoTypesProducer() == null ? Stream.empty() : dme.getInfoTypesProducer().stream(),
+                            Stream.of(dme.getInfoTypeConsumer(), dme.getInfoProducer(), dme.getInfoConsumer()))
+                           .anyMatch(dmeResource -> dmeResource != null && !dmeResource.isEmpty());
+        }
+        return false;
+    }
 }

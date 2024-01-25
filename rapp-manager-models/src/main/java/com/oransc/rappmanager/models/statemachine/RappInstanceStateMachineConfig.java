@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START======================================================================
  * Copyright (C) 2023 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2024 OpenInfra Foundation Europe. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +24,7 @@ import com.oransc.rappmanager.models.rappinstance.RappInstanceState;
 import java.util.EnumSet;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
@@ -103,19 +105,33 @@ public class RappInstanceStateMachineConfig extends EnumStateMachineConfigurerAd
     public Guard<RappInstanceState, RappEvent> deployedGuard() {
         return stateContext -> {
             stateContext.getExtendedState().getVariables().put(stateContext.getEvent(), true);
-            return stateContext.getExtendedState().getVariables().get(RappEvent.ACMDEPLOYED) != null
-                           && stateContext.getExtendedState().getVariables().get(RappEvent.SMEDEPLOYED) != null
-                           && stateContext.getExtendedState().getVariables().get(RappEvent.DMEDEPLOYED) != null;
+            return stateContext.getExtendedState().getVariables().get(RappEvent.ACMDEPLOYED) != null && smeGuard(
+                    stateContext, RappEvent.SMEDEPLOYED) && dmeGuard(stateContext, RappEvent.DMEDEPLOYED);
         };
+    }
+
+    boolean smeGuard(StateContext<RappInstanceState, RappEvent> stateContext, RappEvent rappEvent) {
+        Boolean smeEnabled = (Boolean) stateContext.getExtendedState().getVariables().get("sme");
+        if (smeEnabled != null && smeEnabled.equals(Boolean.TRUE)) {
+            return stateContext.getExtendedState().getVariables().get(rappEvent) != null;
+        }
+        return true;
+    }
+
+    boolean dmeGuard(StateContext<RappInstanceState, RappEvent> stateContext, RappEvent rappEvent) {
+        Boolean dmeEnabled = (Boolean) stateContext.getExtendedState().getVariables().get("dme");
+        if (dmeEnabled != null && dmeEnabled.equals(Boolean.TRUE)) {
+            return stateContext.getExtendedState().getVariables().get(rappEvent) != null;
+        }
+        return true;
     }
 
     @Bean
     public Guard<RappInstanceState, RappEvent> undeployedGuard() {
         return stateContext -> {
             stateContext.getExtendedState().getVariables().put(stateContext.getEvent(), true);
-            return stateContext.getExtendedState().getVariables().get(RappEvent.ACMUNDEPLOYED) != null
-                           && stateContext.getExtendedState().getVariables().get(RappEvent.SMEUNDEPLOYED) != null
-                           && stateContext.getExtendedState().getVariables().get(RappEvent.DMEUNDEPLOYED) != null;
+            return stateContext.getExtendedState().getVariables().get(RappEvent.ACMUNDEPLOYED) != null && smeGuard(
+                    stateContext, RappEvent.SMEUNDEPLOYED) && dmeGuard(stateContext, RappEvent.DMEUNDEPLOYED);
         };
     }
 }

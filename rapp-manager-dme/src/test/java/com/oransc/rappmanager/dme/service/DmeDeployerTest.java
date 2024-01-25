@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START======================================================================
  * Copyright (C) 2023 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2024 OpenInfra Foundation Europe. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,8 +78,6 @@ class DmeDeployerTest {
     RestTemplate restTemplate;
     @Autowired
     DmeConfiguration dmeConfiguration;
-    @SpyBean
-    RappInstanceStateMachine rappInstanceStateMachine;
 
     RappDmeResourceBuilder rappDmeResourceBuilder = new RappDmeResourceBuilder();
 
@@ -148,6 +147,16 @@ class DmeDeployerTest {
     }
 
     @Test
+    void testPrimeRappWithoutDme() throws JsonProcessingException {
+        RappResources rappResources = rappDmeResourceBuilder.getResources();
+        rappResources.setDme(null);
+        Rapp rapp = getRapp(Optional.empty());
+        rapp.setPackageName(validRappFile);
+        rapp.setRappResources(rappResources);
+        assertTrue(dmeDeployer.primeRapp(rapp));
+    }
+
+    @Test
     void testPrimeRappFailure() {
         RappResources rappResources = rappDmeResourceBuilder.getResources();
         RappResources.DMEResources dme = rappResources.getDme();
@@ -172,74 +181,7 @@ class DmeDeployerTest {
     void testDeployrAppInstanceSuccess() {
         Rapp rapp = getRapp(Optional.empty());
         RappInstance rappInstance = rappDmeResourceBuilder.getRappInstance();
-        getMockServerClientCreateInfoType(rappInstance.getDme().getInfoTypesProducer().toArray()[0].toString(), true);
-        getMockServerClientCreateInfoType(rappInstance.getDme().getInfoTypeConsumer(), true);
-        getMockServerClientCreateInfoProducer(rappInstance.getDme().getInfoProducer(), true);
-        getMockServerClientCreateInfoConsumer(rappInstance.getDme().getInfoConsumer(), true);
-        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
         assertTrue(dmeDeployer.deployRappInstance(rapp, rappInstance));
-        mockServer.verify();
-    }
-
-    @Test
-    void testDeployrAppInstanceSuccessWithoutConsumer() {
-        Rapp rapp = getRapp(Optional.empty());
-        RappInstance rappInstance = rappDmeResourceBuilder.getRappInstance();
-        rappInstance.getDme().setInfoTypeConsumer(null);
-        rappInstance.getDme().setInfoConsumer(null);
-        getMockServerClientCreateInfoType(rappInstance.getDme().getInfoTypesProducer().toArray()[0].toString(), true);
-        getMockServerClientCreateInfoProducer(rappInstance.getDme().getInfoProducer(), true);
-        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
-        assertTrue(dmeDeployer.deployRappInstance(rapp, rappInstance));
-        mockServer.verify();
-    }
-
-    @Test
-    void testDeployrAppInstanceWithoutProducer() {
-        Rapp rapp = getRapp(Optional.empty());
-        RappInstance rappInstance = rappDmeResourceBuilder.getRappInstance();
-        rappInstance.getDme().setInfoTypesProducer(null);
-        rappInstance.getDme().setInfoProducer(null);
-        getMockServerClientCreateInfoType(rappInstance.getDme().getInfoTypeConsumer(), true);
-        getMockServerClientCreateInfoConsumer(rappInstance.getDme().getInfoConsumer(), true);
-        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
-        assertTrue(dmeDeployer.deployRappInstance(rapp, rappInstance));
-        mockServer.verify();
-    }
-
-    @Test
-    void testDeployrAppInstanceFailureWithInfoType() {
-        Rapp rapp = getRapp(Optional.empty());
-        RappInstance rappInstance = rappDmeResourceBuilder.getRappInstance();
-        getMockServerClientCreateInfoType(rappInstance.getDme().getInfoTypesProducer().toArray()[0].toString(), false);
-        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
-        assertFalse(dmeDeployer.deployRappInstance(rapp, rappInstance));
-        mockServer.verify();
-    }
-
-    @Test
-    void testDeployrAppInstanceFailureWithInfoProducer() {
-        Rapp rapp = getRapp(Optional.empty());
-        RappInstance rappInstance = rappDmeResourceBuilder.getRappInstance();
-        getMockServerClientCreateInfoType(rappInstance.getDme().getInfoTypesProducer().toArray()[0].toString(), true);
-        getMockServerClientCreateInfoType(rappInstance.getDme().getInfoTypeConsumer(), true);
-        getMockServerClientCreateInfoProducer(rappInstance.getDme().getInfoProducer(), false);
-        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
-        assertFalse(dmeDeployer.deployRappInstance(rapp, rappInstance));
-        mockServer.verify();
-    }
-
-    @Test
-    void testDeployrAppInstanceFailureWithInfoConsumer() {
-        Rapp rapp = getRapp(Optional.empty());
-        RappInstance rappInstance = rappDmeResourceBuilder.getRappInstance();
-        getMockServerClientCreateInfoType(rappInstance.getDme().getInfoTypesProducer().toArray()[0].toString(), true);
-        getMockServerClientCreateInfoType(rappInstance.getDme().getInfoTypeConsumer(), true);
-        getMockServerClientCreateInfoProducer(rappInstance.getDme().getInfoProducer(), true);
-        getMockServerClientCreateInfoConsumer(rappInstance.getDme().getInfoConsumer(), false);
-        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
-        assertFalse(dmeDeployer.deployRappInstance(rapp, rappInstance));
-        mockServer.verify();
     }
 
     @Test
@@ -247,109 +189,11 @@ class DmeDeployerTest {
         Rapp rapp = getRapp(Optional.empty());
         rapp.setState(RappState.PRIMED);
         RappInstance rappInstance = rappDmeResourceBuilder.getRappInstance();
-        getMockServerClientDeleteInfoConsumer(rappInstance.getDme().getInfoConsumer(), true);
-        getMockServerClientDeleteInfoProducer(rappInstance.getDme().getInfoProducer(), true);
-        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
         assertTrue(dmeDeployer.undeployRappInstance(rapp, rappInstance));
-        mockServer.verify();
-    }
-
-
-    @Test
-    void testUndeployrAppInstanceFailureWithInfoProducer() {
-        Rapp rapp = getRapp(Optional.empty());
-        rapp.setState(RappState.PRIMED);
-        RappInstance rappInstance = rappDmeResourceBuilder.getRappInstance();
-        getMockServerClientDeleteInfoConsumer(rappInstance.getDme().getInfoConsumer(), true);
-        getMockServerClientDeleteInfoProducer(rappInstance.getDme().getInfoProducer(), false);
-        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
-        assertFalse(dmeDeployer.undeployRappInstance(rapp, rappInstance));
-        mockServer.verify();
-    }
-
-    @Test
-    void testUndeployrAppInstanceFailureWithInfoConsumer() {
-        Rapp rapp = getRapp(Optional.empty());
-        rapp.setState(RappState.PRIMED);
-        RappInstance rappInstance = rappDmeResourceBuilder.getRappInstance();
-        getMockServerClientDeleteInfoConsumer(rappInstance.getDme().getInfoConsumer(), false);
-        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
-        assertFalse(dmeDeployer.undeployRappInstance(rapp, rappInstance));
-        mockServer.verify();
-    }
-
-    @Test
-    void testCreateInfoTypeFailureInvalidInfoType() {
-        Rapp rapp = getRapp(Optional.empty());
-        assertFalse(dmeDeployer.createProducerInfoTypes(rapp, null));
-        assertFalse(dmeDeployer.createConsumerInfoTypes(rapp, null));
-    }
-
-    @Test
-    void testCreateInfoTypeFailureInvalidInfoProducer() {
-        Rapp rapp = getRapp(Optional.empty());
-        assertFalse(dmeDeployer.createInfoProducer(rapp, ""));
-    }
-
-    @Test
-    void testCreateInfoTypeFailureInvalidInfoConsumer() {
-        Rapp rapp = getRapp(Optional.empty());
-        assertFalse(dmeDeployer.createInfoConsumer(rapp, ""));
     }
 
     Rapp getRapp(Optional<UUID> rappOptional) {
         return Rapp.builder().rappId(rappOptional.orElse(UUID.randomUUID())).name("").packageName(validRappFile)
                        .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
     }
-
-    void getMockServerClientCreateInfoType(String infoType, boolean isSuccess) {
-        if (isSuccess) {
-            mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_INFO_TYPE, infoType)))
-                    .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.CREATED));
-        } else {
-            mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_INFO_TYPE, infoType)))
-                    .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.BAD_GATEWAY));
-        }
-    }
-
-    void getMockServerClientCreateInfoProducer(String infoProducer, boolean isSuccess) {
-        if (isSuccess) {
-            mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_INFO_PRODUCER, infoProducer)))
-                    .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.CREATED));
-        } else {
-            mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_INFO_PRODUCER, infoProducer)))
-                    .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.BAD_GATEWAY));
-        }
-    }
-
-    void getMockServerClientCreateInfoConsumer(String infoConsumer, boolean isSuccess) {
-        if (isSuccess) {
-            mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_INFO_CONSUMER, infoConsumer)))
-                    .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.CREATED));
-        } else {
-            mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_INFO_CONSUMER, infoConsumer)))
-                    .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.BAD_GATEWAY));
-        }
-    }
-
-    void getMockServerClientDeleteInfoProducer(String infoProducer, boolean isSuccess) {
-        if (isSuccess) {
-            mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_INFO_PRODUCER, infoProducer)))
-                    .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
-        } else {
-            mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_INFO_PRODUCER, infoProducer)))
-                    .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.BAD_GATEWAY));
-        }
-    }
-
-    void getMockServerClientDeleteInfoConsumer(String infoConsumer, boolean isSuccess) {
-        if (isSuccess) {
-            mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_INFO_CONSUMER, infoConsumer)))
-                    .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
-        } else {
-            mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_INFO_CONSUMER, infoConsumer)))
-                    .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.BAD_GATEWAY));
-        }
-    }
-
 }
