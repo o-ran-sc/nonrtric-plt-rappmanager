@@ -88,32 +88,38 @@ public class SmeDeployer implements RappDeployer {
     @Override
     public boolean deployRappInstance(Rapp rapp, RappInstance rappInstance) {
         logger.debug("Deploying SME functions for RappInstance {}", rappInstance.getRappInstanceId());
-        if (createProviderDomain(rapp, rappInstance) && createPublishApi(rapp, rappInstance) && createInvoker(rapp,
-                rappInstance)) {
-            rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.SMEDEPLOYED);
-            return true;
+        if (rappInstance.isSMEEnabled()) {
+            if (createProviderDomain(rapp, rappInstance) && createPublishApi(rapp, rappInstance) && createInvoker(rapp,
+                    rappInstance)) {
+                rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.SMEDEPLOYED);
+                return true;
+            }
+            rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.SMEDEPLOYFAILED);
+            rappInstance.setReason("Unable to deploy SME");
+            return false;
         }
-        rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.SMEDEPLOYFAILED);
-        rappInstance.setReason("Unable to deploy SME");
-        return false;
+        return true;
     }
 
     @Override
     public boolean undeployRappInstance(Rapp rapp, RappInstance rappInstance) {
         logger.debug("Undeploying SME functions for Rapp {}", rapp.getName());
-        try {
-            rappInstance.getSme().getInvokerIds().forEach(this::deleteInvoker);
-            rappInstance.getSme().getServiceApiIds()
-                    .forEach(s -> deletePublishApi(s, rappInstance.getSme().getApfId()));
-            rappInstance.getSme().getProviderFunctionIds().forEach(this::deleteProviderFunc);
-            rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.SMEUNDEPLOYED);
-            return true;
-        } catch (Exception e) {
-            logger.warn("Failed to Undeploy SME functions for Rapp {}", rapp.getName(), e);
+        if (rappInstance.isSMEEnabled()) {
+            try {
+                rappInstance.getSme().getInvokerIds().forEach(this::deleteInvoker);
+                rappInstance.getSme().getServiceApiIds()
+                        .forEach(s -> deletePublishApi(s, rappInstance.getSme().getApfId()));
+                rappInstance.getSme().getProviderFunctionIds().forEach(this::deleteProviderFunc);
+                rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.SMEUNDEPLOYED);
+                return true;
+            } catch (Exception e) {
+                logger.warn("Failed to Undeploy SME functions for Rapp {}", rapp.getName(), e);
+            }
+            rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.SMEUNDEPLOYFAILED);
+            rappInstance.setReason("Unable to undeploy SME");
+            return false;
         }
-        rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.SMEUNDEPLOYFAILED);
-        rappInstance.setReason("Unable to undeploy SME");
-        return false;
+        return true;
     }
 
     @Override

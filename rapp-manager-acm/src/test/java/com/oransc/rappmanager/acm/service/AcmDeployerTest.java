@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START======================================================================
  * Copyright (C) 2023 Nordix Foundation. All rights reserved.
- * Copyright (C) 2023 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2023-2024 OpenInfra Foundation Europe. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -163,7 +163,6 @@ class AcmDeployerTest {
     void testDeployRappInstance() throws Exception {
 
         UUID compositionId = UUID.randomUUID();
-        UUID rappId = UUID.randomUUID();
         UUID instanceId = UUID.randomUUID();
         Rapp rapp = Rapp.builder().name("").packageName(validRappFile).compositionId(compositionId)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
@@ -184,9 +183,32 @@ class AcmDeployerTest {
     }
 
     @Test
+    void testDeployRappInstanceWithoutDmeInjection() throws Exception {
+
+        UUID compositionId = UUID.randomUUID();
+        UUID instanceId = UUID.randomUUID();
+        Rapp rapp = Rapp.builder().name("").packageName(validRappFile).compositionId(compositionId)
+                            .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
+        RappInstance rappInstance = rappResourceBuilder.getRappInstance();
+        rappInstance.setDme(null);
+        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
+        InstantiationResponse instantiationResponse = new InstantiationResponse();
+        instantiationResponse.setInstanceId(instanceId);
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_INSTANCES, compositionId)))
+                .andExpect(method(HttpMethod.POST)).andRespond(
+                        withStatus(HttpStatus.ACCEPTED).contentType(MediaType.APPLICATION_JSON)
+                                .body(objectMapper.writeValueAsString(instantiationResponse)));
+        mockServer.expect(ExpectedCount.once(),
+                        requestTo(acmConfiguration.getBaseUrl() + "compositions/" + compositionId + "/instances/" + instanceId))
+                .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.ACCEPTED));
+        boolean rappDeployStateActual = acmDeployer.deployRappInstance(rapp, rappInstance);
+        assertTrue(rappDeployStateActual);
+        mockServer.verify();
+    }
+
+    @Test
     void testDeployRappInstanceFailureWithNoInstanceId() throws JsonProcessingException {
         UUID compositionId = UUID.randomUUID();
-        UUID rappId = UUID.randomUUID();
         Rapp rapp = Rapp.builder().name("").packageName(validRappFile).compositionId(compositionId)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
         RappInstance rappInstance = rappResourceBuilder.getRappInstance();
@@ -205,7 +227,6 @@ class AcmDeployerTest {
     @Test
     void testDeployRappInstanceFailure() {
         UUID compositionId = UUID.randomUUID();
-        UUID rappId = UUID.randomUUID();
         Rapp rapp = Rapp.builder().name("").packageName(validRappFile).compositionId(compositionId)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
         RappInstance rappInstance = rappResourceBuilder.getRappInstance();

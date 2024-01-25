@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START======================================================================
  * Copyright (C) 2023 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2024 OpenInfra Foundation Europe. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +21,11 @@ package com.oransc.rappmanager.models.rapp;
 
 
 import com.oransc.rappmanager.models.rappinstance.RappInstance;
+import java.beans.Transient;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Stream;
 import lombok.Builder;
 import lombok.Data;
 
@@ -42,4 +45,24 @@ public class Rapp {
     Map<UUID, RappInstance> rappInstances = new HashMap<>();
 
     UUID compositionId;
+
+    @Transient
+    public boolean isSMEEnabled() {
+        if (rappResources != null && rappResources.getSme() != null) {
+            return Stream.of(rappResources.getSme().getInvokers(), rappResources.getSme().getServiceApis(),
+                    rappResources.getSme().getProviderFunctions()).anyMatch(smeResource -> !smeResource.isEmpty());
+        }
+        return false;
+
+    }
+
+    @Transient
+    public boolean isDMEEnabled() {
+        if (rappResources != null && rappResources.getDme() != null) {
+            return Stream.of(rappResources.getDme().getProducerInfoTypes(),
+                    rappResources.getDme().getConsumerInfoTypes(), rappResources.getDme().getInfoProducers(),
+                    rappResources.getDme().getInfoConsumers()).anyMatch(smeResource -> !smeResource.isEmpty());
+        }
+        return false;
+    }
 }

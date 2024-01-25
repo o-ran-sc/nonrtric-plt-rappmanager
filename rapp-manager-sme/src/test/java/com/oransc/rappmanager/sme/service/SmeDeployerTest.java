@@ -298,6 +298,18 @@ class SmeDeployerTest {
     }
 
     @Test
+    void testDeployRappInstanceWithoutSme() throws Exception {
+        UUID rappId = UUID.randomUUID();
+        Rapp rapp =
+                Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
+                        .state(RappState.PRIMED).build();
+        RappInstance rappInstance = getRappInstance();
+        rappInstance.setSme(null);
+        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
+        assertTrue(smeDeployer.deployRappInstance(rapp, rappInstance));
+    }
+
+    @Test
     void testDeployRappFailure() throws Exception {
         UUID rappId = UUID.randomUUID();
         APIProviderEnrolmentDetails apiProviderEnrolmentDetails = getProviderDomainApiEnrollmentDetails();
@@ -360,6 +372,16 @@ class SmeDeployerTest {
         boolean undeployRapp = smeDeployer.undeployRappInstance(rapp, rappInstance);
         mockServer.verify();
         assertTrue(undeployRapp);
+    }
+
+    @Test
+    void testUndeployRappInstanceWithoutSme() {
+        UUID rappId = UUID.randomUUID();
+        Rapp rapp = Rapp.builder().rappId(rappId).name(rappId.toString()).packageName(validRappFile)
+                            .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
+        RappInstance rappInstance = getRappInstance();
+        rappInstance.setSme(null);
+        assertTrue(smeDeployer.undeployRappInstance(rapp, rappInstance));
     }
 
     @Test
