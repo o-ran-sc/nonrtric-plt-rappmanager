@@ -55,7 +55,7 @@ public class RappService {
                 return ResponseEntity.ok().build();
             }
             rapp.setState(RappState.COMMISSIONED);
-            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
+            throw new RappHandlerException(HttpStatus.BAD_GATEWAY, rapp.getReason());
         }
         throw new RappHandlerException(HttpStatus.BAD_REQUEST,
                 String.format(STATE_TRANSITION_NOT_PERMITTED, rapp.getState().name(), RappState.PRIMED.name()));
@@ -71,7 +71,7 @@ public class RappService {
                 return ResponseEntity.ok().build();
             }
             rapp.setState(RappState.PRIMED);
-            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
+            throw new RappHandlerException(HttpStatus.BAD_GATEWAY, rapp.getReason());
         }
         if (!rapp.getRappInstances().isEmpty()) {
             throw new RappHandlerException(HttpStatus.BAD_REQUEST,
@@ -106,7 +106,7 @@ public class RappService {
                         .allMatch(rappDeployer -> rappDeployer.deployRappInstance(rapp, rappInstance))) {
                 return ResponseEntity.accepted().build();
             }
-            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
+            throw new RappHandlerException(HttpStatus.BAD_GATEWAY, rappInstance.getReason());
         }
         throw new RappHandlerException(HttpStatus.BAD_REQUEST,
                 String.format("Unable to deploy rApp instance %s as it is not in UNDEPLOYED state",
@@ -122,7 +122,7 @@ public class RappService {
                         .allMatch(rappDeployer -> rappDeployer.undeployRappInstance(rapp, rappInstance))) {
                 return ResponseEntity.accepted().build();
             }
-            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
+            throw new RappHandlerException(HttpStatus.BAD_GATEWAY, rappInstance.getReason());
         }
         throw new RappHandlerException(HttpStatus.BAD_REQUEST,
                 String.format("Unable to undeploy rApp instance %s as it is not in DEPLOYED state",

@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START======================================================================
  * Copyright (C) 2023 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2024 OpenInfra Foundation Europe. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -158,7 +159,7 @@ class SmeDeployerTest {
     }
 
     @Test
-    void testCreateProviderDomainFailure() throws Exception {
+    void testCreateProviderDomainFailure() {
         UUID rappId = UUID.randomUUID();
         Rapp rapp =
                 Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
@@ -201,7 +202,7 @@ class SmeDeployerTest {
 
 
     @Test
-    void testCreatePublishApiFailure() throws Exception {
+    void testCreatePublishApiFailure() {
         UUID rappId = UUID.randomUUID();
         UUID apfId = UUID.randomUUID();
         Rapp rapp =
@@ -298,7 +299,55 @@ class SmeDeployerTest {
     }
 
     @Test
-    void testDeployRappInstanceWithoutSme() throws Exception {
+    void testDeployRappInstanceNoInvoker() throws Exception {
+        UUID rappId = UUID.randomUUID();
+        APIProviderEnrolmentDetails apiProviderEnrolmentDetails = getProviderDomainApiEnrollmentDetails();
+        APIProviderFunctionDetails apfProviderFunctionDetails = apiProviderEnrolmentDetails.getApiProvFuncs().stream()
+                                                                        .filter(apiProviderFunctionDetails -> apiProviderFunctionDetails.getApiProvFuncRole()
+                                                                                                                      .equals(ApiProviderFuncRole.APF))
+                                                                        .findFirst().get();
+        Rapp rapp =
+                Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
+                        .state(RappState.COMMISSIONED).build();
+        mockServer.expect(ExpectedCount.once(), requestTo(URI_PROVIDER_REGISTRATIONS))
+                .andExpect(method(HttpMethod.POST)).andRespond(
+                        withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
+                                .body(objectMapper.writeValueAsString(apiProviderEnrolmentDetails)));
+        ServiceAPIDescription serviceAPIDescription = getServiceApiDescription();
+        mockServer.expect(ExpectedCount.once(),
+                        requestTo(String.format(URI_PUBLISH_APIS, apfProviderFunctionDetails.getApiProvFuncId())))
+                .andExpect(method(HttpMethod.POST)).andRespond(
+                        withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
+                                .body(objectMapper.writeValueAsString(serviceAPIDescription)));
+        RappInstance rappInstance = getRappInstance();
+        rappInstance.getSme().setInvokers(null);
+        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
+        boolean deployRapp = smeDeployer.deployRappInstance(rapp, rappInstance);
+        mockServer.verify();
+        assertTrue(deployRapp);
+    }
+
+    @Test
+    void testDeployRappInstanceNoProvider() throws Exception {
+        UUID rappId = UUID.randomUUID();
+        Rapp rapp =
+                Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
+                        .state(RappState.COMMISSIONED).build();
+        APIInvokerEnrolmentDetails apiInvokerEnrolmentDetails = getApiInvokerEnrollmentDetails();
+        mockServer.expect(ExpectedCount.once(), requestTo(URI_INVOKERS)).andExpect(method(HttpMethod.POST)).andRespond(
+                withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
+                        .body(objectMapper.writeValueAsString(apiInvokerEnrolmentDetails)));
+        RappInstance rappInstance = getRappInstance();
+        rappInstance.getSme().setProviderFunction(null);
+        rappInstance.getSme().setServiceApis(null);
+        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
+        boolean deployRapp = smeDeployer.deployRappInstance(rapp, rappInstance);
+        mockServer.verify();
+        assertTrue(deployRapp);
+    }
+
+    @Test
+    void testDeployRappInstanceWithoutSme() {
         UUID rappId = UUID.randomUUID();
         Rapp rapp =
                 Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
@@ -367,6 +416,58 @@ class SmeDeployerTest {
         rappInstance.getSme().setApfId(String.valueOf(apfId));
         rappInstance.getSme().setProviderFunctionIds(providerFuncs.values().stream().toList());
         rappInstance.getSme().setServiceApiIds(serviceApis);
+        rappInstance.getSme().setInvokerIds(invokers);
+        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
+        boolean undeployRapp = smeDeployer.undeployRappInstance(rapp, rappInstance);
+        mockServer.verify();
+        assertTrue(undeployRapp);
+    }
+
+    @Test
+    void testUndeployRappInstanceNoInvokers() {
+        UUID rappId = UUID.randomUUID();
+        UUID apfId = UUID.randomUUID();
+        List<String> serviceApis = List.of(String.valueOf(UUID.randomUUID()), String.valueOf(UUID.randomUUID()));
+        Map<String, String> providerFuncs = Map.of(String.valueOf(UUID.randomUUID()), String.valueOf(UUID.randomUUID()),
+                String.valueOf(UUID.randomUUID()), String.valueOf(UUID.randomUUID()));
+        Rapp rapp = Rapp.builder().rappId(rappId).name(rappId.toString()).packageName(validRappFile)
+                            .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_PUBLISH_API, apfId, serviceApis.get(0))))
+                .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_PUBLISH_API, apfId, serviceApis.get(1))))
+                .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
+        mockServer.expect(ExpectedCount.once(),
+                        requestTo(String.format(URI_PROVIDER_REGISTRATION, providerFuncs.values().toArray()[0])))
+                .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
+        mockServer.expect(ExpectedCount.once(),
+                        requestTo(String.format(URI_PROVIDER_REGISTRATION, providerFuncs.values().toArray()[1])))
+                .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
+        RappInstance rappInstance = getRappInstance();
+        rappInstance.getSme().setApfId(String.valueOf(apfId));
+        rappInstance.getSme().setProviderFunctionIds(providerFuncs.values().stream().toList());
+        rappInstance.getSme().setServiceApiIds(serviceApis);
+        rappInstance.getSme().setInvokerIds(null);
+        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
+        boolean undeployRapp = smeDeployer.undeployRappInstance(rapp, rappInstance);
+        mockServer.verify();
+        assertTrue(undeployRapp);
+    }
+
+    @Test
+    void testUndeployRappInstanceNoProviders() {
+        UUID rappId = UUID.randomUUID();
+        UUID apfId = UUID.randomUUID();
+        List<String> invokers = List.of(String.valueOf(UUID.randomUUID()), String.valueOf(UUID.randomUUID()));
+        Rapp rapp = Rapp.builder().rappId(rappId).name(rappId.toString()).packageName(validRappFile)
+                            .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_INVOKER, invokers.get(0))))
+                .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_INVOKER, invokers.get(1))))
+                .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
+        RappInstance rappInstance = getRappInstance();
+        rappInstance.getSme().setApfId(String.valueOf(apfId));
+        rappInstance.getSme().setProviderFunctionIds(null);
+        rappInstance.getSme().setServiceApiIds(null);
         rappInstance.getSme().setInvokerIds(invokers);
         rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
         boolean undeployRapp = smeDeployer.undeployRappInstance(rapp, rappInstance);

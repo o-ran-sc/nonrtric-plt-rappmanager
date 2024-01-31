@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START======================================================================
  * Copyright (C) 2023 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2024 OpenInfra Foundation Europe. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,8 +90,9 @@ public class SmeDeployer implements RappDeployer {
     public boolean deployRappInstance(Rapp rapp, RappInstance rappInstance) {
         logger.debug("Deploying SME functions for RappInstance {}", rappInstance.getRappInstanceId());
         if (rappInstance.isSMEEnabled()) {
-            if (createProviderDomain(rapp, rappInstance) && createPublishApi(rapp, rappInstance) && createInvoker(rapp,
-                    rappInstance)) {
+            if ((rappInstance.getSme().getProviderFunction() == null || createProviderDomain(rapp, rappInstance)) && (
+                    rappInstance.getSme().getServiceApis() == null || createPublishApi(rapp, rappInstance)) && (
+                    rappInstance.getSme().getInvokers() == null || createInvoker(rapp, rappInstance))) {
                 rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.SMEDEPLOYED);
                 return true;
             }
@@ -106,10 +108,13 @@ public class SmeDeployer implements RappDeployer {
         logger.debug("Undeploying SME functions for Rapp {}", rapp.getName());
         if (rappInstance.isSMEEnabled()) {
             try {
-                rappInstance.getSme().getInvokerIds().forEach(this::deleteInvoker);
-                rappInstance.getSme().getServiceApiIds()
-                        .forEach(s -> deletePublishApi(s, rappInstance.getSme().getApfId()));
-                rappInstance.getSme().getProviderFunctionIds().forEach(this::deleteProviderFunc);
+                Optional.ofNullable(rappInstance.getSme().getInvokerIds())
+                        .ifPresent(invokerList -> invokerList.forEach(this::deleteInvoker));
+                Optional.ofNullable(rappInstance.getSme().getServiceApiIds()).ifPresent(
+                        serviceApiList -> serviceApiList.forEach(
+                                s -> deletePublishApi(s, rappInstance.getSme().getApfId())));
+                Optional.ofNullable(rappInstance.getSme().getProviderFunctionIds())
+                        .ifPresent(providerList -> providerList.forEach(this::deleteProviderFunc));
                 rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.SMEUNDEPLOYED);
                 return true;
             } catch (Exception e) {
