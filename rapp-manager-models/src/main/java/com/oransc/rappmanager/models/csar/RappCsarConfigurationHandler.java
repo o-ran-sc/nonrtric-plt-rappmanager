@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START======================================================================
  * Copyright (C) 2023 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2024 OpenInfra Foundation Europe. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +19,13 @@
 
 package com.oransc.rappmanager.models.csar;
 
+import static com.google.common.base.Splitter.on;
+import static com.google.common.collect.Iterables.filter;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.oransc.rappmanager.models.exception.RappHandlerException;
 import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappResources;
 import com.oransc.rappmanager.models.rappinstance.RappACMInstance;
@@ -27,23 +35,32 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.yaml.snakeyaml.Yaml;
 
 @Service
+@RequiredArgsConstructor
 public class RappCsarConfigurationHandler {
 
     Logger logger = LoggerFactory.getLogger(RappCsarConfigurationHandler.class);
+
+    private final ObjectMapper objectMapper;
+    private static final String TOSCA_METADATA_LOCATION = "TOSCA-Metadata/TOSCA.meta";
+    private static final String ENTRY_DEFINITIONS_INDEX = "Entry-Definitions";
     private static final String ACM_COMPOSITION_JSON_LOCATION = "Files/Acm/definition/compositions.json";
     private static final String ACM_DEFINITION_LOCATION = "Files/Acm/definition";
     private static final String ACM_INSTANCES_LOCATION = "Files/Acm/instances";
@@ -60,7 +77,8 @@ public class RappCsarConfigurationHandler {
         String originalFilename = multipartFile.getOriginalFilename();
         if (originalFilename != null) {
             return originalFilename.endsWith(".csar") && isFileExistsInCsar(multipartFile,
-                    ACM_COMPOSITION_JSON_LOCATION);
+                    ACM_COMPOSITION_JSON_LOCATION) && isFileExistsInCsar(multipartFile, TOSCA_METADATA_LOCATION)
+                           && containsValidArtifactDefinition(multipartFile);
         }
         return false;
     }
@@ -73,10 +91,10 @@ public class RappCsarConfigurationHandler {
                     return Boolean.TRUE;
                 }
             }
-            return Boolean.FALSE;
+            throw new RappHandlerException(HttpStatus.BAD_REQUEST, "rApp package missing a file " + fileLocation);
         } catch (IOException e) {
             logger.error("Unable to find the CSAR file", e);
-            return Boolean.FALSE;
+            throw new RappHandlerException(HttpStatus.BAD_REQUEST, "rApp package missing a file " + fileLocation);
         }
     }
 
@@ -100,10 +118,30 @@ public class RappCsarConfigurationHandler {
                 getRappPackageLocation(rapp.getPackageLocation(), rapp.getName(), rapp.getPackageName()).toUri());
     }
 
+    ByteArrayOutputStream getFileFromCsar(MultipartFile multipartFile, String fileLocation) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try (ZipArchiveInputStream zipArchiveInputStream = new ZipArchiveInputStream(multipartFile.getInputStream())) {
+            byteArrayOutputStream = getFileFromCsar(zipArchiveInputStream, fileLocation);
+        } catch (IOException e) {
+            logger.info("Unable to get file {} from the multipart CSAR file", fileLocation, e);
+        }
+        return byteArrayOutputStream;
+    }
+
     ByteArrayOutputStream getFileFromCsar(File csarFile, String fileLocation) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try (FileInputStream fileInputStream = new FileInputStream(csarFile);
              ZipArchiveInputStream zipArchiveInputStream = new ZipArchiveInputStream(fileInputStream)) {
+            byteArrayOutputStream = getFileFromCsar(zipArchiveInputStream, fileLocation);
+        } catch (IOException e) {
+            logger.info("Unable to get file {} from the CSAR file", fileLocation, e);
+        }
+        return byteArrayOutputStream;
+    }
+
+    ByteArrayOutputStream getFileFromCsar(ZipArchiveInputStream zipArchiveInputStream, String fileLocation) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try {
             ArchiveEntry entry;
             while ((entry = zipArchiveInputStream.getNextEntry()) != null) {
                 if (!entry.isDirectory() && entry.getName().equals(fileLocation)) {
@@ -115,9 +153,46 @@ public class RappCsarConfigurationHandler {
                 }
             }
         } catch (IOException e) {
-            logger.error("Unable to find the CSAR file", e);
+            logger.info("Unable to get file {} from the zip archive CSAR file", fileLocation, e);
         }
         return byteArrayOutputStream;
+    }
+
+    boolean containsValidArtifactDefinition(MultipartFile multipartFile) {
+        String asdLocation = getAsdDefinitionLocation(multipartFile);
+        if (asdLocation != null && !asdLocation.isEmpty() && isFileExistsInCsar(multipartFile, asdLocation)) {
+            try {
+                String asdContent = getFileFromCsar(multipartFile, asdLocation).toString();
+                String asdJsonContent = new Gson().toJsonTree(new Yaml().load(asdContent)).toString();
+                JsonNode jsonNode = objectMapper.readTree(asdJsonContent);
+                List<String> artifactFileList =
+                        jsonNode.at("/topology_template/node_templates/applicationServiceDescriptor/artifacts")
+                                .findValuesAsText("file");
+                return artifactFileList.stream()
+                               .allMatch(artifactFile -> isFileExistsInCsar(multipartFile, artifactFile));
+            } catch (RappHandlerException e) {
+                throw e;
+            } catch (Exception e) {
+                logger.warn("Unable to validate artifact definition", e);
+                throw new RappHandlerException(HttpStatus.BAD_REQUEST, "ASD definition in rApp package is invalid.");
+            }
+        }
+        throw new RappHandlerException(HttpStatus.BAD_REQUEST, "ASD definition in rApp package is invalid.");
+    }
+
+    String getAsdDefinitionLocation(final MultipartFile multipartFile) {
+        String asdLocation = "";
+        final ByteArrayOutputStream fileContent = getFileFromCsar(multipartFile, TOSCA_METADATA_LOCATION);
+        if (fileContent != null) {
+            final String toscaMetadata = fileContent.toString();
+            if (!toscaMetadata.isEmpty()) {
+                final String entry =
+                        filter(on("\n").split(toscaMetadata), line -> line.contains(ENTRY_DEFINITIONS_INDEX)).iterator()
+                                .next();
+                asdLocation = entry.replace(ENTRY_DEFINITIONS_INDEX + ":", "").trim();
+            }
+        }
+        return asdLocation;
     }
 
 

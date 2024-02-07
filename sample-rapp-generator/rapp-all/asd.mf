@@ -5,6 +5,8 @@ metadata:
   entry_definition_type: asd
 
 Source: asd.mf
+Source: Artifacts/Deployment/HELM/orufhrecovery-1.0.0.tgz
+Source: Artifacts/Deployment/HELM/ransliceassurance-1.0.0.tgz
 Source: Definitions/asd.yaml
 Source: Definitions/asd_types.yaml
 Source: Files/Guides/user_guide.txt

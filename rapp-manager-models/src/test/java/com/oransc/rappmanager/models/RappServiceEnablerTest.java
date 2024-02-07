@@ -21,6 +21,7 @@ package com.oransc.rappmanager.models;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oransc.rappmanager.models.csar.RappCsarConfigurationHandler;
 import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappResources;
@@ -35,7 +36,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 
 @SpringBootTest
-@ContextConfiguration(classes = RappCsarConfigurationHandler.class)
+@ContextConfiguration(classes = {ObjectMapper.class, RappCsarConfigurationHandler.class})
 class RappServiceEnablerTest {
 
     @Autowired

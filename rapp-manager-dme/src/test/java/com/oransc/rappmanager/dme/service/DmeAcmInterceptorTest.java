@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START======================================================================
- * Copyright (C) 2023 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2023-2024 OpenInfra Foundation Europe. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package com.oransc.rappmanager.dme.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.oransc.rappmanager.models.csar.RappCsarConfigurationHandler;
@@ -47,7 +48,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = {RappCsarConfigurationHandler.class, DmeAcmInterceptor.class})
+@SpringBootTest(classes = {ObjectMapper.class, RappCsarConfigurationHandler.class, DmeAcmInterceptor.class})
 class DmeAcmInterceptorTest {
 
     @Autowired
