@@ -1,0 +1,31 @@
+{
+  "name": "K8DemoInstance0",
+  "version": "1.0.1",
+  "compositionId": "COMPOSITIONID",
+  "description": "Demo automation composition instance 0",
+  "elements": {
+    "d7be552e-bcc5-4478-b64d-797dbaec8f55": {
+      "id": "d7be552e-bcc5-4478-b64d-797dbaec8f55",
+      "definition": {
+        "name": "onap.policy.clamp.ac.element.K8S_StarterAutomationCompositionElement",
+        "version": "1.2.3"
+      },
+      "description": "Starter Automation Composition Element for the Hello World",
+      "properties": {
+        "chart": {
+          "chartId": {
+            "name": "hello-world-chart",
+            "version": "0.1.0"
+          },
+          "namespace": "nonrtric",
+          "releaseName": "hello-world-chart",
+          "podName": "hello-world-chart",
+          "repository": {
+            "repoName": "local",
+            "address": "http://10.101.1.90:8879/charts"
+          }
+        }
+      }
+    }
+  }
+}
