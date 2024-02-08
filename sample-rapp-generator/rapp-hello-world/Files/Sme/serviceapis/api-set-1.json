@@ -1,0 +1,32 @@
+{
+  "apiName": "Hello World API Set 1",
+  "description": "Simple Hello World API",
+  "aefProfiles": [
+    {
+      "aefId": "Hello World as AEF",
+      "description": "Simple Hello World API",
+      "versions": [
+        {
+          "apiVersion": "v1",
+          "resources": [
+            {
+              "resourceName": "helloworld",
+              "commType": "REQUEST_RESPONSE",
+              "uri": "/helloworld/v1",
+              "operations": [
+                "GET"
+              ]
+            }
+          ]
+        }
+      ],
+      "protocol": "HTTP_1_1",
+      "interfaceDescriptions": [
+        {
+          "ipv4Addr": "hello-world-chart.nonrtric.svc.cluster.local",
+          "port": 8080
+        }
+      ]
+    }
+  ]
+}
