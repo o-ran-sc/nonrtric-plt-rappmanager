@@ -1,0 +1,28 @@
+metadata:
+  application_name: Free5gc-APP
+  application_provider: MyCompany
+  release_date_time: 2021-10-21T11:30:00+05:00
+  entry_definition_type: asd
+
+Source: asd.mf
+Source: Definitions/asd.yaml
+Source: Definitions/asd_types.yaml
+
+Source: TOSCA-Metadata/TOSCA.meta
+Source: Files/Acm/definition/compositions.json
+Source: Files/Acm/instances/k8s-instance.json
+
+non_mano_artifact_sets:
+    onap_ves_events:
+        Source: Files/Events/MyASD_v1.yaml
+    onap_pm_dictionary:
+        Source: Files/Measurements/PM_Dictionary.yaml
+    onap_yang_modules:
+        Source: Files/Yang_module/mynetconf.yang
+    onap_others:
+        Source: Files/Guides/user_guide.txt
+    onap_vendor_artifacts:
+        vendor_name: Ericsson
+        artifact_type: rApp_name1
+        source:Files/rapp1/rapp.zip
+
