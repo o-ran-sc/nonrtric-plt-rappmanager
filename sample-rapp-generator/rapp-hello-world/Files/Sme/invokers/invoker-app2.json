@@ -1,0 +1,14 @@
+[
+  {
+    "apiInvokerInformation": "Invoker App 2",
+    "apiList": [
+      {}
+    ],
+    "notificationDestination": "http://invoker-app2:8086/callback",
+    "onboardingInformation": {
+      "apiInvokerPublicKey": "{PUBLIC_KEY_INVOKER_1}",
+      "apiInvokerCertificate": "apiInvokerCertificate"
+    },
+    "requestTestNotification": true
+  }
+]

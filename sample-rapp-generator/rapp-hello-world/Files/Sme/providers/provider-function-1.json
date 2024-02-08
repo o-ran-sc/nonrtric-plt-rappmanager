@@ -1,0 +1,20 @@
+{
+  "apiProvDomInfo": "Provider domain",
+  "apiProvFuncs": [
+    {
+      "apiProvFuncInfo": "Hello World as APF",
+      "apiProvFuncRole": "APF",
+      "regInfo": {
+        "apiProvPubKey": "APF-PublicKey"
+      }
+    },
+    {
+      "apiProvFuncInfo": "Hello World as AEF",
+      "apiProvFuncRole": "AEF",
+      "regInfo": {
+        "apiProvPubKey": "AEF-PublicKey"
+      }
+    }
+  ],
+  "regSec": "PSK"
+}

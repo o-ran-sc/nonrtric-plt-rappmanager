@@ -1,0 +1,39 @@
+{
+  "apiName": "Hello World API Set 2",
+  "description": "Simple Hello World API for Subpath",
+  "aefProfiles": [
+    {
+      "aefId": "Hello World as AEF",
+      "description": "Simple Hello World API for Subpath",
+      "versions": [
+        {
+          "apiVersion": "v1",
+          "resources": [
+            {
+              "resourceName": "helloworld",
+              "commType": "REQUEST_RESPONSE",
+              "uri": "/helloworld/v1/subpath1",
+              "operations": [
+                "GET"
+              ]
+            }
+          ]
+        }
+      ],
+      "protocol": "HTTP_1_1",
+      "securityMethods": [
+        "PSK"
+      ],
+      "interfaceDescriptions": [
+        {
+          "ipv4Addr": "hello-world-chart.nonrtric.svc.cluster.local",
+          "port": 8080
+        },
+        {
+          "ipv4Addr": "hello-world-chart.nonrtric.svc.cluster.local",
+          "port": 8080
+        }
+      ]
+    }
+  ]
+}
