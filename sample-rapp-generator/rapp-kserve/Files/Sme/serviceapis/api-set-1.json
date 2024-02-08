@@ -1,0 +1,32 @@
+{
+  "apiName": "sklearn-iris API Set",
+  "description": "sklearn-iris API",
+  "aefProfiles": [
+    {
+      "aefId": "sklearn-iris as AEF",
+      "description": "sklearn-iris API",
+      "versions": [
+        {
+          "apiVersion": "v1",
+          "resources": [
+            {
+              "resourceName": "sklearn",
+              "commType": "REQUEST_RESPONSE",
+              "uri": "v1/models/sklearn-iris:predict",
+              "operations": [
+                "POST"
+              ]
+            }
+          ]
+        }
+      ],
+      "protocol": "HTTP_1_1",
+      "interfaceDescriptions": [
+        {
+          "ipv4Addr": "sklearn-iris-predictor-default.kserve-test.svc.cluster.local",
+          "port": 80
+        }
+      ]
+    }
+  ]
+}

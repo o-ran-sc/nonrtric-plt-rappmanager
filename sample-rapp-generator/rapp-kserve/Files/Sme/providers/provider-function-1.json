@@ -1,0 +1,20 @@
+{
+  "apiProvDomInfo": "Provider domain",
+  "apiProvFuncs": [
+    {
+      "apiProvFuncInfo": "sklearn-iris as APF",
+      "apiProvFuncRole": "APF",
+      "regInfo": {
+        "apiProvPubKey": "NOT USED here"
+      }
+    },
+    {
+      "apiProvFuncInfo": "sklearn-iris as AEF",
+      "apiProvFuncRole": "AEF",
+      "regInfo": {
+        "apiProvPubKey": "NOT USED here"
+      }
+    }
+  ],
+  "regSec": "plain"
+}

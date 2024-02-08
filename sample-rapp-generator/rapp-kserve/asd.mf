@@ -1,0 +1,14 @@
+metadata:
+  application_name: rapp-kserve
+  application_provider: Ericsson Software Technology (O-RAN SC NONRTRIC team)
+  release_date_time: 2024-02-12T11:30:00+00:00
+  entry_definition_type: asd
+
+Source: asd.mf
+Source: Definitions/asd.yaml
+Source: Definitions/asd_types.yaml
+Source: TOSCA-Metadata/TOSCA.meta
+Source: Files/Acm/definition/compositions.json
+Source: Files/Acm/instances/kserve-instance.json
+Source: Files/Sme/provider/provider-function-1.json
+Source: Files/Sme/serviceapis/api-set-1.json
