@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "90ebf923_7ef56add",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-02-08T14:24:58Z",
+      "side": 1,
+      "message": "Please see inline comments. \nPlase also add license info to files where possible.",
+      "revId": "036317f5573c76b9dc1d20c9aa934679bee20bee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8773188e_0c0b7b21",
+        "filename": "sample-rapp-generator/rapp-kserve/Definitions/asd.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-02-08T14:24:58Z",
+      "side": 1,
+      "message": "I think this is not the correct file ...",
+      "range": {
+        "startLine": 12,
+        "startChar": 5,
+        "endLine": 12,
+        "endChar": 29
+      },
+      "revId": "036317f5573c76b9dc1d20c9aa934679bee20bee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "46fcc0a9_f3bfc76c",
+        "filename": "sample-rapp-generator/rapp-kserve/Definitions/asd_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-02-08T14:24:58Z",
+      "side": 1,
+      "message": "again, i don\u0027t think this is the correct file",
+      "range": {
+        "startLine": 4,
+        "startChar": 2,
+        "endLine": 6,
+        "endChar": 6
+      },
+      "revId": "036317f5573c76b9dc1d20c9aa934679bee20bee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc1ba862_4a121785",
+        "filename": "sample-rapp-generator/rapp-kserve/TOSCA-Metadata/TOSCA.meta",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-02-08T14:24:58Z",
+      "side": 1,
+      "message": "please update",
+      "range": {
+        "startLine": 3,
+        "startChar": 17,
+        "endLine": 4,
+        "endChar": 31
+      },
+      "revId": "036317f5573c76b9dc1d20c9aa934679bee20bee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a809fcec_2e53e4a0",
+        "filename": "sample-rapp-generator/rapp-kserve/asd.mf",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-02-08T14:24:58Z",
+      "side": 1,
+      "message": "please update.",
+      "range": {
+        "startLine": 2,
+        "startChar": 2,
+        "endLine": 6,
+        "endChar": 1
+      },
+      "revId": "036317f5573c76b9dc1d20c9aa934679bee20bee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "660fc1d6_d8526ec7",
+        "filename": "sample-rapp-generator/rapp-kserve/asd.mf",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-02-08T14:24:58Z",
+      "side": 1,
+      "message": "Currently I think these are optional (TBC)\nSo maybe can be removed, or if not then empty files will be needed for each.",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 36
+      },
+      "revId": "036317f5573c76b9dc1d20c9aa934679bee20bee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
