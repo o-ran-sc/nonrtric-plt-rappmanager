@@ -46,8 +46,10 @@ if [[ "$1" == "dev" ]]; then
   echo "DME Participant Version: $DME_PARTICIPANT_VERSION"
   yq eval ".rappmanager.rappmanager.image.registry"=\"$SNAPSHOT_REPO\" -i $RECEIPE_FILE
   yq eval ".rappmanager.rappmanager.image.tag"=\"$RAPP_MANAGER_VERSION\" -i $RECEIPE_FILE
+  yq eval ".rappmanager.rappmanager.imagePullPolicy=\"Always\"" -i $RECEIPE_FILE
   yq eval ".dmeparticipant.dmeparticipant.image.registry"=\"$SNAPSHOT_REPO\" -i $RECEIPE_FILE
   yq eval ".dmeparticipant.dmeparticipant.image.tag"=\"$DME_PARTICIPANT_VERSION\" -i $RECEIPE_FILE
+  yq eval ".dmeparticipant.dmeparticipant.imagePullPolicy=\"Always\"" -i $RECEIPE_FILE
 fi
 
 sudo dep/bin/deploy-nonrtric -f $RECEIPE_FILE
