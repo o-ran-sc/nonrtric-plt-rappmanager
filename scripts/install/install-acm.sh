@@ -58,8 +58,12 @@ export WORKSPACE="$CWD/docker"
 
 # Kafka installation
 echo "Installing Confluent kafka"
-kubectl apply -f $KAFKA_DIR/zookeeper.yaml
-kubectl apply -f $KAFKA_DIR/kafka.yaml
+# Using "default" as namespace for kafka installation. As the policy CSIT helm charts contains the namespace "default" inbuilt.
+# ACM installation fails to run, If the kubernetes cluster setup with a different default namespace,
+# Expected kafka service is "kafka.default.svc.cluster.local"
+# This can be removed when the kafka charts provided with "default" namespace or when policy CSIT charts can be configurable with different namespace.
+kubectl apply -f $KAFKA_DIR/zookeeper.yaml -n default
+kubectl apply -f $KAFKA_DIR/kafka.yaml -n default
 wait_for_pods_to_be_running
 
 echo "Updating policy docker image versions..."
