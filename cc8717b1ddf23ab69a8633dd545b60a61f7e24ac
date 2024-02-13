@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c7ce2e45_75222b3b",
+        "filename": "sample-rapp-generator/rapp-hello-world/Definitions/asd.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2024-02-13T14:25:32Z",
+      "side": 1,
+      "message": "use a different name",
+      "range": {
+        "startLine": 41,
+        "startChar": 8,
+        "endLine": 41,
+        "endChar": 25
+      },
+      "revId": "cc8717b1ddf23ab69a8633dd545b60a61f7e24ac",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
