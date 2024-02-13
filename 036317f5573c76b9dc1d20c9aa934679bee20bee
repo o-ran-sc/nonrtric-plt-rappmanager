@@ -58,6 +58,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e9ef1066_bd5cce66",
+        "filename": "sample-rapp-generator/rapp-kserve/Definitions/asd.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1002202
+      },
+      "writtenOn": "2024-02-13T13:17:35Z",
+      "side": 1,
+      "message": "Fixed",
+      "parentUuid": "8773188e_0c0b7b21",
+      "range": {
+        "startLine": 12,
+        "startChar": 5,
+        "endLine": 12,
+        "endChar": 29
+      },
+      "revId": "036317f5573c76b9dc1d20c9aa934679bee20bee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "46fcc0a9_f3bfc76c",
@@ -71,6 +95,30 @@
       "writtenOn": "2024-02-08T14:24:58Z",
       "side": 1,
       "message": "again, i don\u0027t think this is the correct file",
+      "range": {
+        "startLine": 4,
+        "startChar": 2,
+        "endLine": 6,
+        "endChar": 6
+      },
+      "revId": "036317f5573c76b9dc1d20c9aa934679bee20bee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "817491dd_309c3e85",
+        "filename": "sample-rapp-generator/rapp-kserve/Definitions/asd_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1002202
+      },
+      "writtenOn": "2024-02-13T13:17:35Z",
+      "side": 1,
+      "message": "Fixed",
+      "parentUuid": "46fcc0a9_f3bfc76c",
       "range": {
         "startLine": 4,
         "startChar": 2,
@@ -104,6 +152,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8c7982b9_2d3b73be",
+        "filename": "sample-rapp-generator/rapp-kserve/TOSCA-Metadata/TOSCA.meta",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1002202
+      },
+      "writtenOn": "2024-02-13T13:17:35Z",
+      "side": 1,
+      "message": "Fixed",
+      "parentUuid": "dc1ba862_4a121785",
+      "range": {
+        "startLine": 3,
+        "startChar": 17,
+        "endLine": 4,
+        "endChar": 31
+      },
+      "revId": "036317f5573c76b9dc1d20c9aa934679bee20bee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a809fcec_2e53e4a0",
@@ -127,6 +199,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d268f097_3de919c1",
+        "filename": "sample-rapp-generator/rapp-kserve/asd.mf",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1002202
+      },
+      "writtenOn": "2024-02-13T13:17:35Z",
+      "side": 1,
+      "message": "Fixed",
+      "parentUuid": "a809fcec_2e53e4a0",
+      "range": {
+        "startLine": 2,
+        "startChar": 2,
+        "endLine": 6,
+        "endChar": 1
+      },
+      "revId": "036317f5573c76b9dc1d20c9aa934679bee20bee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "660fc1d6_d8526ec7",
@@ -140,6 +236,30 @@
       "writtenOn": "2024-02-08T14:24:58Z",
       "side": 1,
       "message": "Currently I think these are optional (TBC)\nSo maybe can be removed, or if not then empty files will be needed for each.",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 36
+      },
+      "revId": "036317f5573c76b9dc1d20c9aa934679bee20bee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e9cff7a_c0c4681e",
+        "filename": "sample-rapp-generator/rapp-kserve/asd.mf",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1002202
+      },
+      "writtenOn": "2024-02-13T13:17:35Z",
+      "side": 1,
+      "message": "Fixed.",
+      "parentUuid": "660fc1d6_d8526ec7",
       "range": {
         "startLine": 15,
         "startChar": 0,
