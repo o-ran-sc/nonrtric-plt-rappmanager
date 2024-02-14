@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a73667f_881cdd56",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-02-14T12:57:07Z",
+      "side": 1,
+      "message": "Few more comments.",
+      "revId": "24911e64f5d58698dd9d71b63dbbbfb9749067ee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4526569_b0880ba5",
+        "filename": "sample-rapp-generator/rapp-hello-world/Definitions/asd.yaml",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-02-14T12:57:07Z",
+      "side": 1,
+      "message": "Please add new IDs. \nMaybe those should be unique?",
+      "range": {
+        "startLine": 32,
+        "startChar": 40,
+        "endLine": 33,
+        "endChar": 45
+      },
+      "revId": "24911e64f5d58698dd9d71b63dbbbfb9749067ee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c4559f2b_356cef7a",
+        "filename": "sample-rapp-generator/rapp-hello-world/Files/Acm/instances/k8s-instance.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-02-14T12:57:07Z",
+      "side": 1,
+      "message": "This VM will disappear\nHave we a service name or cluster-internal url we could use here? \nI know in general this could be outside, but for our rApp deployment scenarios will the chartmuseum be deployed locally?",
+      "range": {
+        "startLine": 25,
+        "startChar": 24,
+        "endLine": 25,
+        "endChar": 54
+      },
+      "revId": "24911e64f5d58698dd9d71b63dbbbfb9749067ee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8f78e587_e764d738",
+        "filename": "sample-rapp-generator/rapp-hello-world/Files/Sme/providers/provider-function-1.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-02-14T12:57:07Z",
+      "side": 1,
+      "message": "Is this required? \nSame below.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 8
+      },
+      "revId": "24911e64f5d58698dd9d71b63dbbbfb9749067ee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "623a5a27_94ac66c0",
+        "filename": "sample-rapp-generator/rapp-hello-world/TOSCA-Metadata/TOSCA.meta",
+        "patchSetId": 4
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-02-14T12:57:07Z",
+      "side": 1,
+      "message": "Perhaps: ?\nEricsson Software Technology (O-RAN SC NONRTRIC team)",
+      "range": {
+        "startLine": 3,
+        "startChar": 12,
+        "endLine": 3,
+        "endChar": 16
+      },
+      "revId": "24911e64f5d58698dd9d71b63dbbbfb9749067ee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
