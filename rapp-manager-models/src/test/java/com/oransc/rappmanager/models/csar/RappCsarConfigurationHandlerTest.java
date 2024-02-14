@@ -27,10 +27,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonSyntaxException;
 import com.oransc.rappmanager.models.exception.RappHandlerException;
 import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappResources;
@@ -41,6 +44,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -51,6 +55,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
@@ -67,10 +72,13 @@ class RappCsarConfigurationHandlerTest {
 
     String validCsarFileLocation = "src/test/resources/";
 
-
     private final String validRappFile = "valid-rapp-package.csar";
 
     private final String invalidRappFile = "invalid-rapp-package.csar";
+
+    private final String invalidRappNoAsdFile = "invalid-rapp-package-no-asd-yaml.csar";
+
+    private final String invalidRappEmptyAsdFile = "invalid-rapp-package-empty-asd-yaml.csar";
 
     @Test
     void testCsarPackageValidationSuccess() throws IOException {
@@ -84,7 +92,6 @@ class RappCsarConfigurationHandlerTest {
     @ParameterizedTest
     @MethodSource("getInvalidCsarPackage")
     void testCsarPackageValidationFailure(MultipartFile multipartFile) {
-        System.out.println(multipartFile.getOriginalFilename());
         RappHandlerException exception = assertThrows(RappHandlerException.class,
                 () -> rappCsarConfigurationHandler.isValidRappPackage(multipartFile));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
@@ -361,4 +368,32 @@ class RappCsarConfigurationHandlerTest {
         assertNotNull(dmeInfoConsumerPayload);
     }
 
+    @Test
+    void testListDeploymentItems() {
+        Rapp rapp = Rapp.builder().name("").packageName(validRappFile).packageLocation(validCsarFileLocation).build();
+        List<DeploymentItem> deploymentItems = rappCsarConfigurationHandler.getDeploymentItems(rapp);
+        assertEquals(2, deploymentItems.size());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {invalidRappNoAsdFile, invalidRappEmptyAsdFile})
+    void testListDeploymentItemsNoAsd(String packageName) {
+        Rapp rapp = Rapp.builder().name("").packageName(packageName).packageLocation(validCsarFileLocation).build();
+        assertThat(rappCsarConfigurationHandler.getDeploymentItems(rapp)).isEmpty();
+    }
+
+    @Test
+    void testListDeploymentItemsWithException() throws JsonProcessingException {
+        Rapp rapp = Rapp.builder().name("").packageName(validRappFile).packageLocation(validCsarFileLocation).build();
+        doThrow(new JsonSyntaxException("")).when(rappCsarConfigurationHandler).getAsdContentNode(any());
+        assertThat(rappCsarConfigurationHandler.getDeploymentItems(rapp)).isEmpty();
+    }
+
+    @Test
+    void testGetArtifactPayload() {
+        Rapp rapp = Rapp.builder().name("").packageName(validRappFile).packageLocation(validCsarFileLocation).build();
+        assertNotNull(rappCsarConfigurationHandler.getArtifactPayload(rapp,
+                "Artifacts/Deployment/HELM/ransliceassurance-1.0.0.tgz"));
+
+    }
 }

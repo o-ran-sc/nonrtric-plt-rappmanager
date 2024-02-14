@@ -43,19 +43,30 @@ node_types:
 
 artifact_types:
 tosca.artifacts.asd.deploymentItem:
-    version: 0.1
-    derived_from: tosca.artifacts.Root
-    description: "Describes the artifact type of asd deployment item"
-    file: "Relative path of the artifact in the package"
-    properties:
-        item_id:
-            description: "The identifier of this asd deployment item"
-            required: true
-            type: string
-        artifact_type:
-            description: >
-                Specify artifact type.
-            required: true
-            type: string
-            constraints:
-                - valid_values: ["helm_chart"]
+  version: 0.1
+  derived_from: tosca.artifacts.Root
+  description: "Describes the artifact type of asd deployment item"
+  file: "Relative path of the artifact in the package"
+  properties:
+    item_id:
+      description: "The identifier of this asd deployment item"
+      required: true
+      type: string
+    artifact_type:
+      description: >
+        Specify artifact type.
+      required: true
+      type: string
+      constraints:
+        - valid_values: ["helm_chart"]
+    target_server:
+      description: >
+        Specify target server for artifact.
+      required: true
+      type: string
+      constraints:
+        - valid_values: [ "chartmuseum" ]
+    target_server_uri:
+      description: "URI of the target server"
+      required: true
+      type: string

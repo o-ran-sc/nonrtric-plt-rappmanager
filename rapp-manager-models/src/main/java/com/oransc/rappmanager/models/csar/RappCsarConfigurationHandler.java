@@ -22,6 +22,7 @@ package com.oransc.rappmanager.models.csar;
 import static com.google.common.base.Splitter.on;
 import static com.google.common.collect.Iterables.filter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -35,6 +36,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -47,6 +49,7 @@ import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -71,6 +74,8 @@ public class RappCsarConfigurationHandler {
     private static final String DME_CONSUMER_INFO_TYPES_LOCATION = "Files/Dme/consumerinfotypes";
     private static final String DME_INFO_PRODUCERS_LOCATION = "Files/Dme/infoproducers";
     private static final String DME_INFO_CONSUMERS_LOCATION = "Files/Dme/infoconsumers";
+    private static final String ARTIFACTS_LOCATION_JSON_POINTER =
+            "/topology_template/node_templates/applicationServiceDescriptor/artifacts";
 
 
     public boolean isValidRappPackage(MultipartFile multipartFile) {
@@ -107,10 +112,18 @@ public class RappCsarConfigurationHandler {
                 "COMPOSITIONID", String.valueOf(compositionId));
     }
 
+    public ByteArrayResource getArtifactPayload(Rapp rapp, String location) {
+        return new ByteArrayResource(getByteArrayStreamPayload(rapp, location).toByteArray());
+    }
+
     String getPayload(Rapp rapp, String location) {
+        return getByteArrayStreamPayload(rapp, location).toString();
+    }
+
+    ByteArrayOutputStream getByteArrayStreamPayload(Rapp rapp, String location) {
         logger.debug("Getting payload for {} from {}", rapp.getRappId(), location);
         File csarFile = getCsarFile(rapp);
-        return getFileFromCsar(csarFile, location).toString();
+        return getFileFromCsar(csarFile, location);
     }
 
     File getCsarFile(Rapp rapp) {
@@ -163,11 +176,8 @@ public class RappCsarConfigurationHandler {
         if (asdLocation != null && !asdLocation.isEmpty() && isFileExistsInCsar(multipartFile, asdLocation)) {
             try {
                 String asdContent = getFileFromCsar(multipartFile, asdLocation).toString();
-                String asdJsonContent = new Gson().toJsonTree(new Yaml().load(asdContent)).toString();
-                JsonNode jsonNode = objectMapper.readTree(asdJsonContent);
-                List<String> artifactFileList =
-                        jsonNode.at("/topology_template/node_templates/applicationServiceDescriptor/artifacts")
-                                .findValuesAsText("file");
+                JsonNode jsonNode = getAsdContentNode(asdContent);
+                List<String> artifactFileList = jsonNode.at(ARTIFACTS_LOCATION_JSON_POINTER).findValuesAsText("file");
                 return artifactFileList.stream()
                                .allMatch(artifactFile -> isFileExistsInCsar(multipartFile, artifactFile));
             } catch (RappHandlerException e) {
@@ -180,19 +190,49 @@ public class RappCsarConfigurationHandler {
         throw new RappHandlerException(HttpStatus.BAD_REQUEST, "ASD definition in rApp package is invalid.");
     }
 
+    JsonNode getAsdContentNode(String asdContent) throws JsonProcessingException {
+        return objectMapper.readTree(new Gson().toJsonTree(new Yaml().load(asdContent)).toString());
+    }
+
+    String getAsdDefinitionLocation(final File csarFile) {
+        return getAsdDefinitionLocation(getFileFromCsar(csarFile, TOSCA_METADATA_LOCATION).toString());
+    }
+
     String getAsdDefinitionLocation(final MultipartFile multipartFile) {
+        return getAsdDefinitionLocation(getFileFromCsar(multipartFile, TOSCA_METADATA_LOCATION).toString());
+    }
+
+    String getAsdDefinitionLocation(final String toscaMetadata) {
         String asdLocation = "";
-        final ByteArrayOutputStream fileContent = getFileFromCsar(multipartFile, TOSCA_METADATA_LOCATION);
-        if (fileContent != null) {
-            final String toscaMetadata = fileContent.toString();
-            if (!toscaMetadata.isEmpty()) {
-                final String entry =
-                        filter(on("\n").split(toscaMetadata), line -> line.contains(ENTRY_DEFINITIONS_INDEX)).iterator()
-                                .next();
-                asdLocation = entry.replace(ENTRY_DEFINITIONS_INDEX + ":", "").trim();
-            }
+        if (toscaMetadata != null && !toscaMetadata.isEmpty()) {
+            final String entry =
+                    filter(on("\n").split(toscaMetadata), line -> line.contains(ENTRY_DEFINITIONS_INDEX)).iterator()
+                            .next();
+            asdLocation = entry.replace(ENTRY_DEFINITIONS_INDEX + ":", "").trim();
         }
         return asdLocation;
+    }
+
+    public List<DeploymentItem> getDeploymentItems(Rapp rApp) {
+        List<DeploymentItem> deploymentItems = new ArrayList<>();
+        File csarFile = getCsarFile(rApp);
+        String asdDefinitionLocation = getAsdDefinitionLocation(csarFile);
+        if (asdDefinitionLocation != null && !asdDefinitionLocation.isEmpty()) {
+            try {
+                String asdContent = getFileFromCsar(csarFile, asdDefinitionLocation).toString();
+                JsonNode jsonNode = getAsdContentNode(asdContent);
+                JsonNode artifactsJsonNode = jsonNode.at(ARTIFACTS_LOCATION_JSON_POINTER);
+                artifactsJsonNode.forEach(artifactJsonNode -> {
+                    DeploymentItem deploymentItem =
+                            objectMapper.convertValue(artifactJsonNode.at("/properties"), DeploymentItem.class);
+                    deploymentItem.setFile(artifactJsonNode.at("/file").asText());
+                    deploymentItems.add(deploymentItem);
+                });
+            } catch (Exception e) {
+                logger.warn("Unable to get the deployment items", e);
+            }
+        }
+        return deploymentItems;
     }
 
 
