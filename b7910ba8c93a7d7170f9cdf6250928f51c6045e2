@@ -16,6 +16,24 @@
       "message": "this can be removed as kserve rApp doesn\u0027t need the microservice helm artifact",
       "revId": "b7910ba8c93a7d7170f9cdf6250928f51c6045e2",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8cb5adf_d33012b6",
+        "filename": "sample-rapp-generator/rapp-kserve/Artifacts/Deployment/HELM/hello-world-chart-0.1.0.tgz",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002202
+      },
+      "writtenOn": "2024-02-15T11:57:02Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "d053f551_980d3264",
+      "revId": "b7910ba8c93a7d7170f9cdf6250928f51c6045e2",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
