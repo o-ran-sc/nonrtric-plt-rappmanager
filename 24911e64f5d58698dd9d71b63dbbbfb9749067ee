@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5344485d_b92ba634",
+        "filename": "sample-rapp-generator/rapp-hello-world/Definitions/asd.yaml",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-02-15T11:17:57Z",
+      "side": 1,
+      "message": "We guess they should be unique. \nFor example, in other ASDs/packages in SDC this ID is important, and should be unique. \nSo, yes, please make unique. \nWill also add a check in rApp manager that these IDs are unique among existing installed rApps, and rApp installation should fail if not unique.",
+      "parentUuid": "b4526569_b0880ba5",
+      "range": {
+        "startLine": 32,
+        "startChar": 40,
+        "endLine": 33,
+        "endChar": 45
+      },
+      "revId": "24911e64f5d58698dd9d71b63dbbbfb9749067ee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c4559f2b_356cef7a",
         "filename": "sample-rapp-generator/rapp-hello-world/Files/Acm/instances/k8s-instance.json",
         "patchSetId": 4
@@ -66,6 +90,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e16c76fb_b7f87ba8",
+        "filename": "sample-rapp-generator/rapp-hello-world/Files/Acm/instances/k8s-instance.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-02-15T11:17:57Z",
+      "side": 1,
+      "message": "Actually. This can\u0027t be fixed. Need to make it very explicit if chartmuseum cannot be accessed.",
+      "parentUuid": "c4559f2b_356cef7a",
+      "range": {
+        "startLine": 25,
+        "startChar": 24,
+        "endLine": 25,
+        "endChar": 54
+      },
+      "revId": "24911e64f5d58698dd9d71b63dbbbfb9749067ee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8f78e587_e764d738",
         "filename": "sample-rapp-generator/rapp-hello-world/Files/Sme/providers/provider-function-1.json",
         "patchSetId": 4
@@ -77,6 +125,30 @@
       "writtenOn": "2024-02-14T12:57:07Z",
       "side": 1,
       "message": "Is this required? \nSame below.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 8
+      },
+      "revId": "24911e64f5d58698dd9d71b63dbbbfb9749067ee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "896f9119_3133fd89",
+        "filename": "sample-rapp-generator/rapp-hello-world/Files/Sme/providers/provider-function-1.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-02-15T11:17:57Z",
+      "side": 1,
+      "message": "This field is required for CAPIF registration call, but we never use the value. \nPlease change to \n\"apiProvPubKey\": \"NOT USED here\"\nor\n\"apiProvPubKey\": \"ABCDEFG\"\nor\n\"apiProvPubKey\": \"XXXXXXXXXXX\"\nor\n\"apiProvPubKey\": \"BlahBlah\"",
+      "parentUuid": "8f78e587_e764d738",
       "range": {
         "startLine": 7,
         "startChar": 0,
