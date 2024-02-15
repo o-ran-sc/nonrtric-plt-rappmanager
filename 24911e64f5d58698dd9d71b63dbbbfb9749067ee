@@ -65,6 +65,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7462e1c9_f579c018",
+        "filename": "sample-rapp-generator/rapp-hello-world/Definitions/asd.yaml",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1002202
+      },
+      "writtenOn": "2024-02-15T11:56:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5344485d_b92ba634",
+      "range": {
+        "startLine": 32,
+        "startChar": 40,
+        "endLine": 33,
+        "endChar": 45
+      },
+      "revId": "24911e64f5d58698dd9d71b63dbbbfb9749067ee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c4559f2b_356cef7a",
@@ -102,6 +126,30 @@
       "side": 1,
       "message": "Actually. This can\u0027t be fixed. Need to make it very explicit if chartmuseum cannot be accessed.",
       "parentUuid": "c4559f2b_356cef7a",
+      "range": {
+        "startLine": 25,
+        "startChar": 24,
+        "endLine": 25,
+        "endChar": 54
+      },
+      "revId": "24911e64f5d58698dd9d71b63dbbbfb9749067ee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5606316d_7783d4ac",
+        "filename": "sample-rapp-generator/rapp-hello-world/Files/Acm/instances/k8s-instance.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1002202
+      },
+      "writtenOn": "2024-02-15T11:56:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e16c76fb_b7f87ba8",
       "range": {
         "startLine": 25,
         "startChar": 24,
@@ -159,6 +207,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "188c7aa1_a92058ce",
+        "filename": "sample-rapp-generator/rapp-hello-world/Files/Sme/providers/provider-function-1.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1002202
+      },
+      "writtenOn": "2024-02-15T11:56:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "896f9119_3133fd89",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 8
+      },
+      "revId": "24911e64f5d58698dd9d71b63dbbbfb9749067ee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "623a5a27_94ac66c0",
@@ -172,6 +244,30 @@
       "writtenOn": "2024-02-14T12:57:07Z",
       "side": 1,
       "message": "Perhaps: ?\nEricsson Software Technology (O-RAN SC NONRTRIC team)",
+      "range": {
+        "startLine": 3,
+        "startChar": 12,
+        "endLine": 3,
+        "endChar": 16
+      },
+      "revId": "24911e64f5d58698dd9d71b63dbbbfb9749067ee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "30109beb_b7c2f8f5",
+        "filename": "sample-rapp-generator/rapp-hello-world/TOSCA-Metadata/TOSCA.meta",
+        "patchSetId": 4
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1002202
+      },
+      "writtenOn": "2024-02-15T11:56:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "623a5a27_94ac66c0",
       "range": {
         "startLine": 3,
         "startChar": 12,
