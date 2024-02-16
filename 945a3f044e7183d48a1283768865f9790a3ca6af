@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "61ed13e0_8305c0b8",
+        "filename": "sample-rapp-generator/rapp-kserve/Definitions/asd.yaml",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1002240
+      },
+      "writtenOn": "2024-02-16T10:15:32Z",
+      "side": 1,
+      "message": "NB: Not defining any artifacts/deployment items?",
+      "range": {
+        "startLine": 33,
+        "startChar": 13,
+        "endLine": 39,
+        "endChar": 32
+      },
+      "revId": "945a3f044e7183d48a1283768865f9790a3ca6af",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
