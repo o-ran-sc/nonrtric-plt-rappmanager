@@ -46,6 +46,29 @@
       },
       "revId": "a46c269e0972357c54378520a4bba531bf7bb12d",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b55a81a_67836974",
+        "filename": "sample-rapp-generator/rapp-all/Definitions/asd.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-02-19T12:33:18Z",
+      "side": 1,
+      "message": "Similar to Ambrish\u0027s sample rApp, for the checked in version should we replace the IP address with \"\u003cREPLACE WITH CHARTMUSEUM IP ADDRESS\u003e\" ... or something similar?",
+      "range": {
+        "startLine": 29,
+        "startChar": 32,
+        "endLine": 29,
+        "endChar": 56
+      },
+      "revId": "a46c269e0972357c54378520a4bba531bf7bb12d",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
