@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5fe2f389_e591f69e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-02-19T12:36:48Z",
+      "side": 1,
+      "message": "Just a suggestion: Ignore if you wish: \nSome of the lines are bit long / hard to read. \nCan an auto-formatter improve readability a bit ... or might benefit from some manual help?",
+      "revId": "a46c269e0972357c54378520a4bba531bf7bb12d",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "988b2db8_1f20d0d8",
