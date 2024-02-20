@@ -1,0 +1,16 @@
+metadata:
+  application_name: rapp-hello-world
+  application_provider: Ericsson Software Technology (O-RAN SC NONRTRIC team)
+  release_date_time: 2024-02-12T11:30:00+00:00
+  entry_definition_type: asd
+
+Source: asd.mf
+Source: Artifacts/Deployment/HELM/hello-world-chart-0.1.0.tgz
+Source: Definitions/asd.yaml
+Source: Definitions/asd_types.yaml
+Source: TOSCA-Metadata/TOSCA.meta
+Source: Files/Acm/definition/compositions.json
+Source: Files/Acm/instances/k8s-instance.json
+Source: Files/Sme/provider/provider-function-1.json
+Source: Files/Sme/serviceapis/api-set-1.json
+Source: Files/Sme/serviceapis/api-set-2.json
