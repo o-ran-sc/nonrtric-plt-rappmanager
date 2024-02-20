@@ -32,6 +32,9 @@ echo "Installing ACM components..."
 ./install-acm.sh
 
 echo "Patching Kserve..."
-./patch-kserve.sh
+#./patch-kserve.sh
+
+echo "Patching Sample rApps..."
+./patch-sample-rapps.sh
 
 echo "Rapp Manager installation completed."

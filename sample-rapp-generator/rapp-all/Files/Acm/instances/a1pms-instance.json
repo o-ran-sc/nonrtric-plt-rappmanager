@@ -1,7 +1,7 @@
 {
   "name": "A1PMSInstance0",
   "version": "1.0.1",
-  "compositionId": "COMPOSITIONID",
+  "compositionId": "DO_NOT_CHANGE_THIS_COMPOSITION_ID",
   "description": "Demo automation composition instance 0",
   "elements": {
     "709c62b3-8918-41b9-a747-d21eb79c6c12": {
