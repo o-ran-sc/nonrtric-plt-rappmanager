@@ -1,7 +1,7 @@
 {
   "name": "AllInstance0",
   "version": "1.0.1",
-  "compositionId": "COMPOSITIONID",
+  "compositionId": "DO_NOT_CHANGE_THIS_COMPOSITION_ID",
   "description": "Demo automation composition instance",
   "elements": {
     "709c62b3-8918-41b9-a747-d21eb79c6c12": {
@@ -42,7 +42,7 @@
           "podName": "ransliceassurance",
           "repository": {
             "repoName": "local",
-            "address": "http://10.101.2.41:8879/charts"
+            "address": "UPDATE_THIS_CHART_MUSEUM_GET_CHARTS_URI"
           }
         }
       }

@@ -16,7 +16,7 @@ topology_template:
         descriptor_version: 1.0
         schema_version: 2.0
         function_description: rApp description
-        provider: EST
+        provider: Ericsson Software Technology (O-RAN SC NONRTRIC team)
         application_name: rapp-all
         application_version: 1.0
       artifacts:
@@ -26,7 +26,7 @@ topology_template:
           properties:
             artifact_type: "helm_chart"
             target_server: "chartmuseum"
-            target_server_uri: "http://10.101.0.106:8879/charts/api/charts"
+            target_server_uri: "UPDATE_THIS_CHART_MUSEUM_POST_CHARTS_URI"
             item_id: 1
         oru-app:
           type: tosca.artifacts.asd.deploymentItem
@@ -34,5 +34,5 @@ topology_template:
           properties:
             artifact_type: "helm_chart"
             target_server: "chartmuseum"
-            target_server_uri: "http://10.101.0.106:8879/charts/api/charts"
+            target_server_uri: "UPDATE_THIS_CHART_MUSEUM_POST_CHARTS_URI"
             item_id: 2
