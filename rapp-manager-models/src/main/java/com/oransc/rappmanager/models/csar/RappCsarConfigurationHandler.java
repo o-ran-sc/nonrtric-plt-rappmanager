@@ -67,7 +67,7 @@ public class RappCsarConfigurationHandler {
     public String getInstantiationPayload(Rapp rapp, RappACMInstance rappACMInstance, UUID compositionId) {
         return getPayload(rapp,
                 getResourceUri(RappCsarPathProvider.ACM_INSTANCES_LOCATION, rappACMInstance.getInstance())).replaceAll(
-                "COMPOSITIONID", String.valueOf(compositionId));
+                "DO_NOT_CHANGE_THIS_COMPOSITION_ID", String.valueOf(compositionId));
     }
 
     public ByteArrayResource getArtifactPayload(Rapp rapp, String location) {

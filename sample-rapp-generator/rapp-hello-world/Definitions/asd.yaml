@@ -43,4 +43,6 @@ topology_template:
           file: "Artifacts/Deployment/HELM/hello-world-chart-0.1.0.tgz"
           properties:
             artifact_type: "helm_chart"
-            itemId: 1
+            target_server: "chartmuseum"
+            target_server_uri: "UPDATE_THIS_CHART_MUSEUM_POST_CHARTS_URI"
+            item_id: 1
