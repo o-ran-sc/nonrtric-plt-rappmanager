@@ -61,6 +61,9 @@ class RappServiceTest {
     DmeDeployer dmeDeployer;
 
     @MockBean
+    DeploymentArtifactsService deploymentArtifactsService;
+
+    @MockBean
     SmeLifecycleManager smeLifecycleManager;
 
     @Autowired
@@ -80,6 +83,7 @@ class RappServiceTest {
         when(acmDeployer.primeRapp(any())).thenReturn(true);
         when(dmeDeployer.primeRapp(any())).thenReturn(true);
         when(smeDeployer.primeRapp(any())).thenReturn(true);
+        when(deploymentArtifactsService.configureDeploymentArtifacts(any())).thenReturn(true);
         assertEquals(HttpStatus.OK, rappService.primeRapp(rapp).getStatusCode());
         assertEquals(RappState.PRIMED, rapp.getState());
     }
@@ -100,6 +104,7 @@ class RappServiceTest {
     void testPrimeRappAcmFailure() {
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
+        when(deploymentArtifactsService.configureDeploymentArtifacts(any())).thenReturn(true);
         when(acmDeployer.primeRapp(any())).thenReturn(false);
         when(dmeDeployer.primeRapp(any())).thenReturn(true);
         RappHandlerException rappHandlerException =
@@ -112,6 +117,7 @@ class RappServiceTest {
     void testPrimeRappDmeFailure() {
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
+        when(deploymentArtifactsService.configureDeploymentArtifacts(any())).thenReturn(true);
         when(acmDeployer.primeRapp(any())).thenReturn(true);
         when(dmeDeployer.primeRapp(any())).thenReturn(false);
         RappHandlerException rappHandlerException =
@@ -120,6 +126,16 @@ class RappServiceTest {
         assertEquals(RappState.COMMISSIONED, rapp.getState());
     }
 
+    @Test
+    void testPrimeRappDeployArtifactFailure() {
+        Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
+                            .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
+        when(deploymentArtifactsService.configureDeploymentArtifacts(any())).thenReturn(false);
+        RappHandlerException rappHandlerException =
+                assertThrows(RappHandlerException.class, () -> rappService.primeRapp(rapp));
+        assertEquals(HttpStatus.BAD_GATEWAY, rappHandlerException.getStatusCode());
+        assertEquals(RappState.COMMISSIONED, rapp.getState());
+    }
 
     @Test
     void testDeprimeRapp() {

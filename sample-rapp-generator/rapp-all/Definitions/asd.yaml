@@ -7,7 +7,7 @@ imports:
 
 topology_template:
   node_templates:
-   applicationServiceDescriptor:
+    applicationServiceDescriptor:
       type: tosca.nodes.asd
       description: "rapp-all"
       properties:
@@ -25,10 +25,14 @@ topology_template:
           file: "Artifacts/Deployment/HELM/ransliceassurance-1.0.0.tgz"
           properties:
             artifact_type: "helm_chart"
-            itemId: 1
+            target_server: "chartmuseum"
+            target_server_uri: "http://10.101.0.106:8879/charts/api/charts"
+            item_id: 1
         oru-app:
           type: tosca.artifacts.asd.deploymentItem
           file: "Artifacts/Deployment/HELM/orufhrecovery-1.0.0.tgz"
           properties:
             artifact_type: "helm_chart"
-            itemId: 2
+            target_server: "chartmuseum"
+            target_server_uri: "http://10.101.0.106:8879/charts/api/charts"
+            item_id: 2

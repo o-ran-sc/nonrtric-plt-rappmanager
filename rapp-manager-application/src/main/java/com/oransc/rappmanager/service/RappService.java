@@ -44,13 +44,19 @@ public class RappService {
     private final List<RappDeployer> rappDeployers;
     private final RappInstanceStateMachine rappInstanceStateMachine;
     private final RappCacheService rappCacheService;
+    private final DeploymentArtifactsService deploymentArtifactsService;
     private static final String STATE_TRANSITION_NOT_PERMITTED = "State transition from %s to %s is not permitted.";
 
     public ResponseEntity<String> primeRapp(Rapp rapp) {
         if (rapp.getState().equals(RappState.COMMISSIONED)) {
             rapp.setState(RappState.PRIMING);
             rapp.setReason(null);
-            if (rappDeployers.parallelStream().allMatch(rappDeployer -> rappDeployer.primeRapp(rapp))) {
+            //Configuring the deployment artifact needs to be done before starting the priming with other components
+            //If there are additional conditions needs to be checked before priming, This needs handled as part of pre-priming stage.
+            if (deploymentArtifactsService.configureDeploymentArtifacts(rapp) && rappDeployers.parallelStream()
+                                                                                         .allMatch(
+                                                                                                 rappDeployer -> rappDeployer.primeRapp(
+                                                                                                         rapp))) {
                 rapp.setState(RappState.PRIMED);
                 return ResponseEntity.ok().build();
             }
