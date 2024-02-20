@@ -77,3 +77,14 @@ tosca.artifacts.asd.deploymentItem:
       type: string
       constraints:
         - valid_values: ["helm_chart"]
+    target_server:
+      description: >
+        Specify target server for artifact.
+      required: true
+      type: string
+      constraints:
+        - valid_values: [ "chartmuseum" ]
+    target_server_uri:
+      description: "URI of the target server"
+      required: true
+      type: string
