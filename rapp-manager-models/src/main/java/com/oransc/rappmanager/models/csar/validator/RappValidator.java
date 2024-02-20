@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START======================================================================
- * Copyright (C) 2023-2024 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2024 OpenInfra Foundation Europe. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END========================================================================
+ *
  */
+package com.oransc.rappmanager.models.csar.validator;
 
-package com.oransc.rappmanager.models.exception;
+import org.springframework.validation.Validator;
+import org.springframework.web.multipart.MultipartFile;
 
-import lombok.Getter;
-import org.springframework.http.HttpStatusCode;
-
-@Getter
-public class RappHandlerException extends RuntimeException {
-
-    private final HttpStatusCode statusCode;
-
-    public RappHandlerException(HttpStatusCode statusCode, String message) {
-        super(message);
-        this.statusCode = statusCode;
+public interface RappValidator extends Validator {
+    int getOrder();
+    @Override
+    default boolean supports(Class<?> cls) {
+        return MultipartFile.class.isAssignableFrom(cls);
     }
 }

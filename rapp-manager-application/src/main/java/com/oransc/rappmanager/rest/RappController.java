@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START======================================================================
- * Copyright (C) 2023 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2023-2024 Nordix Foundation. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ package com.oransc.rappmanager.rest;
 import com.oransc.rappmanager.configuration.RappManagerConfiguration;
 import com.oransc.rappmanager.models.cache.RappCacheService;
 import com.oransc.rappmanager.models.csar.RappCsarConfigurationHandler;
+import com.oransc.rappmanager.models.csar.validator.RappValidationHandler;
 import com.oransc.rappmanager.models.exception.RappHandlerException;
 import com.oransc.rappmanager.models.rapp.PrimeOrder;
 import com.oransc.rappmanager.models.rapp.Rapp;
@@ -56,6 +57,7 @@ public class RappController {
 
     Logger logger = LoggerFactory.getLogger(RappController.class);
     private final RappCsarConfigurationHandler rappCsarConfigurationHandler;
+    private final RappValidationHandler rappValidationHandler;
     private final RappManagerConfiguration rappManagerConfiguration;
     private final RappCacheService rappCacheService;
     private final RappService rappService;
@@ -75,7 +77,7 @@ public class RappController {
     @PostMapping("{rapp_id}")
     public ResponseEntity<Rapp> createRapp(@PathVariable("rapp_id") String rappId,
             @RequestPart("file") MultipartFile csarFilePart) throws IOException {
-        if (rappCsarConfigurationHandler.isValidRappPackage(csarFilePart)) {
+        if (rappValidationHandler.isValidRappPackage(csarFilePart)) {
             File csarFile = new File(
                     rappCsarConfigurationHandler.getRappPackageLocation(rappManagerConfiguration.getCsarLocation(),
                             rappId, csarFilePart.getOriginalFilename()).toUri());

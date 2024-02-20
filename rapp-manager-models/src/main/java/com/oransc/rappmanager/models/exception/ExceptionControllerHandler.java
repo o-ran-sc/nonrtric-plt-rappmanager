@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START======================================================================
- * Copyright (C) 2023 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2023-2024 OpenInfra Foundation Europe. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,5 +29,12 @@ public class ExceptionControllerHandler {
     public ResponseEntity<ErrorResponse> handleRappHandlerException(RappHandlerException rappHandlerException) {
         return ResponseEntity.status(rappHandlerException.getStatusCode())
                        .body(new ErrorResponse(rappHandlerException.getMessage()));
+    }
+
+    @ExceptionHandler(RappValidationException.class)
+    public ResponseEntity<ErrorResponse> handleRappValidationException(
+            RappValidationException rappValidationException) {
+        return ResponseEntity.status(rappValidationException.getStatusCode())
+                       .body(new ErrorResponse(rappValidationException.getMessage()));
     }
 }
