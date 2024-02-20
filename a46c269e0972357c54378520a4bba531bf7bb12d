@@ -65,6 +65,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "15a5cbca_2411d62e",
+        "filename": "rapp-manager-application/src/main/java/com/oransc/rappmanager/service/RappService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-02-20T10:47:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8699a238_94659ee7",
+      "range": {
+        "startLine": 53,
+        "startChar": 12,
+        "endLine": 53,
+        "endChar": 33
+      },
+      "revId": "a46c269e0972357c54378520a4bba531bf7bb12d",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8b55a81a_67836974",
@@ -78,6 +102,30 @@
       "writtenOn": "2024-02-19T12:33:18Z",
       "side": 1,
       "message": "Similar to Ambrish\u0027s sample rApp, for the checked in version should we replace the IP address with \"\u003cREPLACE WITH CHARTMUSEUM IP ADDRESS\u003e\" ... or something similar?",
+      "range": {
+        "startLine": 29,
+        "startChar": 32,
+        "endLine": 29,
+        "endChar": 56
+      },
+      "revId": "a46c269e0972357c54378520a4bba531bf7bb12d",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9d8fb3d0_4ae7c015",
+        "filename": "sample-rapp-generator/rapp-all/Definitions/asd.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-02-20T10:47:01Z",
+      "side": 1,
+      "message": "Will update in next review",
+      "parentUuid": "8b55a81a_67836974",
       "range": {
         "startLine": 29,
         "startChar": 32,
