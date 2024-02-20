@@ -184,6 +184,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c26454ec_4713e76d",
+        "filename": "sample-rapp-generator/rapp-hello-world/Files/Acm/instances/k8s-instance.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-02-20T10:43:31Z",
+      "side": 1,
+      "message": "Will update in next review.",
+      "parentUuid": "3ce3c4ac_5bc6777b",
+      "range": {
+        "startLine": 25,
+        "startChar": 24,
+        "endLine": 25,
+        "endChar": 54
+      },
+      "revId": "24911e64f5d58698dd9d71b63dbbbfb9749067ee",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8f78e587_e764d738",
