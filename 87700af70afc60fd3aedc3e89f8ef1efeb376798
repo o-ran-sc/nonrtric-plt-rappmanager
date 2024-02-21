@@ -52,6 +52,24 @@
       "parentUuid": "9bac8dd9_9bcf5468",
       "revId": "87700af70afc60fd3aedc3e89f8ef1efeb376798",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a693ddc1_2e91b804",
+        "filename": "scripts/install/patch-sample-rapps.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2024-02-21T16:54:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "317033c6_1d1cf13a",
+      "revId": "87700af70afc60fd3aedc3e89f8ef1efeb376798",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
