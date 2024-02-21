@@ -16,6 +16,24 @@
       "message": "According to the man page for hostname -I, you cannot make any assumptions about the order the of the output. Would it be better to sort the output for consistency?\n\n hostname -I | sort -n -t . -k 1,1 -k 2,2 -k 3,3 -k 4,4 | awk \u0027{print $1}\u0027",
       "revId": "87700af70afc60fd3aedc3e89f8ef1efeb376798",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9bac8dd9_9bcf5468",
+        "filename": "scripts/install/patch-sample-rapps.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2024-02-21T15:47:50Z",
+      "side": 1,
+      "message": "Sorting it for consistency is possible, but using the first result as primary address after sorting remains an assumption. Would you like to sort this solely for consistency?",
+      "parentUuid": "ff0cad56_cf49bf89",
+      "revId": "87700af70afc60fd3aedc3e89f8ef1efeb376798",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
