@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ba3b3a2_8a2abfef",
+        "filename": "rapp-manager-models/src/main/java/com/oransc/rappmanager/models/csar/validator/FileExistenceValidator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1002243
+      },
+      "writtenOn": "2024-02-21T14:43:33Z",
+      "side": 1,
+      "message": "Should this be a final int ?",
+      "revId": "85f39ef6211e4f29f1c8f32216c95d8ecca5fce3",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3f5182e7_9ae4254a",
+        "filename": "rapp-manager-models/src/main/java/com/oransc/rappmanager/models/csar/validator/NamingValidator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1002243
+      },
+      "writtenOn": "2024-02-21T14:43:33Z",
+      "side": 1,
+      "message": "\"should end with\", i.e. no s",
+      "revId": "85f39ef6211e4f29f1c8f32216c95d8ecca5fce3",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce665254_457cbcb6",
+        "filename": "rapp-manager-models/src/test/java/com/oransc/rappmanager/models/csar/validator/NamingValidatorTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1002243
+      },
+      "writtenOn": "2024-02-21T14:43:33Z",
+      "side": 1,
+      "message": "We need to remove the s from ends.",
+      "revId": "85f39ef6211e4f29f1c8f32216c95d8ecca5fce3",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
