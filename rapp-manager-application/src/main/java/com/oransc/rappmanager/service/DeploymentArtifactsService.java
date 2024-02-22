@@ -24,7 +24,6 @@ import com.oransc.rappmanager.models.csar.DeploymentItemArtifactType;
 import com.oransc.rappmanager.models.csar.RappCsarConfigurationHandler;
 import com.oransc.rappmanager.models.exception.RappHandlerException;
 import com.oransc.rappmanager.models.rapp.Rapp;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
@@ -45,9 +44,9 @@ public class DeploymentArtifactsService {
     private final RappCsarConfigurationHandler rappCsarConfigurationHandler;
 
     public boolean configureDeploymentArtifacts(Rapp rapp) {
-        List<DeploymentItem> deploymentItems = rappCsarConfigurationHandler.getDeploymentItems(rapp);
-        return deploymentItems.stream().filter(deploymentItem -> deploymentItem.getArtifactType()
-                                                                         .equals(DeploymentItemArtifactType.HELMCHART))
+        return rapp.getAsdMetadata().getDeploymentItems().stream()
+                       .filter(deploymentItem -> deploymentItem.getArtifactType()
+                                                         .equals(DeploymentItemArtifactType.HELMCHART))
                        .allMatch(deploymentItem -> uploadHelmChart(rapp, deploymentItem));
     }
 

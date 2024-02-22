@@ -36,6 +36,11 @@ public class RappCsarPathProvider {
     public static final String DME_CONSUMER_INFO_TYPES_LOCATION = "Files/Dme/consumerinfotypes";
     public static final String DME_INFO_PRODUCERS_LOCATION = "Files/Dme/infoproducers";
     public static final String DME_INFO_CONSUMERS_LOCATION = "Files/Dme/infoconsumers";
-    public static final String ARTIFACTS_LOCATION_JSON_POINTER =
-            "/topology_template/node_templates/applicationServiceDescriptor/artifacts";
+    public static final String ASD_LOCATION_JSON_POINTER =
+            "/topology_template/node_templates/applicationServiceDescriptor";
+    public static final String ASD_PROPERTIES_JSON_POINTER = ASD_LOCATION_JSON_POINTER + "/properties";
+    public static final String ASD_ARTIFACTS_LOCATION_JSON_POINTER = ASD_LOCATION_JSON_POINTER + "/artifacts";
+    public static final String ASD_DESCRIPTOR_JSON_POINTER = ASD_PROPERTIES_JSON_POINTER + "/descriptor_id";
+    public static final String ASD_DESCRIPTOR_VARIANT_LOCATION_JSON_POINTER =
+            ASD_PROPERTIES_JSON_POINTER + "/descriptor_invariant_id";
 }

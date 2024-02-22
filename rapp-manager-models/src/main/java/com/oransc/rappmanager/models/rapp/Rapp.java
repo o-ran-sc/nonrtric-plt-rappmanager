@@ -20,6 +20,7 @@
 package com.oransc.rappmanager.models.rapp;
 
 
+import com.oransc.rappmanager.models.csar.AsdMetadata;
 import com.oransc.rappmanager.models.rappinstance.RappInstance;
 import java.beans.Transient;
 import java.util.HashMap;
@@ -41,6 +42,7 @@ public class Rapp {
     String packageLocation;
     String packageName;
     RappResources rappResources;
+    AsdMetadata asdMetadata;
     @Builder.Default
     Map<UUID, RappInstance> rappInstances = new HashMap<>();
 

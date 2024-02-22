@@ -83,33 +83,11 @@ class ArtifactDefinitionValidatorTest {
         assertTrue(exception.getMessage().startsWith("rApp package missing a file"));
     }
 
-    @Test
-    void testCsarNoAsdFailure() {
-        MultipartFile multipartFile = mock(MultipartFile.class);
-        RappValidationException exception = assertThrows(RappValidationException.class,
-                () -> artifactDefinitionValidator.validate(multipartFile, null));
-        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
-        assertEquals("ASD definition in rApp package is invalid.", exception.getMessage());
-    }
+
 
     @ParameterizedTest
     @NullSource
-    @ValueSource(strings = {""})
-    void testCsarAsdLocationNullFailure(String asdLocation) throws IOException {
-        String rappCsarPath = validCsarFileLocation + File.separator + invalidRappAsdEmptyFile;
-        MultipartFile multipartFile =
-                new MockMultipartFile(rappCsarPath, rappCsarPath, ContentType.MULTIPART_FORM_DATA.getMimeType(),
-                        new FileInputStream(rappCsarPath));
-        doReturn(asdLocation).when(rappValidationUtils).getAsdDefinitionLocation(any());
-        RappValidationException exception = assertThrows(RappValidationException.class,
-                () -> artifactDefinitionValidator.validate(multipartFile, null));
-        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
-        assertEquals("ASD definition in rApp package is invalid.", exception.getMessage());
-    }
-
-    @ParameterizedTest
-    @NullSource
-    @ValueSource(strings = {"", "{asasdasd"})
+    @ValueSource(strings = {"{asasdasd"})
     void testCsarAsdContentInvalidFailure(String asdContent) throws IOException {
         String rappCsarPath = validCsarFileLocation + File.separator + validRappFile;
         MultipartFile multipartFile =

@@ -24,6 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.oransc.rappmanager.models.BeanTestConfiguration;
+import com.oransc.rappmanager.models.cache.RappCacheService;
 import com.oransc.rappmanager.models.csar.RappCsarConfigurationHandler;
 import com.oransc.rappmanager.models.exception.RappValidationException;
 import java.io.File;
@@ -43,9 +45,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.multipart.MultipartFile;
 
 @SpringBootTest
-@ContextConfiguration(classes = {RappValidationHandler.class, NamingValidator.class, FileExistenceValidator.class,
-        ArtifactDefinitionValidator.class, RappValidationUtils.class, RappCsarConfigurationHandler.class,
-        ObjectMapper.class})
+@ContextConfiguration(classes = {BeanTestConfiguration.class, RappValidationHandler.class, NamingValidator.class,
+        FileExistenceValidator.class, ArtifactDefinitionValidator.class, AsdDescriptorValidator.class,
+        RappValidationUtils.class, RappCsarConfigurationHandler.class, ObjectMapper.class, RappCacheService.class})
 class RappValidationHandlerTest {
 
     @Autowired

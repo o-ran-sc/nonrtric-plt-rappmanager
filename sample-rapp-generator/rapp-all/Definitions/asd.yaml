@@ -12,7 +12,7 @@ topology_template:
       description: "rapp-all"
       properties:
         descriptor_id: 123e4567-e89b-12d3-a456-426614174000
-        descriptor_invariant_id: 123e4yyy-e89b-12d3-a456-426614174abc
+        descriptor_invariant_id: 040eff2a-eb1a-4aff-bd46-37ce38092985
         descriptor_version: 1.0
         schema_version: 2.0
         function_description: rApp description

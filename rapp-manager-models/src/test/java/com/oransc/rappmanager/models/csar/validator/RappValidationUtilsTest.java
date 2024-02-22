@@ -87,7 +87,7 @@ class RappValidationUtilsTest {
         RappValidationException exception = assertThrows(RappValidationException.class,
                 () -> rappValidationUtils.getFileFromCsar(multipartFile, null));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
-        assertEquals(String.format("Unable to get file %s from the multipart CSAR file", null), exception.getMessage());
+        assertEquals(String.format("Unable to get file %s from the multipart CSAR file", (Object) null), exception.getMessage());
     }
 
     @Test

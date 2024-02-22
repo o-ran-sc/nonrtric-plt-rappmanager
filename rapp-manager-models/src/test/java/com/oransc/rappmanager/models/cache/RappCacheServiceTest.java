@@ -22,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.oransc.rappmanager.models.BeanTestConfiguration;
 import com.oransc.rappmanager.models.rapp.Rapp;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;

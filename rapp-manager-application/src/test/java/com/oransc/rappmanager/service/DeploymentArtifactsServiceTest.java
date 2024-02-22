@@ -80,8 +80,10 @@ class DeploymentArtifactsServiceTest {
     @EnumSource(value = HttpStatus.class, names = {"CREATED", "CONFLICT"})
     void testChartUpload(HttpStatus status) {
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
-                            .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
-        List<DeploymentItem> deploymentItems = rappCsarConfigurationHandler.getDeploymentItems(rapp);
+                            .packageLocation(validCsarFileLocation)
+                            .state(RappState.COMMISSIONED).build();
+        rapp.setAsdMetadata(rappCsarConfigurationHandler.getAsdMetadata(rapp));
+        List<DeploymentItem> deploymentItems = rapp.getAsdMetadata().getDeploymentItems();
         deploymentItems.forEach(deploymentItem -> mockServer.expect(ExpectedCount.once(),
                         requestTo(deploymentItem.getTargetServerUri())).andExpect(method(HttpMethod.POST))
                                                           .andRespond(withStatus(status)));
@@ -94,6 +96,7 @@ class DeploymentArtifactsServiceTest {
         String invalidRappFile = "invalid-rapp-package.csar";
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(invalidRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
+        rapp.setAsdMetadata(rappCsarConfigurationHandler.getAsdMetadata(rapp));
         assertTrue(deploymentArtifactsService.configureDeploymentArtifacts(rapp));
     }
 
@@ -101,7 +104,8 @@ class DeploymentArtifactsServiceTest {
     void testChartUploadFailure() {
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
-        List<DeploymentItem> deploymentItems = rappCsarConfigurationHandler.getDeploymentItems(rapp);
+        rapp.setAsdMetadata(rappCsarConfigurationHandler.getAsdMetadata(rapp));
+        List<DeploymentItem> deploymentItems = rapp.getAsdMetadata().getDeploymentItems();
         deploymentItems.stream().findFirst().ifPresent(deploymentItem -> mockServer.expect(ExpectedCount.once(),
                         requestTo(deploymentItem.getTargetServerUri())).andExpect(method(HttpMethod.POST))
                                                                                  .andRespond(withServerError()));
@@ -115,7 +119,8 @@ class DeploymentArtifactsServiceTest {
     void testChartUploadFailureWithNotFound() {
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
-        List<DeploymentItem> deploymentItems = rappCsarConfigurationHandler.getDeploymentItems(rapp);
+        rapp.setAsdMetadata(rappCsarConfigurationHandler.getAsdMetadata(rapp));
+        List<DeploymentItem> deploymentItems = rapp.getAsdMetadata().getDeploymentItems();
         deploymentItems.stream().findFirst().ifPresent(deploymentItem -> mockServer.expect(ExpectedCount.once(),
                 requestTo(deploymentItem.getTargetServerUri())).andExpect(method(HttpMethod.POST)).andRespond(
                 withStatus(HttpStatus.NOT_FOUND)));
@@ -127,7 +132,8 @@ class DeploymentArtifactsServiceTest {
     void testChartUploadFailureWithException() {
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
-        List<DeploymentItem> deploymentItems = rappCsarConfigurationHandler.getDeploymentItems(rapp);
+        rapp.setAsdMetadata(rappCsarConfigurationHandler.getAsdMetadata(rapp));
+        List<DeploymentItem> deploymentItems = rapp.getAsdMetadata().getDeploymentItems();
         deploymentItems.stream().findFirst().ifPresent(deploymentItem -> mockServer.expect(ExpectedCount.once(),
                 requestTo(deploymentItem.getTargetServerUri())).andExpect(method(HttpMethod.POST)).andRespond(
                 withException(new IOException())));
@@ -141,7 +147,8 @@ class DeploymentArtifactsServiceTest {
     void testChartUploadFailureWithTooManyRequests() {
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
-        List<DeploymentItem> deploymentItems = rappCsarConfigurationHandler.getDeploymentItems(rapp);
+        rapp.setAsdMetadata(rappCsarConfigurationHandler.getAsdMetadata(rapp));
+        List<DeploymentItem> deploymentItems = rapp.getAsdMetadata().getDeploymentItems();
         deploymentItems.stream().findFirst().ifPresent(deploymentItem -> mockServer.expect(ExpectedCount.once(),
                         requestTo(deploymentItem.getTargetServerUri())).andExpect(method(HttpMethod.POST))
                                                                                  .andRespond(withTooManyRequests()));

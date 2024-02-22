@@ -138,27 +138,7 @@ public class RappCsarConfigurationHandler {
         return asdLocation;
     }
 
-    public List<DeploymentItem> getDeploymentItems(Rapp rApp) {
-        List<DeploymentItem> deploymentItems = new ArrayList<>();
-        File csarFile = getCsarFile(rApp);
-        String asdDefinitionLocation = getAsdDefinitionLocation(csarFile);
-        if (asdDefinitionLocation != null && !asdDefinitionLocation.isEmpty()) {
-            try {
-                String asdContent = getFileFromCsar(csarFile, asdDefinitionLocation).toString();
-                JsonNode jsonNode = getAsdContentNode(asdContent);
-                JsonNode artifactsJsonNode = jsonNode.at(RappCsarPathProvider.ARTIFACTS_LOCATION_JSON_POINTER);
-                artifactsJsonNode.forEach(artifactJsonNode -> {
-                    DeploymentItem deploymentItem =
-                            objectMapper.convertValue(artifactJsonNode.at("/properties"), DeploymentItem.class);
-                    deploymentItem.setFile(artifactJsonNode.at("/file").asText());
-                    deploymentItems.add(deploymentItem);
-                });
-            } catch (Exception e) {
-                logger.warn("Unable to get the deployment items", e);
-            }
-        }
-        return deploymentItems;
-    }
+
 
 
     public String getSmeProviderDomainPayload(Rapp rapp, RappSMEInstance rappSMEInstance) {
@@ -230,6 +210,36 @@ public class RappCsarConfigurationHandler {
             logger.warn("Error in getting the rapp resources", e);
         }
         return rappResources;
+    }
+
+    public AsdMetadata getAsdMetadata(Rapp rApp) {
+        AsdMetadata asdMetadata = new AsdMetadata();
+        File csarFile = getCsarFile(rApp);
+        String asdDefinitionLocation = getAsdDefinitionLocation(csarFile);
+        if (asdDefinitionLocation != null && !asdDefinitionLocation.isEmpty()) {
+            try {
+                String asdContent = getFileFromCsar(csarFile, asdDefinitionLocation).toString();
+                if (asdContent != null && !asdContent.isEmpty()) {
+                    JsonNode jsonNode = getAsdContentNode(asdContent);
+                    JsonNode asdJsonNode = jsonNode.at(RappCsarPathProvider.ASD_LOCATION_JSON_POINTER);
+                    asdMetadata = objectMapper.convertValue(asdJsonNode.at("/properties"), AsdMetadata.class);
+                    asdMetadata.setDescription(asdJsonNode.at("/description").asText());
+
+                    JsonNode artifactsJsonNode = jsonNode.at(RappCsarPathProvider.ASD_ARTIFACTS_LOCATION_JSON_POINTER);
+                    final List<DeploymentItem> deploymentItems = new ArrayList<>();
+                    artifactsJsonNode.forEach(artifactJsonNode -> {
+                        DeploymentItem deploymentItem =
+                                objectMapper.convertValue(artifactJsonNode.at("/properties"), DeploymentItem.class);
+                        deploymentItem.setFile(artifactJsonNode.at("/file").asText());
+                        deploymentItems.add(deploymentItem);
+                    });
+                    asdMetadata.setDeploymentItems(deploymentItems);
+                }
+            } catch (Exception e) {
+                logger.warn("Unable to get the asd metadata items", e);
+            }
+        }
+        return asdMetadata;
     }
 
     Set<String> getFileListFromCsar(File csarFile, String dirLocation) {

@@ -24,7 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,9 +38,10 @@ import com.oransc.rappmanager.models.rappinstance.RappDMEInstance;
 import com.oransc.rappmanager.models.rappinstance.RappSMEInstance;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.util.List;
+import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -92,6 +95,14 @@ class RappCsarConfigurationHandlerTest {
     void testInvalidFileListingFromCsar() {
         File file = new File("InvalidFile");
         ByteArrayOutputStream fileByteArray = rappCsarConfigurationHandler.getFileFromCsar(file, null);
+        assertThat(fileByteArray.size()).isZero();
+    }
+
+    @Test
+    void testInvalidZipStreamGetFromCsar() throws IOException {
+        ZipArchiveInputStream zipArchiveInputStream = mock(ZipArchiveInputStream.class);
+        doThrow(new IOException()).when(zipArchiveInputStream).getNextEntry();
+        ByteArrayOutputStream fileByteArray = rappCsarConfigurationHandler.getFileFromCsar(zipArchiveInputStream, null);
         assertThat(fileByteArray.size()).isZero();
     }
 
@@ -241,24 +252,37 @@ class RappCsarConfigurationHandlerTest {
     }
 
     @Test
-    void testListDeploymentItems() {
+    void testGetAsdMetadata() {
         Rapp rapp = Rapp.builder().name("").packageName(validRappFile).packageLocation(validCsarFileLocation).build();
-        List<DeploymentItem> deploymentItems = rappCsarConfigurationHandler.getDeploymentItems(rapp);
-        assertEquals(2, deploymentItems.size());
+        AsdMetadata asdMetadata = rappCsarConfigurationHandler.getAsdMetadata(rapp);
+        assertEquals("123e4567-e89b-12d3-a456-426614174000", asdMetadata.getDescriptorId());
+        assertEquals("040eff2a-eb1a-4aff-bd46-37ce38092985", asdMetadata.getDescriptorInvariantId());
+        assertEquals(2, asdMetadata.getDeploymentItems().size());
     }
 
     @ParameterizedTest
     @ValueSource(strings = {invalidRappNoAsdFile, invalidRappEmptyAsdFile})
-    void testListDeploymentItemsNoAsd(String packageName) {
+    void testGetAsdMetadataNoAsd(String packageName) {
         Rapp rapp = Rapp.builder().name("").packageName(packageName).packageLocation(validCsarFileLocation).build();
-        assertThat(rappCsarConfigurationHandler.getDeploymentItems(rapp)).isEmpty();
+        assertThat(rappCsarConfigurationHandler.getAsdMetadata(rapp)).isNotNull();
     }
 
     @Test
-    void testListDeploymentItemsWithException() throws JsonProcessingException {
+    void testGetAsdMetadataException() throws JsonProcessingException {
         Rapp rapp = Rapp.builder().name("").packageName(validRappFile).packageLocation(validCsarFileLocation).build();
         doThrow(new JsonSyntaxException("")).when(rappCsarConfigurationHandler).getAsdContentNode(any());
-        assertThat(rappCsarConfigurationHandler.getDeploymentItems(rapp)).isEmpty();
+        assertNull(rappCsarConfigurationHandler.getAsdMetadata(rapp).getDescriptorId());
+        assertNull(rappCsarConfigurationHandler.getAsdMetadata(rapp).getDescriptorInvariantId());
+        assertThat(rappCsarConfigurationHandler.getAsdMetadata(rapp).getDeploymentItems()).isNull();
+    }
+
+    @Test
+    void testGetAsdMetadataNullAsdContent() throws JsonProcessingException {
+        Rapp rapp = Rapp.builder().name("").packageName(validRappFile).packageLocation(validCsarFileLocation).build();
+        doReturn(null).when(rappCsarConfigurationHandler).getAsdContentNode(any());
+        assertNull(rappCsarConfigurationHandler.getAsdMetadata(rapp).getDescriptorId());
+        assertNull(rappCsarConfigurationHandler.getAsdMetadata(rapp).getDescriptorInvariantId());
+        assertThat(rappCsarConfigurationHandler.getAsdMetadata(rapp).getDeploymentItems()).isNull();
     }
 
     @Test

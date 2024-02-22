@@ -87,6 +87,7 @@ public class RappController {
             Rapp rapp = Rapp.builder().name(rappId).packageLocation(rappManagerConfiguration.getCsarLocation())
                                 .packageName(csarFile.getName()).state(RappState.COMMISSIONED).build();
             rapp.setRappResources(rappCsarConfigurationHandler.getRappResource(rapp));
+            rapp.setAsdMetadata(rappCsarConfigurationHandler.getAsdMetadata(rapp));
             rappCacheService.putRapp(rapp);
             return ResponseEntity.accepted().build();
         } else {

@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START======================================================================
- * Copyright (C) 2023 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2023-2024 OpenInfra Foundation Europe. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oransc.rappmanager.acm.service.AcmDeployer;
 import com.oransc.rappmanager.dme.service.DmeDeployer;
 import com.oransc.rappmanager.models.cache.RappCacheService;
+import com.oransc.rappmanager.models.csar.AsdMetadata;
 import com.oransc.rappmanager.models.rapp.PrimeOrder;
 import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappPrimeOrder;
@@ -35,6 +36,7 @@ import com.oransc.rappmanager.models.rapp.RappState;
 import com.oransc.rappmanager.sme.service.SmeLifecycleManager;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.List;
 import java.util.UUID;
 import org.apache.http.entity.ContentType;
 import org.junit.jupiter.api.Test;
@@ -82,6 +84,11 @@ class RappControllerTest {
         UUID rappId = UUID.randomUUID();
         Rapp rapp = Rapp.builder().rappId(rappId).name(String.valueOf(rappId)).packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
+        AsdMetadata asdMetadata = new AsdMetadata();
+        asdMetadata.setDescriptorId(UUID.randomUUID().toString());
+        asdMetadata.setDescriptorInvariantId(UUID.randomUUID().toString());
+        asdMetadata.setDeploymentItems(List.of());
+        rapp.setAsdMetadata(asdMetadata);
         rappCacheService.putRapp(rapp);
         mockMvc.perform(MockMvcRequestBuilders.get("/rapps")).andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
@@ -92,6 +99,11 @@ class RappControllerTest {
         UUID rappId = UUID.randomUUID();
         Rapp rapp = Rapp.builder().rappId(rappId).name(String.valueOf(rappId)).packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
+        AsdMetadata asdMetadata = new AsdMetadata();
+        asdMetadata.setDescriptorId(UUID.randomUUID().toString());
+        asdMetadata.setDescriptorInvariantId(UUID.randomUUID().toString());
+        asdMetadata.setDeploymentItems(List.of());
+        rapp.setAsdMetadata(asdMetadata);
         rappCacheService.putRapp(rapp);
         mockMvc.perform(MockMvcRequestBuilders.get("/rapps/{rapp_id}", rappId)).andExpect(status().isOk())
                 .andExpect(jsonPath("$.rappId").value(rappId.toString()))
@@ -129,6 +141,11 @@ class RappControllerTest {
         UUID rappId = UUID.randomUUID();
         Rapp rapp = Rapp.builder().rappId(rappId).name(String.valueOf(rappId)).packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
+        AsdMetadata asdMetadata = new AsdMetadata();
+        asdMetadata.setDescriptorId(UUID.randomUUID().toString());
+        asdMetadata.setDescriptorInvariantId(UUID.randomUUID().toString());
+        asdMetadata.setDeploymentItems(List.of());
+        rapp.setAsdMetadata(asdMetadata);
         rappCacheService.putRapp(rapp);
         when(acmDeployer.primeRapp(any())).thenReturn(true);
         when(dmeDeployer.primeRapp(any())).thenReturn(true);
@@ -154,6 +171,11 @@ class RappControllerTest {
         UUID rappId = UUID.randomUUID();
         Rapp rapp = Rapp.builder().rappId(rappId).name(String.valueOf(rappId)).packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
+        AsdMetadata asdMetadata = new AsdMetadata();
+        asdMetadata.setDescriptorId(UUID.randomUUID().toString());
+        asdMetadata.setDescriptorInvariantId(UUID.randomUUID().toString());
+        asdMetadata.setDeploymentItems(List.of());
+        rapp.setAsdMetadata(asdMetadata);
         rappCacheService.putRapp(rapp);
         when(acmDeployer.deprimeRapp(any())).thenReturn(true);
         when(dmeDeployer.deprimeRapp(any())).thenReturn(true);
@@ -168,6 +190,11 @@ class RappControllerTest {
         UUID rappId = UUID.randomUUID();
         Rapp rapp = Rapp.builder().rappId(rappId).name(String.valueOf(rappId)).packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
+        AsdMetadata asdMetadata = new AsdMetadata();
+        asdMetadata.setDescriptorId(UUID.randomUUID().toString());
+        asdMetadata.setDescriptorInvariantId(UUID.randomUUID().toString());
+        asdMetadata.setDeploymentItems(List.of());
+        rapp.setAsdMetadata(asdMetadata);
         rappCacheService.putRapp(rapp);
         mockMvc.perform(MockMvcRequestBuilders.delete("/rapps/{rapp_id}", rappId)).andExpect(status().isOk());
     }

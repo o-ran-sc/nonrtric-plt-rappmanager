@@ -36,7 +36,7 @@ public class ArtifactDefinitionValidator implements RappValidator {
     private final RappCsarConfigurationHandler rappCsarConfigurationHandler;
     private final RappValidationUtils rappValidationUtils;
     String invalidAsdErrorMsg = "ASD definition in rApp package is invalid.";
-    private static final int VALIDATION_ORDER = 10;
+    private static final int VALIDATION_ORDER = 15;
 
     @Override
     public int getOrder() {
@@ -47,25 +47,16 @@ public class ArtifactDefinitionValidator implements RappValidator {
     public void validate(Object target, Errors errors) {
         MultipartFile multipartFile = (MultipartFile) target;
         String asdLocation = rappValidationUtils.getAsdDefinitionLocation(multipartFile);
-        if (asdLocation != null && !asdLocation.isEmpty() && rappValidationUtils.isFileExistsInCsar(multipartFile,
-                asdLocation)) {
-            try {
-                String asdContent = rappValidationUtils.getFileFromCsar(multipartFile, asdLocation).toString();
-                if(asdContent != null && !asdContent.isEmpty()) {
-                    JsonNode jsonNode = rappCsarConfigurationHandler.getAsdContentNode(asdContent);
-                    List<String> artifactFileList =
-                            jsonNode.at(RappCsarPathProvider.ARTIFACTS_LOCATION_JSON_POINTER).findValuesAsText("file");
-                    artifactFileList.forEach(
-                            artifactFile -> rappValidationUtils.isFileExistsInCsar(multipartFile, artifactFile));
-                } else {
-                    throw new RappValidationException(invalidAsdErrorMsg);
-                }
-            } catch (RappValidationException e) {
-                throw new RappValidationException(e.getMessage());
-            } catch (Exception e) {
-                throw new RappValidationException(invalidAsdErrorMsg);
-            }
-        } else {
+        try {
+            String asdContent = rappValidationUtils.getFileFromCsar(multipartFile, asdLocation).toString();
+            JsonNode jsonNode = rappCsarConfigurationHandler.getAsdContentNode(asdContent);
+            List<String> artifactFileList =
+                    jsonNode.at(RappCsarPathProvider.ASD_ARTIFACTS_LOCATION_JSON_POINTER).findValuesAsText("file");
+            artifactFileList.forEach(
+                    artifactFile -> rappValidationUtils.isFileExistsInCsar(multipartFile, artifactFile));
+        } catch (RappValidationException e) {
+            throw new RappValidationException(e.getMessage());
+        } catch (Exception e) {
             throw new RappValidationException(invalidAsdErrorMsg);
         }
     }
