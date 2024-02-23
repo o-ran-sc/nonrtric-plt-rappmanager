@@ -4,6 +4,7 @@ autonumber
 actor "API User"
 participant "rApp Manager"
 collections "File System"
+participant "Chartmuseum Server"
 participant "ACM Runtime"
 participant "DME"
 
@@ -13,6 +14,8 @@ group Create rApp
 "rApp Manager"->"File System": Store rApp Package
 "rApp Manager"->"API User": Create rApp Status
 "API User"->"rApp Manager": Prime rApp
+"rApp Manager"->"Chartmuseum Server": Upload helm charts
+"Chartmuseum Server"->"rApp Manager": Upload helm charts Status
 "rApp Manager"->"ACM Runtime": Create ACM composition
 "ACM Runtime"->"rApp Manager": Create ACM composition Status
 "rApp Manager"->"ACM Runtime": Prime ACM composition

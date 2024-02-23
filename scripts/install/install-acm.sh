@@ -29,11 +29,11 @@ K8S_CONFIGURATION_FILE="docker/helm/policy/components/policy-clamp-ac-k8s-ppnt/v
 K8S_VERSIONS_FILE="docker/compose/get-k8s-versions.sh"
 KAFKA_DIR="docker/helm/cp-kafka"
 
-IP_ADDRESS=$(hostname -I | awk '{print $1}')
+IP_ADDRESS=$(hostname -I | sort -n -t . -k 1,1 -k 2,2 -k 3,3 -k 4,4 | awk '{print $1}')
 echo "IP Address : $IP_ADDRESS"
 
 A1PMS_HOST=${A1PMS_HOST:-http://policymanagementservice.nonrtric:9080}
-CHART_REPO_HOST=${CHART_REPO_HOST:-'http://'$IP_ADDRESS':8879/charts'}
+CHART_REPO_GET_URI=${CHART_REPO_GET_URI:-'http://'$IP_ADDRESS':8879/charts'}
 
 function wait_for_pods_to_be_running() {
     while [[ $TIME -lt 2000 ]]; do
@@ -86,7 +86,7 @@ echo "Updating A1PMS Participant"
 yq eval '.a1pms.baseUrl="'$A1PMS_HOST'"' -i $A1PMS_CONFIGURATION_FILE
 
 echo "Updating the k8s participant repo list"
-yq eval '.repoList.helm.repos += {"repoName":"local","address":"'$CHART_REPO_HOST'"}' -i $K8S_CONFIGURATION_FILE
+yq eval '.repoList.helm.repos += {"repoName":"local","address":"'$CHART_REPO_GET_URI'"}' -i $K8S_CONFIGURATION_FILE
 
 echo "Building policy helm charts..."
 helm dependency build docker/helm/policy/

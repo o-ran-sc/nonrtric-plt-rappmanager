@@ -1,6 +1,6 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. http://creativecommons.org/licenses/by/4.0
-.. Copyright (C) 2023 OpenInfra Foundation Europe. All rights reserved.
+.. Copyright (C) 2023-2024 OpenInfra Foundation Europe. All rights reserved.
 
 Installation Guide
 ==================
@@ -37,9 +37,14 @@ In case some of the installation is already setup or not set by the installation
 +--------------------+--------------------------------------------+----------------------------------------------+
 | **Variable Name**  | **Description**                            | **Default Value**                            |
 +--------------------+--------------------------------------------+----------------------------------------------+
-| CHART_REPO_HOST    | Address of the chart repository.           | \http://IP_ADDRESS:8879/charts               |
+| CHART_REPO_GET_URI | URI to get the charts.                     | \http://IP_ADDRESS:8879/charts               |
 |                    |                                            |                                              |
-|                    | It will be used by Kubernetes participant. | IP_ADDRESS: IP of the host in which          |
+|                    | It will be used by Kubernetes participant  | IP_ADDRESS: IP of the host in which          |
+|                    | and sample rApp generator                  | the installation scripts are running.        |
++--------------------+--------------------------------------------+----------------------------------------------+
+| CHART_REPO_POST_URI| URI to upload the charts.                  | \http://IP_ADDRESS:8879/charts/api/charts    |
+|                    |                                            |                                              |
+|                    | It will be used by sample rApp generator   | IP_ADDRESS: IP of the host in which          |
 |                    |                                            | the installation scripts are running.        |
 +--------------------+--------------------------------------------+----------------------------------------------+
 | A1PMS_HOST         | Address of the A1PMS.                      | \http://policymanagementservice.nonrtric:9080|
