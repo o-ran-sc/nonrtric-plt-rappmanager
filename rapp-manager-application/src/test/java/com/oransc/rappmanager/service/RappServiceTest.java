@@ -22,11 +22,13 @@ package com.oransc.rappmanager.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import com.oransc.rappmanager.acm.service.AcmDeployer;
 import com.oransc.rappmanager.dme.service.DmeDeployer;
 import com.oransc.rappmanager.models.exception.RappHandlerException;
+import com.oransc.rappmanager.models.exception.RappValidationException;
 import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappState;
 import com.oransc.rappmanager.models.rappinstance.RappInstance;
@@ -123,6 +125,19 @@ class RappServiceTest {
         RappHandlerException rappHandlerException =
                 assertThrows(RappHandlerException.class, () -> rappService.primeRapp(rapp));
         assertEquals(HttpStatus.BAD_GATEWAY, rappHandlerException.getStatusCode());
+        assertEquals(RappState.COMMISSIONED, rapp.getState());
+    }
+
+    @Test
+    void testPrimeRappHelmUploadFailure() {
+        Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
+                            .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
+        doThrow(new RappValidationException("")).when(deploymentArtifactsService).configureDeploymentArtifacts(any());
+        when(acmDeployer.primeRapp(any())).thenReturn(true);
+        when(dmeDeployer.primeRapp(any())).thenReturn(false);
+        RappValidationException rappValidationException =
+                assertThrows(RappValidationException.class, () -> rappService.primeRapp(rapp));
+        assertEquals(HttpStatus.BAD_REQUEST, rappValidationException.getStatusCode());
         assertEquals(RappState.COMMISSIONED, rapp.getState());
     }
 
