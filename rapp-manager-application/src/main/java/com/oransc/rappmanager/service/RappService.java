@@ -23,6 +23,7 @@ import com.oransc.rappmanager.acm.service.AcmDeployer;
 import com.oransc.rappmanager.models.RappDeployer;
 import com.oransc.rappmanager.models.cache.RappCacheService;
 import com.oransc.rappmanager.models.exception.RappHandlerException;
+import com.oransc.rappmanager.models.exception.RappValidationException;
 import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappEvent;
 import com.oransc.rappmanager.models.rapp.RappState;
@@ -51,14 +52,19 @@ public class RappService {
         if (rapp.getState().equals(RappState.COMMISSIONED)) {
             rapp.setState(RappState.PRIMING);
             rapp.setReason(null);
-            //Configuring the deployment artifact needs to be done before starting the priming with other components
-            //If there are additional conditions needs to be checked before priming, This needs handled as part of pre-priming stage.
-            if (deploymentArtifactsService.configureDeploymentArtifacts(rapp) && rappDeployers.parallelStream()
-                                                                                         .allMatch(
-                                                                                                 rappDeployer -> rappDeployer.primeRapp(
-                                                                                                         rapp))) {
-                rapp.setState(RappState.PRIMED);
-                return ResponseEntity.ok().build();
+            try {
+                //Configuring the deployment artifact needs to be done before starting the priming with other components
+                //If there are additional conditions needs to be checked before priming, This needs handled as part of pre-priming stage.
+                if (deploymentArtifactsService.configureDeploymentArtifacts(rapp) && rappDeployers.parallelStream()
+                                                                                             .allMatch(
+                                                                                                     rappDeployer -> rappDeployer.primeRapp(
+                                                                                                             rapp))) {
+                    rapp.setState(RappState.PRIMED);
+                    return ResponseEntity.ok().build();
+                }
+            } catch (RappValidationException e) {
+                rapp.setState(RappState.COMMISSIONED);
+                throw e;
             }
             rapp.setState(RappState.COMMISSIONED);
             throw new RappHandlerException(HttpStatus.BAD_GATEWAY, rapp.getReason());
