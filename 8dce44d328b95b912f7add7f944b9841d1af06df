@@ -1,0 +1,159 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "640c107d_5fe4e98b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-03-01T18:19:32Z",
+      "side": 1,
+      "message": "in xxxx.charts.tgz/.../hello-world-sme-invoker/values.yaml - Do you need to add values for RAPP-ID?",
+      "revId": "8dce44d328b95b912f7add7f944b9841d1af06df",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aec47447_809640d2",
+        "filename": "sample-rapp-generator/rapp-hello-world-sme-invoker/Definitions/asd.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-03-01T18:19:32Z",
+      "side": 1,
+      "message": "invoker?",
+      "range": {
+        "startLine": 30,
+        "startChar": 23,
+        "endLine": 30,
+        "endChar": 34
+      },
+      "revId": "8dce44d328b95b912f7add7f944b9841d1af06df",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be35d831_2529931e",
+        "filename": "sample-rapp-generator/rapp-hello-world-sme-invoker/Files/Acm/instances/k8s-instance.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-03-01T18:19:32Z",
+      "side": 1,
+      "message": "should be invoker?",
+      "range": {
+        "startLine": 13,
+        "startChar": 8,
+        "endLine": 25,
+        "endChar": 41
+      },
+      "revId": "8dce44d328b95b912f7add7f944b9841d1af06df",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "07025f94_42901efe",
+        "filename": "sample-rapp-generator/rapp-hello-world-sme-invoker/Files/Sme/invokers/invoker-app1.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-03-01T18:19:32Z",
+      "side": 1,
+      "message": "Shouldn\u0027t be hardcoded?",
+      "range": {
+        "startLine": 3,
+        "startChar": 30,
+        "endLine": 3,
+        "endChar": 59
+      },
+      "revId": "8dce44d328b95b912f7add7f944b9841d1af06df",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b8d81bc_970877d7",
+        "filename": "sample-rapp-generator/rapp-hello-world-sme-invoker/Files/Sme/invokers/invoker-app1.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-03-01T18:19:32Z",
+      "side": 1,
+      "message": "Add hello world from rapp#1 here?",
+      "range": {
+        "startLine": 5,
+        "startChar": 6,
+        "endLine": 5,
+        "endChar": 8
+      },
+      "revId": "8dce44d328b95b912f7add7f944b9841d1af06df",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d10d9f91_844644ca",
+        "filename": "sample-rapp-generator/rapp-hello-world-sme-invoker/Files/Sme/invokers/invoker-app1.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-03-01T18:19:32Z",
+      "side": 1,
+      "message": "Still have a issue with these endpoints being hardcoded :-(",
+      "range": {
+        "startLine": 7,
+        "startChar": 38,
+        "endLine": 7,
+        "endChar": 62
+      },
+      "revId": "8dce44d328b95b912f7add7f944b9841d1af06df",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5bd783ac_0c182f1a",
+        "filename": "sample-rapp-generator/rapp-hello-world-sme-invoker/asd.mf",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-03-01T18:19:32Z",
+      "side": 1,
+      "message": "invoker?",
+      "range": {
+        "startLine": 8,
+        "startChar": 40,
+        "endLine": 8,
+        "endChar": 45
+      },
+      "revId": "8dce44d328b95b912f7add7f944b9841d1af06df",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
