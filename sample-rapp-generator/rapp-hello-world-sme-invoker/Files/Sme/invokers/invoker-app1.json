@@ -1,0 +1,14 @@
+[
+  {
+    "apiInvokerInformation": "Invoker_Rapp_Id_Invoker_App_1",
+    "apiList": [
+      {}
+    ],
+    "notificationDestination": "http://invoker-app1:8086/callback",
+    "onboardingInformation": {
+      "apiInvokerPublicKey": "{PUBLIC_KEY_INVOKER_1}",
+      "apiInvokerCertificate": "apiInvokerCertificate"
+    },
+    "requestTestNotification": true
+  }
+]
