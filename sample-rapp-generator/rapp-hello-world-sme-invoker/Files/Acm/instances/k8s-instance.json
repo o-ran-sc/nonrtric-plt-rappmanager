@@ -1,0 +1,35 @@
+{
+  "name": "K8SmeInvokerDemoInstance0",
+  "version": "1.0.1",
+  "compositionId": "DO_NOT_CHANGE_THIS_COMPOSITION_ID",
+  "description": "Demo automation composition instance 0",
+  "elements": {
+    "d7be552e-bdd5-2233-b64d-797dbaec8f55": {
+      "id": "d7be552e-bdd5-2233-b64d-797dbaec8f55",
+      "definition": {
+        "name": "onap.policy.clamp.ac.element.K8S_StarterAutomationCompositionElement",
+        "version": "1.2.3"
+      },
+      "description": "Starter Automation Composition Element for the Hello World",
+      "properties": {
+        "chart": {
+          "chartId": {
+            "name": "hello-world-sme-invoker",
+            "version": "0.1.0"
+          },
+          "namespace": "nonrtric",
+          "releaseName": "hello-world-sme-invoker",
+          "podName": "hello-world-sme-invoker",
+          "repository": {
+            "repoName": "local",
+            "address": "UPDATE_THIS_CHART_MUSEUM_GET_CHARTS_URI"
+          },
+          "overrideParams": {
+            "appId": "DO_NOT_CHANGE_THIS_RAPP_INSTANCE_ID",
+            "smeDiscoveryEndpoint": "DO_NOT_CHANGE_THIS_SME_DISCOVERY_ENDPOINT"
+          }
+        }
+      }
+    }
+  }
+}
