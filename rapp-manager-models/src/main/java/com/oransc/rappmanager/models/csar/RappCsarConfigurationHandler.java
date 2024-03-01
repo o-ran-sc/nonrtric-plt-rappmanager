@@ -26,9 +26,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.oransc.rappmanager.models.configuration.RappsEnvironmentConfiguration;
 import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappResources;
-import com.oransc.rappmanager.models.rappinstance.RappACMInstance;
+import com.oransc.rappmanager.models.rappinstance.RappInstance;
 import com.oransc.rappmanager.models.rappinstance.RappSMEInstance;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -59,15 +60,19 @@ public class RappCsarConfigurationHandler {
     Logger logger = LoggerFactory.getLogger(RappCsarConfigurationHandler.class);
 
     private final ObjectMapper objectMapper;
+    private final RappsEnvironmentConfiguration rappsEnvironmentConfiguration;
 
     public Path getRappPackageLocation(String csarLocation, String rappId, String fileName) {
         return Path.of(csarLocation, rappId, fileName);
     }
 
-    public String getInstantiationPayload(Rapp rapp, RappACMInstance rappACMInstance, UUID compositionId) {
-        return getPayload(rapp,
-                getResourceUri(RappCsarPathProvider.ACM_INSTANCES_LOCATION, rappACMInstance.getInstance())).replaceAll(
-                "DO_NOT_CHANGE_THIS_COMPOSITION_ID", String.valueOf(compositionId));
+    public String getInstantiationPayload(Rapp rapp, RappInstance rappInstance, UUID compositionId) {
+        return getPayload(rapp, getResourceUri(RappCsarPathProvider.ACM_INSTANCES_LOCATION,
+                rappInstance.getAcm().getInstance())).replace("DO_NOT_CHANGE_THIS_COMPOSITION_ID",
+                        String.valueOf(compositionId))
+                       .replace("DO_NOT_CHANGE_THIS_RAPP_INSTANCE_ID", String.valueOf(rappInstance.getRappInstanceId()))
+                       .replace("DO_NOT_CHANGE_THIS_SME_DISCOVERY_ENDPOINT",
+                               rappsEnvironmentConfiguration.getSmeDiscoveryEndpoint());
     }
 
     public ByteArrayResource getArtifactPayload(Rapp rapp, String location) {
@@ -139,8 +144,6 @@ public class RappCsarConfigurationHandler {
     }
 
 
-
-
     public String getSmeProviderDomainPayload(Rapp rapp, RappSMEInstance rappSMEInstance) {
         return getPayload(rapp, getResourceUri(RappCsarPathProvider.SME_PROVIDER_FUNCS_LOCATION,
                 rappSMEInstance.getProviderFunction()));
@@ -151,9 +154,10 @@ public class RappCsarConfigurationHandler {
                 getResourceUri(RappCsarPathProvider.SME_SERVICE_APIS_LOCATION, rappSMEInstance.getServiceApis()));
     }
 
-    public String getSmeInvokerPayload(Rapp rapp, RappSMEInstance rappSMEInstance) {
-        return getPayload(rapp,
-                getResourceUri(RappCsarPathProvider.SME_INVOKERS_LOCATION, rappSMEInstance.getInvokers()));
+    public String getSmeInvokerPayload(Rapp rapp, RappInstance rappInstance) {
+        return getPayload(rapp, getResourceUri(RappCsarPathProvider.SME_INVOKERS_LOCATION,
+                rappInstance.getSme().getInvokers())).replace("DO_NOT_CHANGE_THIS_RAPP_INSTANCE_ID",
+                String.valueOf(rappInstance.getRappInstanceId()));
     }
 
     public String getAcmCompositionPayload(Rapp rapp) {

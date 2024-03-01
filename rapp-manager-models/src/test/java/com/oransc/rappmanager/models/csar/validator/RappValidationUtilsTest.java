@@ -27,6 +27,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.oransc.rappmanager.models.configuration.RappsEnvironmentConfiguration;
 import com.oransc.rappmanager.models.csar.RappCsarConfigurationHandler;
 import com.oransc.rappmanager.models.csar.RappCsarPathProvider;
 import com.oransc.rappmanager.models.exception.RappValidationException;
@@ -43,7 +44,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.multipart.MultipartFile;
 
 @SpringBootTest
-@ContextConfiguration(classes = {RappValidationUtils.class, ObjectMapper.class, RappCsarConfigurationHandler.class})
+@ContextConfiguration(classes = {RappValidationUtils.class, ObjectMapper.class, RappsEnvironmentConfiguration.class,
+        RappCsarConfigurationHandler.class})
 class RappValidationUtilsTest {
 
     String validCsarFileLocation = "src/test/resources/";
@@ -87,7 +89,8 @@ class RappValidationUtilsTest {
         RappValidationException exception = assertThrows(RappValidationException.class,
                 () -> rappValidationUtils.getFileFromCsar(multipartFile, null));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
-        assertEquals(String.format("Unable to get file %s from the multipart CSAR file", (Object) null), exception.getMessage());
+        assertEquals(String.format("Unable to get file %s from the multipart CSAR file", (Object) null),
+                exception.getMessage());
     }
 
     @Test

@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
+import com.oransc.rappmanager.models.configuration.RappsEnvironmentConfiguration;
 import com.oransc.rappmanager.models.csar.RappCsarConfigurationHandler;
 import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappDmeResourceBuilder;
@@ -48,7 +49,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = {ObjectMapper.class, RappCsarConfigurationHandler.class, DmeAcmInterceptor.class})
+@SpringBootTest(classes = {ObjectMapper.class, RappsEnvironmentConfiguration.class, RappCsarConfigurationHandler.class,
+        DmeAcmInterceptor.class})
 class DmeAcmInterceptorTest {
 
     @Autowired

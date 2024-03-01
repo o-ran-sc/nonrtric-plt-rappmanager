@@ -133,8 +133,7 @@ public class AcmDeployer implements RappDeployer {
     @Override
     public boolean deployRappInstance(Rapp rapp, RappInstance rappInstance) {
         try {
-            String instantiationPayload =
-                    rappCsarConfigurationHandler.getInstantiationPayload(rapp, rappInstance.getAcm(),
+            String instantiationPayload = rappCsarConfigurationHandler.getInstantiationPayload(rapp, rappInstance,
                             rapp.getCompositionId());
             AutomationComposition automationComposition =
                     gson.fromJson(instantiationPayload, AutomationComposition.class);
