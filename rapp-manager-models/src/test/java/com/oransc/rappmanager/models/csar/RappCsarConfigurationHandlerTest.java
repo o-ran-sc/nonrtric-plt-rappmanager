@@ -29,12 +29,15 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonSyntaxException;
+import com.oransc.rappmanager.models.configuration.RappsEnvironmentConfiguration;
 import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappResources;
 import com.oransc.rappmanager.models.rappinstance.RappACMInstance;
 import com.oransc.rappmanager.models.rappinstance.RappDMEInstance;
+import com.oransc.rappmanager.models.rappinstance.RappInstance;
 import com.oransc.rappmanager.models.rappinstance.RappSMEInstance;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -42,21 +45,30 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.ContextConfiguration;
 
 @SpringBootTest
-@ContextConfiguration(classes = {ObjectMapper.class, RappCsarConfigurationHandler.class})
+@EnableConfigurationProperties
+@ContextConfiguration(
+        classes = {ObjectMapper.class, RappsEnvironmentConfiguration.class, RappCsarConfigurationHandler.class})
 class RappCsarConfigurationHandlerTest {
 
     @SpyBean
     RappCsarConfigurationHandler rappCsarConfigurationHandler;
+    @Autowired
+    RappsEnvironmentConfiguration rappsEnvironmentConfiguration;
+    @Autowired
+    ObjectMapper objectMapper;
 
     String validCsarFileLocation = "src/test/resources/";
 
@@ -67,14 +79,27 @@ class RappCsarConfigurationHandlerTest {
     private final String invalidRappEmptyAsdFile = "invalid-rapp-package-empty-asd-yaml.csar";
 
     @Test
-    void testCsarInstantiationPayload() throws JSONException {
+    void testCsarInstantiationPayload() throws JSONException, JsonProcessingException {
         Rapp rapp = Rapp.builder().name("").packageName(validRappFile).packageLocation(validCsarFileLocation).build();
         UUID compositionId = UUID.randomUUID();
-        RappACMInstance rappACMInstance = new RappACMInstance();
-        rappACMInstance.setInstance("kserve-instance");
-        JSONObject jsonObject = new JSONObject(
-                rappCsarConfigurationHandler.getInstantiationPayload(rapp, rappACMInstance, compositionId));
-        assertEquals(jsonObject.get("compositionId"), String.valueOf(compositionId));
+        RappInstance rappInstance = new RappInstance();
+        RappACMInstance rappKserveACMInstance = new RappACMInstance();
+        rappKserveACMInstance.setInstance("kserve-instance");
+        rappInstance.setAcm(rappKserveACMInstance);
+        JSONObject kserveInstanceJsonObject =
+                new JSONObject(rappCsarConfigurationHandler.getInstantiationPayload(rapp, rappInstance, compositionId));
+        assertEquals(kserveInstanceJsonObject.get("compositionId"), String.valueOf(compositionId));
+        RappACMInstance rappK8sACMInstance = new RappACMInstance();
+        rappK8sACMInstance.setInstance("k8s-instance");
+        rappInstance.setAcm(rappK8sACMInstance);
+        JsonNode jsonNode = objectMapper.readTree(
+                rappCsarConfigurationHandler.getInstantiationPayload(rapp, rappInstance, compositionId));
+        assertEquals(jsonNode.get("compositionId").asText(), String.valueOf(compositionId));
+        JsonNode overrideParamsNode = jsonNode.at("/elements").elements().next().at("/properties/chart/overrideParams");
+        System.out.println(overrideParamsNode);
+        assertEquals(overrideParamsNode.get("rAppInstanceId").asText(), rappInstance.getRappInstanceId().toString());
+        assertEquals(overrideParamsNode.get("smeDiscoveryEndpoint").asText(),
+                rappsEnvironmentConfiguration.getSmeDiscoveryEndpoint());
     }
 
     @Test
@@ -191,12 +216,17 @@ class RappCsarConfigurationHandlerTest {
     void testGetSmeInvokerPayload() {
         UUID rappId = UUID.randomUUID();
         RappSMEInstance rappSMEInstance = new RappSMEInstance();
-        rappSMEInstance.setServiceApis("invoker-app1");
+        rappSMEInstance.setInvokers("invoker-app1");
+        RappInstance rappInstance = new RappInstance();
+        rappInstance.setSme(rappSMEInstance);
         Rapp rapp =
                 Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
                         .build();
-        String smeProviderDomainPayload = rappCsarConfigurationHandler.getSmeInvokerPayload(rapp, rappSMEInstance);
-        assertNotNull(smeProviderDomainPayload);
+        JSONArray smeInvokerPayload =
+                new JSONArray(rappCsarConfigurationHandler.getSmeInvokerPayload(rapp, rappInstance));
+        assertNotNull(smeInvokerPayload);
+        assertEquals(smeInvokerPayload.getJSONObject(0).getString("apiInvokerInformation"),
+                rappInstance.getRappInstanceId().toString());
     }
 
     @Test
