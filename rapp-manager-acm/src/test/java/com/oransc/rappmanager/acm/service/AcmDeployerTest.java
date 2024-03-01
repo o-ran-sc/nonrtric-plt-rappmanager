@@ -37,6 +37,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oransc.rappmanager.acm.configuration.ACMConfiguration;
 import com.oransc.rappmanager.dme.service.DmeAcmInterceptor;
 import com.oransc.rappmanager.models.cache.RappCacheService;
+import com.oransc.rappmanager.models.configuration.RappsEnvironmentConfiguration;
 import com.oransc.rappmanager.models.csar.RappCsarConfigurationHandler;
 import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappEvent;
@@ -78,8 +79,8 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest(
         classes = {BeanTestConfiguration.class, ACMConfiguration.class, AcmDeployer.class, DmeAcmInterceptor.class,
-                RappCsarConfigurationHandler.class, RappCacheService.class, RappInstanceStateMachineConfig.class,
-                RappInstanceStateMachine.class})
+                RappsEnvironmentConfiguration.class, RappCsarConfigurationHandler.class, RappCacheService.class,
+                RappInstanceStateMachineConfig.class, RappInstanceStateMachine.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureMockMvc
 class AcmDeployerTest {

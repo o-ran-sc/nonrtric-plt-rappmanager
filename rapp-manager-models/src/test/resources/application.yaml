@@ -1,0 +1,4 @@
+rappmanager:
+  rapps:
+    env:
+      smeDiscoveryEndpoint: http://localhost:53012/service-apis/v1/allServiceAPIs
