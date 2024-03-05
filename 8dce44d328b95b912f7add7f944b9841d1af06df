@@ -18,6 +18,24 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3bcadc8b_43585c17",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002202
+      },
+      "writtenOn": "2024-03-05T15:22:38Z",
+      "side": 1,
+      "message": "Yes. We need to set the env variables in HELM chart.",
+      "parentUuid": "640c107d_5fe4e98b",
+      "revId": "8dce44d328b95b912f7add7f944b9841d1af06df",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aec47447_809640d2",
@@ -31,6 +49,30 @@
       "writtenOn": "2024-03-01T18:19:32Z",
       "side": 1,
       "message": "invoker?",
+      "range": {
+        "startLine": 30,
+        "startChar": 23,
+        "endLine": 30,
+        "endChar": 34
+      },
+      "revId": "8dce44d328b95b912f7add7f944b9841d1af06df",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ab9b4d6_267e98f5",
+        "filename": "sample-rapp-generator/rapp-hello-world-sme-invoker/Definitions/asd.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1002202
+      },
+      "writtenOn": "2024-03-05T15:22:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aec47447_809640d2",
       "range": {
         "startLine": 30,
         "startChar": 23,
@@ -64,6 +106,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c1712ff3_f8552dc5",
+        "filename": "sample-rapp-generator/rapp-hello-world-sme-invoker/Files/Acm/instances/k8s-instance.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1002202
+      },
+      "writtenOn": "2024-03-05T15:22:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be35d831_2529931e",
+      "range": {
+        "startLine": 13,
+        "startChar": 8,
+        "endLine": 25,
+        "endChar": 41
+      },
+      "revId": "8dce44d328b95b912f7add7f944b9841d1af06df",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "07025f94_42901efe",
@@ -77,6 +143,30 @@
       "writtenOn": "2024-03-01T18:19:32Z",
       "side": 1,
       "message": "Shouldn\u0027t be hardcoded?",
+      "range": {
+        "startLine": 3,
+        "startChar": 30,
+        "endLine": 3,
+        "endChar": 59
+      },
+      "revId": "8dce44d328b95b912f7add7f944b9841d1af06df",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "79ec95b4_b04b383b",
+        "filename": "sample-rapp-generator/rapp-hello-world-sme-invoker/Files/Sme/invokers/invoker-app1.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1002202
+      },
+      "writtenOn": "2024-03-05T15:22:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "07025f94_42901efe",
       "range": {
         "startLine": 3,
         "startChar": 30,
@@ -110,6 +200,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "38c094e9_149929f5",
+        "filename": "sample-rapp-generator/rapp-hello-world-sme-invoker/Files/Sme/invokers/invoker-app1.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1002202
+      },
+      "writtenOn": "2024-03-05T15:22:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7b8d81bc_970877d7",
+      "range": {
+        "startLine": 5,
+        "startChar": 6,
+        "endLine": 5,
+        "endChar": 8
+      },
+      "revId": "8dce44d328b95b912f7add7f944b9841d1af06df",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d10d9f91_844644ca",
@@ -133,6 +247,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "27f8e115_14220e55",
+        "filename": "sample-rapp-generator/rapp-hello-world-sme-invoker/Files/Sme/invokers/invoker-app1.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1002202
+      },
+      "writtenOn": "2024-03-05T15:22:38Z",
+      "side": 1,
+      "message": "NOT USED here",
+      "parentUuid": "d10d9f91_844644ca",
+      "range": {
+        "startLine": 7,
+        "startChar": 38,
+        "endLine": 7,
+        "endChar": 62
+      },
+      "revId": "8dce44d328b95b912f7add7f944b9841d1af06df",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5bd783ac_0c182f1a",
@@ -146,6 +284,30 @@
       "writtenOn": "2024-03-01T18:19:32Z",
       "side": 1,
       "message": "invoker?",
+      "range": {
+        "startLine": 8,
+        "startChar": 40,
+        "endLine": 8,
+        "endChar": 45
+      },
+      "revId": "8dce44d328b95b912f7add7f944b9841d1af06df",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42c4763e_d3751d0c",
+        "filename": "sample-rapp-generator/rapp-hello-world-sme-invoker/asd.mf",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1002202
+      },
+      "writtenOn": "2024-03-05T15:22:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5bd783ac_0c182f1a",
       "range": {
         "startLine": 8,
         "startChar": 40,
