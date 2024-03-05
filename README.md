@@ -64,7 +64,7 @@ This integration is based on the ICS as part of O-RAN SC NONRTRIC. It is availab
 
 This build supports Linux and Windows environments.
 
-In case of below error during the build in Windows environment,
+In case of below error during the build in Windows environment:
 
 ```
 [INFO] --- exec-maven-plugin:3.1.0:exec (git submodule update) @ rapp-manager-sme ---
