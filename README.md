@@ -5,28 +5,28 @@ rApp manager is an application which lifecycle manages the rApp.
 
 ## Architecture
 
-![Image](docs/images/architecture.png "Rapp Manager Architecture")
+![Image](docs/images/architecture.png "rApp Manager Architecture")
 
 ### rApp Package (<mark>**It is a prototype**</mark>)
 
-![Image](docs/images/rApp-package-1.png "Rapp package")
-![Image](docs/images/rApp-package-2.png "Rapp package")
+![Image](docs/images/rApp-package-1.png "rApp package")
+![Image](docs/images/rApp-package-2.png "rApp package")
 
 ### rApp States
 
-![Image](docs/images/rApp-states.png "Rapp States")
+![Image](docs/images/rApp-states.png "rApp States")
 
 ### rApp Instance States
 
-![Image](docs/images/rApp-instance-states.png "Rapp Instance States")
+![Image](docs/images/rApp-instance-states.png "rApp Instance States")
 
 ### Events responsible for rApp Instance State Transition
 
-![Image](docs/images/rApp-state-events.png "Rapp Manager State Events")
+![Image](docs/images/rApp-state-events.png "rApp Manager State Events")
 
 ### rApp Entity Relationship
 
-![Image](docs/images/rApp-entity-relationship.png "Rapp Entity Relationship")
+![Image](docs/images/rApp-entity-relationship.png "rApp Entity Relationship")
 
 ## Integrations
 
@@ -49,22 +49,22 @@ This integration is based on the ICS as part of O-RAN SC NONRTRIC. It is availab
 
 ### Application Lifecycle
 
-![Image](docs/images/application-lifecycle.png "Rapp Manager Application Lifecycle")
+![Image](docs/images/application-lifecycle.png "rApp Manager Application Lifecycle")
 
 ### rApp Flow
 
-![Image](docs/images/rApp-flow.png "Rapp Flow")
+![Image](docs/images/rApp-flow.png "rApp Flow")
 
 ### rApp Instance Flow
 
-![Image](docs/images/rApp-instance-flow.png "Rapp Instance Flow")
+![Image](docs/images/rApp-instance-flow.png "rApp Instance Flow")
 
 
 ## Maven Build
 
 This build supports Linux and Windows environments.
 
-In case of below error during the build in Windows environment,
+In case of below error during the build in Windows environment:
 
 ```
 [INFO] --- exec-maven-plugin:3.1.0:exec (git submodule update) @ rapp-manager-sme ---
