@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "57c58332_ad8b7bfa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-03-05T19:21:10Z",
+      "side": 1,
+      "message": "A comment to suggest a new patchset ... just to check the \u0027new patchset\u0027 process works at your end :-) \n(No issue identified that deserves a -1 review. Just testing)",
+      "revId": "1d1039edcae141192686b1f754899ace124cda61",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2ce1acf5_821089f7",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-03-05T19:21:10Z",
+      "side": 1,
+      "message": "Just for the sake of having a new patchset ... \nPlease find and replace the work \"Rapp\" with the word \u0027rApp\u0027 in this document.",
+      "range": {
+        "startLine": 56,
+        "startChar": 36,
+        "endLine": 56,
+        "endChar": 41
+      },
+      "revId": "1d1039edcae141192686b1f754899ace124cda61",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
