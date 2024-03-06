@@ -1,5 +1,4 @@
 :: ============LICENSE_START===============================================
-::  Copyright (C) 2023 Nordix Foundation. All rights reserved.
 ::  Copyright (C) 2024 OpenInfra Foundation Europe. All rights reserved.
 ::  ========================================================================
 ::  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,27 +14,10 @@
 ::  limitations under the License.
 ::  ============LICENSE_END=================================================
 ::
-
 @echo off
 
-if [%1]==[] goto usage
-SET DIRECTORY=%1
-if %DIRECTORY:~-1%==\ (
-    SET DIRECTORY=%DIRECTORY:~0,-1%
+set SCRIPT_LOCATION="scripts\init\generate-test-rapp-packages"%
+cd %SCRIPT_LOCATION%
+IF EXIST generatetestrapppackages.go (
+  go run generatetestrapppackages.go
 )
-SET CSARFILE=%DIRECTORY%.csar
-SET ZIPFILE=%DIRECTORY%.zip
-if exist %DIRECTORY% (
-    del %CSARFILE% 2>nul
-    pushd %DIRECTORY%
-    tar -a -cf ..\%ZIPFILE% *
-    popd
-    rename %ZIPFILE% %CSARFILE%
-    @echo rApp package %CSARFILE% generated.
-) else (
-    @echo Directory %DIRECTORY% doesn't exists.
-)
-goto :eof
-
-:usage
-@echo USAGE: %0% ^<rApp-resource-folder-name^>

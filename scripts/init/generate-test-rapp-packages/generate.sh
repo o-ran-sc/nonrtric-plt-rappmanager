@@ -1,7 +1,5 @@
 #!/bin/bash
-
 #  ============LICENSE_START===============================================
-#  Copyright (C) 2023 Nordix Foundation. All rights reserved.
 #  Copyright (C) 2024 OpenInfra Foundation Europe. All rights reserved.
 #  ========================================================================
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,25 +16,9 @@
 #  ============LICENSE_END=================================================
 #
 
-if [[ $# -ne 1 ]]; then
-  echo "USAGE: $0 <rApp-resource-folder-name>"
-  exit 1
-fi
+SCRIPT_LOCATION="scripts/init/generate-test-rapp-packages"
+cd $SCRIPT_LOCATION
 
-if ! command -v zip &> /dev/null; then
-  echo "Zip command not found. Please install zip to proceed."
-  exit 1
-fi
-
-DIRECTORY=${1%/}
-PACKAGENAME="$DIRECTORY.csar"
-
-if [ -d "$DIRECTORY" ]; then
-  rm $PACKAGENAME 2> /dev/null
-  pushd $DIRECTORY > /dev/null
-  zip -q -r ../$PACKAGENAME *
-  popd > /dev/null
-  echo -e "rApp package $PACKAGENAME generated."
-else
-  echo "Directory $DIRECTORY doesn't exists."
+if [ -f "generatetestrapppackages.go" ]; then
+  go run generatetestrapppackages.go
 fi
