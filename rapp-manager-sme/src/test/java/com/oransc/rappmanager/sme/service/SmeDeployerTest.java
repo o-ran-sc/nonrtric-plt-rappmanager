@@ -533,7 +533,7 @@ class SmeDeployerTest {
         rappSMEInstance.setServiceApis("api-set-1");
         rappSMEInstance.setAefId("TEST_AEF_ID");
         rappSMEInstance.setApfId(String.valueOf(UUID.randomUUID()));
-        rappSMEInstance.setProviderFunction("aef-provider-function");
+        rappSMEInstance.setProviderFunction("provider-function-1");
         RappInstance rappInstance = new RappInstance();
         rappInstance.setSme(rappSMEInstance);
         return rappInstance;

@@ -58,8 +58,7 @@ class ArtifactDefinitionValidatorTest {
     RappValidationUtils rappValidationUtils;
     String validCsarFileLocation = "src/test/resources/";
     String validRappFile = "valid-rapp-package.csar";
-    String invalidRappFile = "invalid-rapp-package.csar";
-    String invalidRappAsdEmptyFile = "invalid-rapp-package-empty-asd-yaml.csar";
+    String invalidRappMissingArtifactFile = "invalid-rapp-package-missing-artifact.csar";
 
     @Test
     void testCsarContainsValidAsdFile() throws IOException {
@@ -72,7 +71,7 @@ class ArtifactDefinitionValidatorTest {
 
     @Test
     void testCsarContainsValidAsdFileFailure() throws IOException {
-        String rappCsarPath = validCsarFileLocation + File.separator + invalidRappFile;
+        String rappCsarPath = validCsarFileLocation + File.separator + invalidRappMissingArtifactFile;
         MultipartFile multipartFile =
                 new MockMultipartFile(rappCsarPath, rappCsarPath, ContentType.MULTIPART_FORM_DATA.getMimeType(),
                         new FileInputStream(rappCsarPath));

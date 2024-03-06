@@ -93,7 +93,7 @@ class DeploymentArtifactsServiceTest {
 
     @Test
     void testChartUploadNoArtifacts() {
-        String invalidRappFile = "invalid-rapp-package.csar";
+        String invalidRappFile = "valid-rapp-package-no-artifacts.csar";
         Rapp rapp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(invalidRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
         rapp.setAsdMetadata(rappCsarConfigurationHandler.getAsdMetadata(rapp));
