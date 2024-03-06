@@ -1,0 +1,39 @@
+rappmanager:
+  csarlocation: src/test/resources/csar
+  acm:
+    baseurl: http://localhost:30442/onap/policy/clamp/acm/v2/
+    username: runtimeUser
+    password: zb!XztG34
+    maxRetries: 10
+    retryInterval: 2 #seconds
+  sme:
+    baseurl: http://localhost:56571
+    providerBasePath: /api-provider-management/v1/
+    invokerBasePath: /api-invoker-management/v1/
+    publishApiBasePath: /published-apis/v1/
+    maxRetries: 3
+    retryInterval: 2 #seconds
+  dme:
+    baseurl: http://localhost:63475
+
+  rapps:
+    env:
+      smeDiscoveryEndpoint: http://localhost:53012/service-apis/v1/allServiceAPIs
+
+spring:
+  jackson:
+    default-property-inclusion: non_null
+
+logging:
+  level:
+    root: INFO
+    com.oransc: DEBUG
+    org.apache.http: DEBUG
+    httpclient.wire: DEBUG
+    org.springframework.web.client.RestTemplate: TRACE
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

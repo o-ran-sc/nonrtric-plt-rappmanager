@@ -33,9 +33,9 @@ PACKAGENAME="$DIRECTORY.csar"
 
 if [ -d "$DIRECTORY" ]; then
   rm $PACKAGENAME 2> /dev/null
-  pushd $DIRECTORY
-  zip -r ../$PACKAGENAME *
-  popd
+  pushd $DIRECTORY > /dev/null
+  zip -q -r ../$PACKAGENAME *
+  popd > /dev/null
   echo -e "rApp package $PACKAGENAME generated."
 else
   echo "Directory $DIRECTORY doesn't exists."

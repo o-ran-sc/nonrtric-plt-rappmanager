@@ -23,9 +23,9 @@ SET DIRECTORY=%1
 if %DIRECTORY:~-1%==\ (
     SET DIRECTORY=%DIRECTORY:~0,-1%
 )
+SET CSARFILE=%DIRECTORY%.csar
+SET ZIPFILE=%DIRECTORY%.zip
 if exist %DIRECTORY% (
-    SET CSARFILE=%DIRECTORY%.csar
-    SET ZIPFILE=%DIRECTORY%.zip
     del %CSARFILE% 2>nul
     pushd %DIRECTORY%
     tar -a -cf ..\%ZIPFILE% *
