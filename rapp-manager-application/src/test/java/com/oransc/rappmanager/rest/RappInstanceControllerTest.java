@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START======================================================================
- * Copyright (C) 2023 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2023-2024 OpenInfra Foundation Europe. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,13 +27,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oransc.rappmanager.acm.service.AcmDeployer;
 import com.oransc.rappmanager.dme.service.DmeDeployer;
-import com.oransc.rappmanager.models.rappinstance.DeployOrder;
+import com.oransc.rappmanager.models.cache.RappCacheService;
 import com.oransc.rappmanager.models.rapp.Rapp;
+import com.oransc.rappmanager.models.rapp.RappState;
+import com.oransc.rappmanager.models.rappinstance.DeployOrder;
 import com.oransc.rappmanager.models.rappinstance.RappInstance;
 import com.oransc.rappmanager.models.rappinstance.RappInstanceDeployOrder;
 import com.oransc.rappmanager.models.rappinstance.RappInstanceState;
-import com.oransc.rappmanager.models.rapp.RappState;
-import com.oransc.rappmanager.models.cache.RappCacheService;
 import com.oransc.rappmanager.models.statemachine.RappInstanceStateMachine;
 import com.oransc.rappmanager.sme.service.SmeDeployer;
 import com.oransc.rappmanager.sme.service.SmeLifecycleManager;
@@ -76,7 +76,6 @@ class RappInstanceControllerTest {
 
     private final String validRappFile = "valid-rapp-package.csar";
 
-    private final String invalidRappFile = "invalid-rapp-package.csar";
     private final String validCsarFileLocation = "src/test/resources/";
 
     private final ObjectMapper objectMapper = new ObjectMapper();

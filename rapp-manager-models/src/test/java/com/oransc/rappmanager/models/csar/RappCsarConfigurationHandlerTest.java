@@ -141,7 +141,7 @@ class RappCsarConfigurationHandlerTest {
         assertThat(rappResources).isNotNull();
         assertNotNull(rappResources.getAcm().getCompositionDefinitions());
         assertThat(rappResources.getAcm().getCompositionInstances()).hasSize(4);
-        assertThat(rappResources.getSme().getProviderFunctions()).hasSize(4);
+        assertThat(rappResources.getSme().getProviderFunctions()).hasSize(3);
         assertThat(rappResources.getSme().getServiceApis()).hasSize(2);
         assertThat(rappResources.getSme().getInvokers()).hasSize(2);
         assertThat(rappResources.getDme().getProducerInfoTypes()).hasSize(2);
