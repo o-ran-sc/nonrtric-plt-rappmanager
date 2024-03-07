@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ae1f6c63_ce67194d",
+        "filename": "rapp-manager-sme/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-03-07T19:05:16Z",
+      "side": 1,
+      "message": "Actually - better than other suggestion: Why not use maven-resources-plugin:copy-resources ?",
+      "range": {
+        "startLine": 105,
+        "startChar": 31,
+        "endLine": 105,
+        "endChar": 33
+      },
+      "revId": "7bdc2baea5c29a6714b49a932dd0010038912aea",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "491aa90b_31cd9185",
+        "filename": "rapp-manager-sme/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-03-07T19:05:16Z",
+      "side": 1,
+      "message": "cp isn\u0027t available on windows by default I think.\n\nAn idea: \nMaybe create a \u0027cp.bat\u0027 with \n   @echo off\n   call copy %* \n\nWould also need to use file.separator though since string is passed direct.",
+      "range": {
+        "startLine": 105,
+        "startChar": 31,
+        "endLine": 105,
+        "endChar": 33
+      },
+      "revId": "7bdc2baea5c29a6714b49a932dd0010038912aea",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f225bd0b_f614a55a",
+        "filename": "rapp-manager-sme/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-03-07T19:05:16Z",
+      "side": 1,
+      "message": "Maybe generate-sources phase.\n(Is after initialize phase above)",
+      "range": {
+        "startLine": 119,
+        "startChar": 31,
+        "endLine": 119,
+        "endChar": 41
+      },
+      "revId": "7bdc2baea5c29a6714b49a932dd0010038912aea",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
