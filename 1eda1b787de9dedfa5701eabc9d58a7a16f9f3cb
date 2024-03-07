@@ -22,6 +22,30 @@
       },
       "revId": "1eda1b787de9dedfa5701eabc9d58a7a16f9f3cb",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "429f94a4_cba5695c",
+        "filename": "pom.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2024-03-07T18:48:28Z",
+      "side": 1,
+      "message": "Maven able to handle /. It\u0027s been removed as part of https://gerrit.o-ran-sc.org/r/c/nonrtric/plt/rappmanager/+/12600",
+      "parentUuid": "34d5ca67_85588572",
+      "range": {
+        "startLine": 68,
+        "startChar": 2,
+        "endLine": 93,
+        "endChar": 15
+      },
+      "revId": "1eda1b787de9dedfa5701eabc9d58a7a16f9f3cb",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
