@@ -31,6 +31,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oransc.rappmanager.dme.configuration.DmeConfiguration;
 import com.oransc.rappmanager.models.cache.RappCacheService;
+import com.oransc.rappmanager.models.configuration.RappsEnvironmentConfiguration;
 import com.oransc.rappmanager.models.csar.RappCsarConfigurationHandler;
 import com.oransc.rappmanager.models.rapp.Rapp;
 import com.oransc.rappmanager.models.rapp.RappDmeResourceBuilder;
@@ -65,8 +66,8 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest(classes = {DmeConfiguration.class, DmeDeployer.class, BeanTestConfiguration.class,
-        RappCsarConfigurationHandler.class, RappCacheService.class, RappInstanceStateMachineConfig.class,
-        RappInstanceStateMachine.class})
+        RappsEnvironmentConfiguration.class, RappCsarConfigurationHandler.class, RappCacheService.class,
+        RappInstanceStateMachineConfig.class, RappInstanceStateMachine.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureMockMvc
 class DmeDeployerTest {

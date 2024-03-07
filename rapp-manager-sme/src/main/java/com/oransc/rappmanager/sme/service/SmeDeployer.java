@@ -218,7 +218,7 @@ public class SmeDeployer implements RappDeployer {
     boolean createInvoker(Rapp rapp, RappInstance rappInstance) {
         logger.debug("Creating provider domain for Rapp {}", rapp.getName());
         try {
-            String invokerPayload = rappCsarConfigurationHandler.getSmeInvokerPayload(rapp, rappInstance.getSme());
+            String invokerPayload = rappCsarConfigurationHandler.getSmeInvokerPayload(rapp, rappInstance);
             if (invokerPayload != null) {
                 List<APIInvokerEnrolmentDetails> apiInvokerEnrolmentDetails =
                         objectMapper.readValue(invokerPayload, new TypeReference<>() { });

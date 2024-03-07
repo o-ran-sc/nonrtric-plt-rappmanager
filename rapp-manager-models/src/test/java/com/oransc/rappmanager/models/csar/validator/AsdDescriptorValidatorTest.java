@@ -29,6 +29,7 @@ import static org.mockito.Mockito.doReturn;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oransc.rappmanager.models.BeanTestConfiguration;
 import com.oransc.rappmanager.models.cache.RappCacheService;
+import com.oransc.rappmanager.models.configuration.RappsEnvironmentConfiguration;
 import com.oransc.rappmanager.models.csar.AsdMetadata;
 import com.oransc.rappmanager.models.csar.RappCsarConfigurationHandler;
 import com.oransc.rappmanager.models.exception.RappValidationException;
@@ -54,7 +55,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 @SpringBootTest
 @ContextConfiguration(classes = {BeanTestConfiguration.class, AsdDescriptorValidator.class, RappValidationUtils.class,
-        ObjectMapper.class, RappCsarConfigurationHandler.class, RappCacheService.class, CacheManager.class})
+        ObjectMapper.class, RappsEnvironmentConfiguration.class, RappCsarConfigurationHandler.class,
+        RappCacheService.class, CacheManager.class})
 class AsdDescriptorValidatorTest {
 
     @Autowired

@@ -1,7 +1,10 @@
 rappmanager:
   acm:
-    baseurl: http://10.101.3.22:30442/onap/policy/clamp/acm/v2/
+    baseurl: http://localhost:30442/onap/policy/clamp/acm/v2/
     username: runtimeUser
     password: zb!XztG34
     maxRetries: 3
     retryInterval: 2 #seconds
+  rapps:
+    env:
+      smeDiscoveryEndpoint: http://localhost:53012/service-apis/v1/allServiceAPIs

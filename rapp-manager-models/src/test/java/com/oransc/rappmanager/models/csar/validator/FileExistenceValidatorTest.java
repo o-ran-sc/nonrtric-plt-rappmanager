@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.oransc.rappmanager.models.configuration.RappsEnvironmentConfiguration;
 import com.oransc.rappmanager.models.csar.RappCsarConfigurationHandler;
 import com.oransc.rappmanager.models.exception.RappValidationException;
 import java.io.File;
@@ -41,7 +42,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @SpringBootTest
 @ContextConfiguration(classes = {FileExistenceValidator.class, RappValidationUtils.class, ObjectMapper.class,
-        RappCsarConfigurationHandler.class})
+        RappsEnvironmentConfiguration.class, RappCsarConfigurationHandler.class})
 class FileExistenceValidatorTest {
 
     @Autowired

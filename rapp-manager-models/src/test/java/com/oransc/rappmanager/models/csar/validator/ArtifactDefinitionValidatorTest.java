@@ -25,10 +25,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.oransc.rappmanager.models.configuration.RappsEnvironmentConfiguration;
 import com.oransc.rappmanager.models.csar.RappCsarConfigurationHandler;
 import com.oransc.rappmanager.models.exception.RappValidationException;
 import java.io.ByteArrayOutputStream;
@@ -50,7 +49,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @SpringBootTest
 @ContextConfiguration(classes = {ArtifactDefinitionValidator.class, RappValidationUtils.class, ObjectMapper.class,
-        RappCsarConfigurationHandler.class})
+        RappsEnvironmentConfiguration.class, RappCsarConfigurationHandler.class})
 class ArtifactDefinitionValidatorTest {
 
     @Autowired
@@ -82,7 +81,6 @@ class ArtifactDefinitionValidatorTest {
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
         assertTrue(exception.getMessage().startsWith("rApp package missing a file"));
     }
-
 
 
     @ParameterizedTest
