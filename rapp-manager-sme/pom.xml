@@ -95,15 +95,42 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>initialize-sme-openapi-specs</id>
+                        <id>copy-swagger-generator</id>
                         <phase>initialize</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
                         <configuration>
                             <executable>
-                                ..${file.separator}scripts${file.separator}init${file.separator}init-sme-spec${script.extension}
+                               cp
                             </executable>
+                            <arguments>
+                                <argument>
+                                    ${project.parent.basedir}/scripts/init/getsmeswagger.go
+                                </argument>
+                                <argument>
+                                    ${project.parent.basedir}/sme/capifcore
+                                </argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>initialize-sme-openapi-specs</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <workingDirectory>
+                                ${project.parent.basedir}/sme/capifcore
+                            </workingDirectory>
+                            <executable>
+                                go
+                            </executable>
+                            <arguments>
+                                <argument>run</argument>
+                                <argument>getsmeswagger.go</argument>
+                            </arguments>
                         </configuration>
                     </execution>
                 </executions>
