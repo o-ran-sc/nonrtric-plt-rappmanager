@@ -63,34 +63,9 @@
         <slf4j.version>2.0.12</slf4j.version>
         <apache.httpcore.version>4.4.16</apache.httpcore.version>
         <exec-maven-plugin.version>3.1.0</exec-maven-plugin.version>
+        <copy-resources-maven-plugin.version>3.3.1</copy-resources-maven-plugin.version>
         <apache.compress.version>1.25.0</apache.compress.version>
     </properties>
-    <profiles>
-        <profile>
-            <id>Windows</id>
-            <activation>
-                <os>
-                    <family>Windows</family>
-                </os>
-            </activation>
-            <properties>
-                <script.extension>.bat</script.extension>
-                <file.separator>\</file.separator>
-            </properties>
-        </profile>
-        <profile>
-            <id>unix</id>
-            <activation>
-                <os>
-                    <family>unix</family>
-                </os>
-            </activation>
-            <properties>
-                <script.extension>.sh</script.extension>
-                <file.separator>/</file.separator>
-            </properties>
-        </profile>
-    </profiles>
     <build>
         <plugins>
             <plugin>
