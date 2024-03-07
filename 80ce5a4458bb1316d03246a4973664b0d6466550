@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef3ac37e_975704e9",
+        "filename": "pom.xml",
+        "patchSetId": 5
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-03-07T17:34:09Z",
+      "side": 1,
+      "message": "I think ${file.separator} is a built in property and already set?",
+      "range": {
+        "startLine": 78,
+        "startChar": 13,
+        "endLine": 78,
+        "endChar": 50
+      },
+      "revId": "80ce5a4458bb1316d03246a4973664b0d6466550",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fff98a94_824f81f9",
+        "filename": "pom.xml",
+        "patchSetId": 5
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-03-07T17:34:09Z",
+      "side": 1,
+      "message": "I think maven can handle / for file seperator, even on windows?",
+      "range": {
+        "startLine": 116,
+        "startChar": 45,
+        "endLine": 116,
+        "endChar": 104
+      },
+      "revId": "80ce5a4458bb1316d03246a4973664b0d6466550",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "34d5ca67_85588572",
+        "filename": "pom.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-03-07T17:34:09Z",
+      "side": 1,
+      "message": "If / works, and no need for the script then I guess all this profile stuff can go too.",
+      "range": {
+        "startLine": 68,
+        "startChar": 2,
+        "endLine": 93,
+        "endChar": 15
+      },
+      "revId": "1eda1b787de9dedfa5701eabc9d58a7a16f9f3cb",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
