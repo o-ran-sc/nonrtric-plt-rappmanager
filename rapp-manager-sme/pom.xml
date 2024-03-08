@@ -4,6 +4,7 @@
 * O-RAN-SC
 * %%
 * Copyright (C) 2023 Nordix Foundation
+* Copyright (C) 2023-2024 OpenInfra Foundation Europe. All rights reserved.
 * %%
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -37,34 +38,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     </properties>
-
-    <profiles>
-        <profile>
-            <id>Windows</id>
-            <activation>
-                <os>
-                    <family>Windows</family>
-                </os>
-            </activation>
-            <properties>
-                <script.extension>.bat</script.extension>
-                <file.separator>\</file.separator>
-            </properties>
-        </profile>
-        <profile>
-            <id>unix</id>
-            <activation>
-                <os>
-                    <family>unix</family>
-                </os>
-            </activation>
-            <properties>
-                <script.extension>.sh</script.extension>
-                <file.separator>/</file.separator>
-            </properties>
-        </profile>
-    </profiles>
-
     <dependencies>
         <dependency>
             <groupId>org.o-ran-sc.nonrtric.plt.rappmanager</groupId>
@@ -123,14 +96,46 @@
                     </execution>
                     <execution>
                         <id>initialize-sme-openapi-specs</id>
-                        <phase>initialize</phase>
+                        <phase>generate-sources</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
                         <configuration>
+                            <workingDirectory>
+                                ${project.parent.basedir}/sme/capifcore
+                            </workingDirectory>
                             <executable>
-                                ..${file.separator}scripts${file.separator}init${file.separator}init-sme-spec${script.extension}
+                                go
                             </executable>
+                            <arguments>
+                                <argument>run</argument>
+                                <argument>getsmeswagger.go</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${copy-resources-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>copy-swagger-generator</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.parent.basedir}/sme/capifcore</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.parent.basedir}/scripts/init/</directory>
+                                    <includes>
+                                        <include>getsmeswagger.go</include>
+                                    </includes>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>
