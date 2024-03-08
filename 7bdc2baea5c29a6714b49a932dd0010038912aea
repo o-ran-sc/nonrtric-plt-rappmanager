@@ -95,6 +95,54 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7899c08_23ef7d13",
+        "filename": "rapp-manager-sme/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-03-08T09:49:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e56aec3d_4bc62887",
+      "range": {
+        "startLine": 105,
+        "startChar": 31,
+        "endLine": 105,
+        "endChar": 33
+      },
+      "revId": "7bdc2baea5c29a6714b49a932dd0010038912aea",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a06e2da_822a5473",
+        "filename": "rapp-manager-sme/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-03-08T09:49:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cbaea766_253e5d14",
+      "range": {
+        "startLine": 105,
+        "startChar": 31,
+        "endLine": 105,
+        "endChar": 33
+      },
+      "revId": "7bdc2baea5c29a6714b49a932dd0010038912aea",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f225bd0b_f614a55a",
@@ -132,6 +180,30 @@
       "side": 1,
       "message": "Done",
       "parentUuid": "f225bd0b_f614a55a",
+      "range": {
+        "startLine": 119,
+        "startChar": 31,
+        "endLine": 119,
+        "endChar": 41
+      },
+      "revId": "7bdc2baea5c29a6714b49a932dd0010038912aea",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e648e13_2e798945",
+        "filename": "rapp-manager-sme/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-03-08T09:49:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "111da0f6_81a499ae",
       "range": {
         "startLine": 119,
         "startChar": 31,
