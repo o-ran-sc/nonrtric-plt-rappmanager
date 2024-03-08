@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2024 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,10 +32,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
-import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
+import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV1;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
@@ -57,20 +57,22 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
-public class AutomationCompositionElementHandler implements AutomationCompositionElementListener {
+public class AutomationCompositionElementHandler extends AcElementListenerV1 {
 
     private static final Coder CODER = new StandardCoder();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
-    private final ParticipantIntermediaryApi intermediaryApi;
 
     private final AcDmeClient acDmeClient;
 
     // Map of acElement Id and DME services
     @Getter(AccessLevel.PACKAGE)
     private final Map<UUID, ConfigurationEntity> configRequestMap = new ConcurrentHashMap<>();
+
+    public AutomationCompositionElementHandler(ParticipantIntermediaryApi intermediaryApi, AcDmeClient acDmeClient) {
+        super(intermediaryApi);
+        this.acDmeClient = acDmeClient;
+    }
 
     @Override
     public void undeploy(UUID automationCompositionId, UUID automationCompositionElementId) throws DmeException {

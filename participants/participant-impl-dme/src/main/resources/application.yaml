@@ -22,16 +22,16 @@ participant:
     participantId: 101c62b3-8918-41b9-a747-d21eb79c6c08
     clampAutomationCompositionTopics:
       topicSources:
-        - topic: POLICY-ACRUNTIME-PARTICIPANT
+        - topic: policy-acruntime-participant
           servers:
-            - ${topicServer:localhost}
-          topicCommInfrastructure: dmaap
+            - ${topicServer:kafka.default.svc.cluster.local:9092}
+          topicCommInfrastructure: NOOP
           fetchTimeout: 15000
       topicSinks:
-        - topic: POLICY-ACRUNTIME-PARTICIPANT
+        - topic: policy-acruntime-participant
           servers:
-            - ${topicServer:localhost}
-          topicCommInfrastructure: dmaap
+            - ${topicServer:kafka.default.svc.cluster.local:9092}
+          topicCommInfrastructure: NOOP
     participantSupportedElementTypes:
       -
         typeName: org.onap.policy.clamp.acm.DMEAutomationCompositionElement
