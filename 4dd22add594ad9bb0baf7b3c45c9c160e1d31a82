@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c59481b5_338f8ae7",
+        "filename": "participants/participant-impl-dme/src/main/java/org/oransc/participant/dme/handler/AutomationCompositionElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-03-11T10:27:30Z",
+      "side": 1,
+      "message": "Is it really necessary to override a should-be-protected acm-internal impl class rather than implement the interface?",
+      "range": {
+        "startLine": 60,
+        "startChar": 50,
+        "endLine": 60,
+        "endChar": 76
+      },
+      "revId": "4dd22add594ad9bb0baf7b3c45c9c160e1d31a82",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81b9676a_31bfee1f",
+        "filename": "participants/participant-impl-dme/src/main/java/org/oransc/participant/dme/handler/AutomationCompositionElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-03-11T10:27:30Z",
+      "side": 1,
+      "message": "See comment above ... is this really needed?",
+      "range": {
+        "startLine": 73,
+        "startChar": 8,
+        "endLine": 73,
+        "endChar": 30
+      },
+      "revId": "4dd22add594ad9bb0baf7b3c45c9c160e1d31a82",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
