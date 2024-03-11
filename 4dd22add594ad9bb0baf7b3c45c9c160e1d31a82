@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "630db421_5e4c250b",
+        "filename": "participants/participant-impl-dme/src/main/java/org/oransc/participant/dme/handler/AutomationCompositionElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2024-03-11T10:54:01Z",
+      "side": 1,
+      "message": "The AutomationCompositionElementListener interface now accommodates various argument types. To ensure backward compatibility, it offers the AcElementListenerV1 abstract class, which translates older arguments as needed to align with the newer arguments of AutomationCompositionElementListener.\n\nWe can choose to implement the AutomationCompositionElementListener and develop the logic independently. However, this approach may result in redundant code duplication with AcElementListenerV1.",
+      "parentUuid": "c59481b5_338f8ae7",
+      "range": {
+        "startLine": 60,
+        "startChar": 50,
+        "endLine": 60,
+        "endChar": 76
+      },
+      "revId": "4dd22add594ad9bb0baf7b3c45c9c160e1d31a82",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "81b9676a_31bfee1f",
         "filename": "participants/participant-impl-dme/src/main/java/org/oransc/participant/dme/handler/AutomationCompositionElementHandler.java",
         "patchSetId": 1
