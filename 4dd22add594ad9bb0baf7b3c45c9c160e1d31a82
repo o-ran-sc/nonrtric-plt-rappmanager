@@ -48,6 +48,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b223f40a_b58e5fa7",
+        "filename": "participants/participant-impl-dme/src/main/java/org/oransc/participant/dme/handler/AutomationCompositionElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-03-11T17:08:05Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "630db421_5e4c250b",
+      "range": {
+        "startLine": 60,
+        "startChar": 50,
+        "endLine": 60,
+        "endChar": 76
+      },
+      "revId": "4dd22add594ad9bb0baf7b3c45c9c160e1d31a82",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "81b9676a_31bfee1f",
