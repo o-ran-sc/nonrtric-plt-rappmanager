@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "245664ac_11135431",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2024-03-11T17:07:04Z",
+      "side": 1,
+      "message": "Looks good. \nGiven the chart changes in https://gerrit.o-ran-sc.org/r/c/nonrtric/+/12602 is the charts archive still OK? \nIf so I can go ahead and merge. \nThanks.",
+      "revId": "e6f761ccc1ea9d13cc0de2ed030c635e638b989a",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
