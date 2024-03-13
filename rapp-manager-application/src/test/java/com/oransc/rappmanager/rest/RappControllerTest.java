@@ -42,6 +42,7 @@ import org.apache.http.entity.ContentType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -71,8 +72,6 @@ class RappControllerTest {
     SmeLifecycleManager smeLifecycleManager;
 
     private final String validRappFile = "valid-rapp-package.csar";
-
-    private final String invalidRappFile = "invalid-rapp-package.csar";
     private final String validCsarFileLocation = "src/test/resources/";
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -126,11 +125,14 @@ class RappControllerTest {
                 .andExpect(status().isAccepted());
     }
 
-    @Test
-    void testCreateInvalidRapp() throws Exception {
-        String rappCsarPath = validCsarFileLocation + File.separator + invalidRappFile;
+    @ParameterizedTest
+    @ValueSource(strings = {"invalid-rapp-package.csar", "invalid-rapp-package-no-asd-yaml.csar",
+            "invalid-rapp-package-empty-asd-yaml.csar", "invalid-rapp-package-no-tosca.csar",
+            "invalid-rapp-package-no-acm-composition.csar", "invalid-rapp-package-missing-artifact.csar"})
+    void testCreateInvalidRapp(String rAppPackageName) throws Exception {
+        String rappCsarPath = validCsarFileLocation + File.separator + rAppPackageName;
         MockMultipartFile multipartFile =
-                new MockMultipartFile("file", invalidRappFile, ContentType.MULTIPART_FORM_DATA.getMimeType(),
+                new MockMultipartFile("file", rAppPackageName, ContentType.MULTIPART_FORM_DATA.getMimeType(),
                         new FileInputStream(rappCsarPath));
         mockMvc.perform(MockMvcRequestBuilders.multipart("/rapps/{rapp_id}", UUID.randomUUID()).file(multipartFile))
                 .andExpect(status().isBadRequest());
