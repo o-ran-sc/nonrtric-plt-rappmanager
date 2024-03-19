@@ -18,7 +18,7 @@ The installation scripts do not handle the required installations listed below.
 > **"dev"** mode installation can be used to deploy snapshot images of rApp Manager and DME Participant.
 To initiate the dev mode installation, provide "dev" as an argument when executing the script.
 
-All the components can be installed as shown below,
+All the components can be installed as shown below("sudo" is necessary when the user lacks root privileges.),
 
 ```./install-all.sh``` (or) ```./install-all.sh dev```
 

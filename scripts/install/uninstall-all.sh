@@ -20,6 +20,7 @@
 
 echo "######### Uninstalling Rapp Manager #########"
 
+ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 echo "Uninstalling ACM Components..."
 helm uninstall csit-policy -n default
 
@@ -39,6 +40,18 @@ helm uninstall istiod -n istio-system
 helm uninstall istio-base -n istio-system
 kubectl delete ns istio-system
 
+# Cleanup ChartMuseum
+CM_PID_FILE="$ROOT_DIR/CM_PID.txt"
+if [ -f $CM_PID_FILE ]; then
+  echo "Cleaning up ChartMuseum..."
+  PID=$(cat "$CM_PID_FILE")
+  echo "Killing ChartMuseum with PID $PID"
+  kill $PID
+  rm $CM_PID_FILE
+  echo "ChartMuseum cleanup completed"
+fi
+
+rm -rf "$ROOT_DIR/chartstorage"
 rm -rf dep/
 rm -rf docker/
 
