@@ -4,7 +4,7 @@
     "apiList": [
       { "apiName": "Hello World API Set 1" }
     ],
-    "notificationDestination": "NOT USED here",
+    "notificationDestination": "http://NOT_USED_HERE",
     "onboardingInformation": {
       "apiInvokerPublicKey": "{PUBLIC_KEY_INVOKER_1}",
       "apiInvokerCertificate": "apiInvokerCertificate"
