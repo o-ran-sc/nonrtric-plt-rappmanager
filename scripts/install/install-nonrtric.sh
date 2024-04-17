@@ -22,8 +22,8 @@ echo "######### Installing NONRTRIC components #########"
 
 git clone "https://gerrit.o-ran-sc.org/r/it/dep"
 
-ENABLED_SERVICES=(installPms installA1controller installA1simulator installInformationservice installrAppmanager installDmeParticipant)
-DISABLED_SERVICES=(installControlpanel installRappcatalogueservice installRappcatalogueenhancedservice installNonrtricgateway installKong installDmaapadapterservice installDmaapmediatorservice installHelmmanager installOrufhrecovery installRansliceassurance installRanpm)
+ENABLED_SERVICES=(installPms installA1controller installA1simulator installInformationservice installrAppmanager installDmeParticipant installCapifcore installServicemanager installKong)
+DISABLED_SERVICES=(installControlpanel installRappcatalogueservice installRappcatalogueenhancedservice installNonrtricgateway installDmaapadapterservice installDmaapmediatorservice installHelmmanager installOrufhrecovery installRansliceassurance installRanpm)
 
 RECEIPE_FILE="dep/nonrtric/RECIPE_EXAMPLE/example_recipe.yaml"
 
