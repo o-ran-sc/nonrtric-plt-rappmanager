@@ -12,7 +12,7 @@
             {
               "resourceName": "sklearn",
               "commType": "REQUEST_RESPONSE",
-              "uri": "v1/models/sklearn-iris:predict",
+              "uri": "models/sklearn-iris:predict",
               "operations": [
                 "POST"
               ]
