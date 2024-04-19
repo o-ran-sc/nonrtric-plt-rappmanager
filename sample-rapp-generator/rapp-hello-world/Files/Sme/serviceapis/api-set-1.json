@@ -7,7 +7,7 @@
       "description": "Simple Hello World API",
       "versions": [
         {
-          "apiVersion": "v1",
+          "apiVersion": "",
           "resources": [
             {
               "resourceName": "helloworld",
@@ -23,7 +23,7 @@
       "protocol": "HTTP_1_1",
       "interfaceDescriptions": [
         {
-          "ipv4Addr": "hello-world-chart.nonrtric.svc.cluster.local",
+          "ipv4Addr": "hello-world-chart-service.nonrtric.svc.cluster.local",
           "port": 8080
         }
       ]
