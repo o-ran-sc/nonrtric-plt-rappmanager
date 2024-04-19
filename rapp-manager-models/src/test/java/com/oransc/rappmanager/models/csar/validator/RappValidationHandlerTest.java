@@ -103,7 +103,7 @@ class RappValidationHandlerTest {
                 Arguments.of(multipartFileNoTosca, "rApp package missing a file TOSCA-Metadata/TOSCA.meta"),
                 Arguments.of(multipartFileNoAsdYaml, "rApp package missing a file Definitions/asd.yaml"),
                 Arguments.of(multipartFileMissingArtifact,
-                        "rApp package missing a file Artifacts/Deployment/HELM/orufhrecovery-1.0.0.tgz"),
+                        "rApp package missing a file Artifacts/Deployment/HELM/hello-world-chart-0.1.0.tgz"),
                 Arguments.of(multipartFileNoComposition, errorMsgMissingAcmComposition));
     }
 

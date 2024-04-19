@@ -20,17 +20,17 @@ topology_template:
         application_name: rapp-all
         application_version: 1.0
       artifacts:
-        ransliceassurance:
+        helloworld:
           type: tosca.artifacts.asd.deploymentItem
-          file: "Artifacts/Deployment/HELM/ransliceassurance-1.0.0.tgz"
+          file: "Artifacts/Deployment/HELM/hello-world-chart-0.1.0.tgz"
           properties:
             artifact_type: "helm_chart"
             target_server: "chartmuseum"
             target_server_uri: "UPDATE_THIS_CHART_MUSEUM_POST_CHARTS_URI"
             item_id: 1
-        oru-app:
+        helloworld-sme-invoker:
           type: tosca.artifacts.asd.deploymentItem
-          file: "Artifacts/Deployment/HELM/orufhrecovery-1.0.0.tgz"
+          file: "Artifacts/Deployment/HELM/hello-world-sme-invoker-0.1.0.tgz"
           properties:
             artifact_type: "helm_chart"
             target_server: "chartmuseum"

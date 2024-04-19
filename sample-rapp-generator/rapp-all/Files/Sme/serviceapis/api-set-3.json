@@ -1,10 +1,10 @@
 {
-  "apiName": "Rapp API Set A",
-  "description": "Example A API of rApp",
+  "apiName": "Rapp API Set 3",
+  "description": "Example C API of rApp",
   "aefProfiles": [
     {
-      "aefId": "Hello World as AEF",
-      "description": "Simple Hello World API",
+      "aefId": "Hello World subpath as AEF",
+      "description": "Simple Hello World API for Subpath",
       "versions": [
         {
           "apiVersion": "",
@@ -12,7 +12,7 @@
             {
               "resourceName": "helloworld",
               "commType": "REQUEST_RESPONSE",
-              "uri": "/helloworld/v1",
+              "uri": "/helloworld/v1/subpath1",
               "operations": [
                 "GET"
               ]
