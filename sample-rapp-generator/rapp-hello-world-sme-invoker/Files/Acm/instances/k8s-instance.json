@@ -25,8 +25,8 @@
             "address": "UPDATE_THIS_CHART_MUSEUM_GET_CHARTS_URI"
           },
           "overrideParams": {
-            "appId": "DO_NOT_CHANGE_THIS_RAPP_INSTANCE_ID",
-            "smeDiscoveryEndpoint": "DO_NOT_CHANGE_THIS_SME_DISCOVERY_ENDPOINT"
+            "environment.appId": "DO_NOT_CHANGE_THIS_RAPP_INSTANCE_ID",
+            "environment.smeDiscoveryEndpoint": "DO_NOT_CHANGE_THIS_SME_DISCOVERY_ENDPOINT"
           }
         }
       }
