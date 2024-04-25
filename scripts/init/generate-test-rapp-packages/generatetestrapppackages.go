@@ -223,7 +223,7 @@ func main() {
 	fmt.Println("Generating invalid rApp package without Artifacts...")
 	INVALID_RAPP_PACKAGE_MISSING_ARTIFACT_FOLDER_NAME := "invalid-rapp-package-missing-artifact"
 	cp.Copy(RAPP_BASE_PACKAGE, INVALID_RAPP_PACKAGE_MISSING_ARTIFACT_FOLDER_NAME)
-	os.Remove(INVALID_RAPP_PACKAGE_MISSING_ARTIFACT_FOLDER_NAME + "/Artifacts/Deployment/HELM/orufhrecovery-1.0.0.tgz")
+	os.Remove(INVALID_RAPP_PACKAGE_MISSING_ARTIFACT_FOLDER_NAME + "/Artifacts/Deployment/HELM/hello-world-chart-0.1.0.tgz")
 	createCsarAndCopy(INVALID_RAPP_PACKAGE_MISSING_ARTIFACT_FOLDER_NAME, MODELS_TEST_RESOURCES, APPLICATION_TEST_RESOURCES)
 
 	fmt.Println("Generating invalid rApp package with empty asd yaml...")

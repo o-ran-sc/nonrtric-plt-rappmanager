@@ -24,29 +24,56 @@
         ]
       }
     },
-    "709c62b3-8918-41b9-a747-d21eb79c6c21": {
-      "id": "709c62b3-8918-41b9-a747-d21eb79c6c21",
+    "d7be552e-bcc5-4478-b64d-797dbaec8f55": {
+      "id": "d7be552e-bcc5-4478-b64d-797dbaec8f55",
       "definition": {
         "name": "onap.policy.clamp.ac.element.K8S_StarterAutomationCompositionElement",
         "version": "1.2.3"
       },
-      "description": "Starter Automation Composition Element for the Demo",
+      "description": "Starter Automation Composition Element for the Hello World",
       "properties": {
         "chart": {
           "chartId": {
-            "name": "ransliceassurance",
-            "version": "1.0.0"
+            "name": "hello-world-chart",
+            "version": "0.1.0"
           },
           "namespace": "nonrtric",
-          "releaseName": "ransliceassurance",
-          "podName": "ransliceassurance",
+          "releaseName": "hello-world-chart",
+          "podName": "hello-world-chart",
           "repository": {
             "repoName": "local",
             "address": "UPDATE_THIS_CHART_MUSEUM_GET_CHARTS_URI"
           },
           "overrideParams": {
-            "appId": "DO_NOT_CHANGE_THIS_RAPP_INSTANCE_ID",
-            "smeDiscoveryEndpoint": "DO_NOT_CHANGE_THIS_SME_DISCOVERY_ENDPOINT"
+            "environment.appId": "DO_NOT_CHANGE_THIS_RAPP_INSTANCE_ID",
+            "environment.smeDiscoveryEndpoint": "DO_NOT_CHANGE_THIS_SME_DISCOVERY_ENDPOINT"
+          }
+        }
+      }
+    },
+    "d7be552e-bdd5-2233-b64d-797dbaec8f55": {
+      "id": "d7be552e-bdd5-2233-b64d-797dbaec8f55",
+      "definition": {
+        "name": "onap.policy.clamp.ac.element.K8S_StarterAutomationCompositionElement",
+        "version": "1.2.3"
+      },
+      "description": "Starter Automation Composition Element for the Hello World",
+      "properties": {
+        "chart": {
+          "chartId": {
+            "name": "hello-world-sme-invoker",
+            "version": "0.1.0"
+          },
+          "namespace": "nonrtric",
+          "releaseName": "hello-world-sme-invoker",
+          "podName": "hello-world-sme-invoker",
+          "repository": {
+            "repoName": "local",
+            "address": "UPDATE_THIS_CHART_MUSEUM_GET_CHARTS_URI"
+          },
+          "overrideParams": {
+            "environment.appId": "DO_NOT_CHANGE_THIS_RAPP_INSTANCE_ID",
+            "environment.smeDiscoveryEndpoint": "DO_NOT_CHANGE_THIS_SME_DISCOVERY_ENDPOINT"
           }
         }
       }

@@ -97,8 +97,8 @@ class RappCsarConfigurationHandlerTest {
         assertEquals(jsonNode.get("compositionId").asText(), String.valueOf(compositionId));
         JsonNode overrideParamsNode = jsonNode.at("/elements").elements().next().at("/properties/chart/overrideParams");
         System.out.println(overrideParamsNode);
-        assertEquals(overrideParamsNode.get("appId").asText(), rappInstance.getRappInstanceId().toString());
-        assertEquals(overrideParamsNode.get("smeDiscoveryEndpoint").asText(),
+        assertEquals(overrideParamsNode.get("environment.appId").asText(), rappInstance.getRappInstanceId().toString());
+        assertEquals(overrideParamsNode.get("environment.smeDiscoveryEndpoint").asText(),
                 rappsEnvironmentConfiguration.getSmeDiscoveryEndpoint());
     }
 
@@ -106,7 +106,7 @@ class RappCsarConfigurationHandlerTest {
     void testFileListing() {
         File file = new File(validCsarFileLocation + validRappFile);
         Set<String> fileListFromCsar = rappCsarConfigurationHandler.getFileListFromCsar(file, "Files/Sme/serviceapis/");
-        assertThat(fileListFromCsar).hasSize(2);
+        assertThat(fileListFromCsar).hasSize(3);
     }
 
     @Test
@@ -142,7 +142,7 @@ class RappCsarConfigurationHandlerTest {
         assertNotNull(rappResources.getAcm().getCompositionDefinitions());
         assertThat(rappResources.getAcm().getCompositionInstances()).hasSize(4);
         assertThat(rappResources.getSme().getProviderFunctions()).hasSize(3);
-        assertThat(rappResources.getSme().getServiceApis()).hasSize(2);
+        assertThat(rappResources.getSme().getServiceApis()).hasSize(3);
         assertThat(rappResources.getSme().getInvokers()).hasSize(2);
         assertThat(rappResources.getDme().getProducerInfoTypes()).hasSize(2);
         assertThat(rappResources.getDme().getConsumerInfoTypes()).hasSize(2);
