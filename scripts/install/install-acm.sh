@@ -52,6 +52,9 @@ function wait_for_pods_to_be_running() {
 }
 
 git clone "https://gerrit.onap.org/r/policy/docker"
+pushd docker
+git fetch https://gerrit.onap.org/r/policy/docker refs/changes/46/137546/1 && git checkout FETCH_HEAD
+popd
 
 CWD=$(pwd)
 export WORKSPACE="$CWD/docker"
