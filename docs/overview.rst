@@ -1,6 +1,6 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. SPDX-License-Identifier: CC-BY-4.0
-.. Copyright (C) 2023 OpenInfra Foundation Europe. All rights reserved.
+.. Copyright (C) 2023-2024 OpenInfra Foundation Europe. All rights reserved.
 
 rApp Manager
 ~~~~~~~~~~~~
@@ -60,10 +60,12 @@ Information type, and Data producer/consumer information can be provided as part
 
 SME
 ---
+Service Manager is a Go implementation of a service that calls the CAPIF Core function. When publishing a service it creates a Kong route and Kong service.
+
 The CAPIF stands for Common API framework and it was developed by 3GPP to enable a unified Northbound API framework across 3GPP network functions, and to ensure that there is a single and harmonized approach for API development.
 More details about SME can be found in `SME <https://docs.o-ran-sc.org/projects/o-ran-sc-nonrtric-plt-sme/en/latest/overview.html>`_.
 
-It is integrated with rApp manager to enable the rApp to expose/access/discover endpoints.
+Service Manager is integrated with rApp manager to enable the rApp to expose/access/discover endpoints.
 
 Service exposure/access related configurations can be provided as part of rApp package and the package structure can be found in `Sample rApp package structure`_.
 

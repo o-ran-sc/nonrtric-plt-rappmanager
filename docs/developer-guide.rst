@@ -1,6 +1,6 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. SPDX-License-Identifier: CC-BY-4.0
-.. Copyright (C) 2023 OpenInfra Foundation Europe. All rights reserved.
+.. Copyright (C) 2023-2024 OpenInfra Foundation Europe. All rights reserved.
 
 Developer Guide
 ===============
@@ -28,8 +28,9 @@ There are a few service endpoints that needs to be available to run. These are r
 The following properties have to be modified:
 
 * rappmanager.acm.baseurl=http://policy-clamp-runtime-acm.default:6969/onap/policy/clamp/acm/v2/
-* rappmanager.sme.baseurl=http://capifcore:8090
+* rappmanager.sme.baseurl=http://servicemanager:8095
 * rappmanager.dme.baseurl=http://informationservice:9082
+* rappmanager.rapps.env.smeDiscoveryEndpoint=http://servicemanager:8095/service-apis/v1/allServiceAPIs
 
 
 Start in Docker

@@ -1,18 +1,18 @@
 @startuml
 participant "rApp Manager"
 participant "ACM Runtime"
-participant "CAPIF"
+participant "SME"
 
 autonumber
 
 group Application Startup
-"rApp Manager"->"CAPIF": Create "rApp Manager" as AMF
+"rApp Manager"->"SME": Create "rApp Manager" as AMF
 end
 
 autonumber
 
 group Application Stop
-"rApp Manager"->"CAPIF": Delete "rApp Manager" as AMF
+"rApp Manager"->"SME": Delete "rApp Manager" as AMF
 end
 
 @enduml

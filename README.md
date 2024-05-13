@@ -37,9 +37,9 @@ ONAP ACM is used here as a backend of rApp manager to lifecycle manage the deplo
 ONAP ACM related details can be found [here](https://docs.onap.org/projects/onap-policy-parent/en/london/clamp/clamp.html).
 
 
-### Integration of SME (CAPIF)
+### Integration of SME (Service Manager)
 
-This integration is based on the CAPIF function developed as part of O-RAN SC. It is available [here](https://github.com/o-ran-sc/nonrtric-plt-sme/blob/master/capifcore/README.md)
+This integration is based on the Service Manager function developed as part of O-RAN SC. It is available [here](https://github.com/o-ran-sc/nonrtric-plt-sme/blob/master/servicemanager/README.md)
 
 ### Integration of DME (ICS)
 
