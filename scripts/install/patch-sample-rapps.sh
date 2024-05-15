@@ -45,4 +45,12 @@ for file in $(find $WORKSPACE -type f -name "*.json"); do
   fi
 done
 
+echo "Replacing Machine IP in json/xml files....."
+for file in $(find $WORKSPACE -type f \( -name "*.json" -o -name "*.xml" \)); do
+  sed -i "s|UPDATE_THIS_MACHINE_IP|${IP_ADDRESS}|g" "$file"
+  if grep -q "$IP_ADDRESS" "$file"; then
+    echo "$file is updated."
+  fi
+done
+
 echo "Patching Sample rApps completed."

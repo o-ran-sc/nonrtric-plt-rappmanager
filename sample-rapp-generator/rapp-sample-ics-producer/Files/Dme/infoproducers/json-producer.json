@@ -1,0 +1,7 @@
+{
+  "info_producer_supervision_callback_url": "http://UPDATE_THIS_MACHINE_IP:30080/producer/supervision",
+  "supported_info_types": [
+    "json-type1"
+  ],
+  "info_job_callback_url": "http://UPDATE_THIS_MACHINE_IP:30080/producer/job"
+}
