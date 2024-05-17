@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "74ba27f2_3ab975f8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002433
+      },
+      "writtenOn": "2024-05-17T14:12:14Z",
+      "side": 1,
+      "message": "The script will just add in the csar both the packaged and non-packaged helm charts (Not Ideal).\nBut if there are any changes to the charts, running the script will override the packaged helm chart, so in this case we don\u0027t need to upload binary packaged charts.",
+      "revId": "53f3c2cde05b4c08fb0f0e0e4ab5b1775997e48e",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
