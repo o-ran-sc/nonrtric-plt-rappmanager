@@ -6,7 +6,7 @@
 ::  you may not use this file except in compliance with the License.
 ::  You may obtain a copy of the License at
 ::
-::       http:\\www.apache.org\licenses\LICENSE-2.0
+::       http://www.apache.org/licenses/LICENSE-2.0
 ::
 ::  Unless required by applicable law or agreed to in writing, software
 ::  distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,9 +23,24 @@ SET DIRECTORY=%1
 if %DIRECTORY:~-1%==\ (
     SET DIRECTORY=%DIRECTORY:~0,-1%
 )
+SET PACKAGENAME=%DIRECTORY%.csar
+SET HELM_DIR=%DIRECTORY%\Artifacts\Deployment\HELM
+SET CSARFILE=%DIRECTORY%.csar
+SET ZIPFILE=%DIRECTORY%.zip
+
 if exist %DIRECTORY% (
-    SET CSARFILE=%DIRECTORY%.csar
-    SET ZIPFILE=%DIRECTORY%.zip
+    if exist "%HELM_DIR%" (
+        echo Helm directory exists: %HELM_DIR%
+        for /d %%D in ("%HELM_DIR%\*") do (
+            echo Checking directory: %%D
+            echo Packaging Helm chart in directory: %%~nxD
+            helm package %%D
+        )
+    ) else (
+        echo Helm directory %HELM_DIR% doesn't exist.
+        exit /b 1
+    )
+
     del %CSARFILE% 2>nul
     pushd %DIRECTORY%
     tar -a -cf ..\%ZIPFILE% *
@@ -36,6 +51,3 @@ if exist %DIRECTORY% (
     @echo Directory %DIRECTORY% doesn't exists.
 )
 goto :eof
-
-:usage
-@echo USAGE: %0% ^<rApp-resource-folder-name^>
