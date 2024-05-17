@@ -28,15 +28,39 @@ if ! command -v zip &> /dev/null; then
   exit 1
 fi
 
+if ! command -v helm &> /dev/null; then
+  echo "Helm command not found. Please install helm to proceed."
+  exit 1
+fi
+
 DIRECTORY=${1%/}
 PACKAGENAME="$DIRECTORY.csar"
+HELM_DIR="$DIRECTORY/Artifacts/Deployment/HELM"
+EXCLUDE_DIRS=()
+
+checkHelmPackage() {
+  if [ -d "$HELM_DIR" ]; then
+    for dir in "$HELM_DIR"/*/ ; do
+      if [ -d "$dir" ]; then
+        HELM_PACKAGE_NAME=$(basename "$dir")
+        pushd "$HELM_DIR"
+        helm package "$HELM_PACKAGE_NAME"
+        popd
+        EXCLUDE_DIRS+=("*/$HELM_PACKAGE_NAME/*")
+      fi
+    done
+  else
+    echo "Helm directory $HELM_DIR doesn't exist."
+  fi
+}
 
 if [ -d "$DIRECTORY" ]; then
-  rm $PACKAGENAME 2> /dev/null
+  checkHelmPackage
+  rm -f $PACKAGENAME 2> /dev/null
   pushd $DIRECTORY
-  zip -r ../$PACKAGENAME *
+  zip -r ../$PACKAGENAME * $(printf " -x %s" "${EXCLUDE_DIRS[@]}")
   popd
   echo -e "rApp package $PACKAGENAME generated."
 else
-  echo "Directory $DIRECTORY doesn't exists."
+  echo "Directory $DIRECTORY doesn't exist."
 fi
