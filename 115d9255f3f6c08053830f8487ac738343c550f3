@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "62f92cd5_17f8bfbb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002433
+      },
+      "writtenOn": "2024-05-21T14:10:31Z",
+      "side": 1,
+      "message": "rAppManger onboards the rapp but still some work needed to deploy it and give right dme info.\nLOGS:\n\ncurl -X POST --form \u0027file\u003d@\"rapp-sample-ics-producer.csar\"\u0027 http://10.233.2.34:8080/rapps/sample\n\nGetting rappmanger /rapps\n\ncurl http://10.233.2.34:8080/rapps\n[\n  {\n    \"rappId\": \"f79cf5de-b6d9-4e28-90fb-86365dd8bc6a\",\n    \"name\": \"sample\",\n    \"state\": \"COMMISSIONED\",\n    \"packageLocation\": \"/opt/app/rappmanager/csar\",\n    \"packageName\": \"rapp-sample-ics-producer.csar\",\n    \"rappResources\": {\n      \"acm\": {\n        \"compositionDefinitions\": \"compositions\",\n        \"compositionInstances\": [\n          \"k8s-instance\"\n        ]\n      },\n      \"sme\": {\n        \"providerFunctions\": [],\n        \"serviceApis\": [],\n        \"invokers\": []\n      },\n      \"dme\": {\n        \"producerInfoTypes\": [\n          \"xml-type1\",\n          \"json-type1\"\n        ],\n        \"consumerInfoTypes\": [],\n        \"infoProducers\": [\n          \"xml-producer\",\n          \"json-producer\"\n        ],\n        \"infoConsumers\": []\n      }\n    },\n    \"rappInstances\": {}\n  }\n]",
+      "revId": "115d9255f3f6c08053830f8487ac738343c550f3",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
