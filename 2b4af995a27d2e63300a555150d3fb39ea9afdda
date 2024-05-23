@@ -16,6 +16,23 @@
       "message": "Successfully deploy kafka-producer using rAppManger\nUsing kong-nonrtric-kong-proxy loadbalancer\n\n1. Onboard rApp \nPOST {{HOST}}:32080/rapps/{{rappId}} form-data file:rapp-sample-ics-producer.csar\n\n2. Prime rApp\nPUT{{HOST}}:32080/rapps/{{rappId}} primeOrder: PRIME\n\n3. Create rApp-instance\nPOST {{HOST}}:32080/rapps/{{rappId}}/instance \n{\n    \"acm\":{\n        \"instance\": \"k8s-instance\"\n    },\n    \"sme\":{\n    },\n    \"dme\": {\n        \"infoTypesProducer\": [\"json-type1\"],\n        \"infoProducer\": \"json-producer\"\n    }\n}\n\n4. Deploy rApp-instance\nPUT {{HOST}}:32080/rapps/{{rappId}}/instance/{{rappInstanceId}} deployOrder: DEPLOY",
       "revId": "2b4af995a27d2e63300a555150d3fb39ea9afdda",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eff6e84d_a72b0b58",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002433
+      },
+      "writtenOn": "2024-05-23T13:57:08Z",
+      "side": 1,
+      "message": "If we merge https://gerrit.o-ran-sc.org/r/c/nonrtric/plt/rappmanager/+/12914\nI can push the charts instead of the binary file",
+      "revId": "2b4af995a27d2e63300a555150d3fb39ea9afdda",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
