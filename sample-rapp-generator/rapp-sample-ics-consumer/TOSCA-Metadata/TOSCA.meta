@@ -1,0 +1,5 @@
+TOSCA-Meta-File-Version: 1.0
+CSAR-Version: 1.0
+Created-By: Ericsson Software Technology (O-RAN SC NONRTRIC team)
+Entry-Definitions: Definitions/asd.yaml
+ETSI-Entry-Manifest: asd.mf
