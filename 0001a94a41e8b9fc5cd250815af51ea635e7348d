@@ -108,6 +108,30 @@
       },
       "revId": "0001a94a41e8b9fc5cd250815af51ea635e7348d",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0af754d4_da5dca66",
+        "filename": "sample-rapp-generator/rapp-sample-ics-producer/Files/Dme/producerinfotypes/json-type1.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2024-05-24T14:45:00Z",
+      "side": 1,
+      "message": "File name can be changed to something related to this producer infotype.",
+      "parentUuid": "3ff6b72c_2ddce705",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 1
+      },
+      "revId": "0001a94a41e8b9fc5cd250815af51ea635e7348d",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
