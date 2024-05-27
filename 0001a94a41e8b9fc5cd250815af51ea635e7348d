@@ -18,6 +18,41 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6942c2a8_421547f6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002433
+      },
+      "writtenOn": "2024-05-27T10:18:50Z",
+      "side": 1,
+      "message": "changes in the next patch:\nRemoved unused infotypes xml-*\nRenamed infoproducer/infotype\nChanged acm UUID to random one\nUpdated asd file paths",
+      "revId": "0001a94a41e8b9fc5cd250815af51ea635e7348d",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "99f1cc13_ac2f31d2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002433
+      },
+      "writtenOn": "2024-05-27T10:18:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7d2e61e4_b3aad631",
+      "revId": "0001a94a41e8b9fc5cd250815af51ea635e7348d",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a2795d5a_0bcf1cfc",
@@ -31,6 +66,30 @@
       "writtenOn": "2024-05-24T14:25:12Z",
       "side": 1,
       "message": "It should be better to generate new uuid(everytime we create new instance). It works as long as the ACM doesn\u0027t contains an element with same UUID. rapp-hello-world also use the same uuid.",
+      "range": {
+        "startLine": 7,
+        "startChar": 5,
+        "endLine": 7,
+        "endChar": 41
+      },
+      "revId": "0001a94a41e8b9fc5cd250815af51ea635e7348d",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0e39c4a_1cfbe262",
+        "filename": "sample-rapp-generator/rapp-sample-ics-producer/Files/Acm/instances/k8s-instance.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1002433
+      },
+      "writtenOn": "2024-05-27T10:18:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a2795d5a_0bcf1cfc",
       "range": {
         "startLine": 7,
         "startChar": 5,
@@ -64,6 +123,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "60bba75b_87629c1f",
+        "filename": "sample-rapp-generator/rapp-sample-ics-producer/Files/Acm/instances/k8s-instance.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1002433
+      },
+      "writtenOn": "2024-05-27T10:18:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7669f8f_0caeb262",
+      "range": {
+        "startLine": 27,
+        "startChar": 11,
+        "endLine": 30,
+        "endChar": 11
+      },
+      "revId": "0001a94a41e8b9fc5cd250815af51ea635e7348d",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b92d7a02_626d9f5b",
@@ -77,6 +160,30 @@
       "writtenOn": "2024-05-24T14:25:12Z",
       "side": 1,
       "message": "File name can be changed to something related to this producer.",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 1
+      },
+      "revId": "0001a94a41e8b9fc5cd250815af51ea635e7348d",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "be8eba5f_9825d71c",
+        "filename": "sample-rapp-generator/rapp-sample-ics-producer/Files/Dme/infoproducers/json-producer.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1002433
+      },
+      "writtenOn": "2024-05-27T10:18:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b92d7a02_626d9f5b",
       "range": {
         "startLine": 1,
         "startChar": 0,
@@ -124,6 +231,30 @@
       "side": 1,
       "message": "File name can be changed to something related to this producer infotype.",
       "parentUuid": "3ff6b72c_2ddce705",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 1
+      },
+      "revId": "0001a94a41e8b9fc5cd250815af51ea635e7348d",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "84b53a45_7b8c3e23",
+        "filename": "sample-rapp-generator/rapp-sample-ics-producer/Files/Dme/producerinfotypes/json-type1.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1002433
+      },
+      "writtenOn": "2024-05-27T10:18:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0af754d4_da5dca66",
       "range": {
         "startLine": 1,
         "startChar": 0,
