@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "57be121b_19ae5513",
+        "filename": "docs/developer-guide.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2024-05-30T10:17:14Z",
+      "side": 1,
+      "message": "This only build rApp manager application. If there is code changes made in other modules, it will not be compiled if we run the \"mvn clean install\" only in rapp-manager-application. rapp-manager-application depends on some other modules.",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 148
+      },
+      "revId": "d48369c10f103ec41ec303ac95aa5fa64e694fed",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
