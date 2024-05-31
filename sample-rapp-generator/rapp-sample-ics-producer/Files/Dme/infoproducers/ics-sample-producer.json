@@ -1,0 +1,7 @@
+{
+  "info_producer_supervision_callback_url": "http://kafka-producer:8080/producer/supervision",
+  "supported_info_types": [
+    "type1"
+  ],
+  "info_job_callback_url": "http://kafka-producer:8080/producer/job"
+}
