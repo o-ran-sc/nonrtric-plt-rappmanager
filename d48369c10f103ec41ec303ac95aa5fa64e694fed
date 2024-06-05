@@ -22,6 +22,30 @@
       },
       "revId": "d48369c10f103ec41ec303ac95aa5fa64e694fed",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "44d1483d_d328b18f",
+        "filename": "docs/developer-guide.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1002433
+      },
+      "writtenOn": "2024-06-05T10:12:12Z",
+      "side": 1,
+      "message": "Right, maybe this line is ambiguous.\nMy point was if you already built dependencies and you are making changes to rapp-manager-application then you can build only the last one.\n\nSo I can remove this line, it does not add any extra information",
+      "parentUuid": "57be121b_19ae5513",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 148
+      },
+      "revId": "d48369c10f103ec41ec303ac95aa5fa64e694fed",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
