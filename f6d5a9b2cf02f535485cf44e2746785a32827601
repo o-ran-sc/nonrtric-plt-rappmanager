@@ -22,6 +22,30 @@
       },
       "revId": "f6d5a9b2cf02f535485cf44e2746785a32827601",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa793251_f9144345",
+        "filename": "sample-rapp-generator/rapp-sample-ics-consumer/asd.mf",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1002433
+      },
+      "writtenOn": "2024-06-05T15:26:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf66e4fe_ddf3d80d",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 46
+      },
+      "revId": "f6d5a9b2cf02f535485cf44e2746785a32827601",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
