@@ -27,27 +27,32 @@ command in the *rappmanager/rapp-manager-application* directory:
 There are a few service endpoints that needs to be available to run. These are referred to from the application.yaml file.
 The following properties have to be modified:
 
-* rappmanager.acm.baseurl=http://policy-clamp-runtime-acm.default:6969/onap/policy/clamp/acm/v2/
-* rappmanager.sme.baseurl=http://servicemanager:8095
-* rappmanager.dme.baseurl=http://informationservice:9082
-* rappmanager.rapps.env.smeDiscoveryEndpoint=http://servicemanager:8095/service-apis/v1/allServiceAPIs
+.. code-block:: yaml
+
+    rappmanager.acm.baseurl=http://policy-clamp-runtime-acm.default:6969/onap/policy/clamp/acm/v2/
+    rappmanager.sme.baseurl=http://servicemanager:8095
+    rappmanager.dme.baseurl=http://informationservice:9082
+    rappmanager.rapps.env.smeDiscoveryEndpoint=http://servicemanager:8095/service-apis/v1/allServiceAPIs
 
 
 Start in Docker
 +++++++++++++++
 
-To build and deploy the rApp Manager, go to the *rappmanager/rapp-manager-application* folder and run the
+To build and deploy the rApp Manager, go to the *rappmanager* folder and run the
 following command:
 
     +-----------------------------+
     | mvn clean install           |
     +-----------------------------+
 
+.. note::
+    The rApp packages for the unit tests are generated as part of the build process at the rappmanager level.
+
 Then start the container by running the following command:
 
-    +-------------------------------------+
-    | docker run nonrtric-plt-rappmanager |
-    +-------------------------------------+
+    +----------------------------------------------+
+    | docker run o-ran-sc/nonrtric-plt-rappmanager |
+    +----------------------------------------------+
 
 Kubernetes deployment
 +++++++++++++++++++++
@@ -55,6 +60,8 @@ Kubernetes deployment
 Non-RT RIC can be also deployed in a Kubernetes cluster, `it/dep repository <https://gerrit.o-ran-sc.org/r/admin/repos/it/dep>`_.
 hosts deployment and integration artifacts. Instructions and helm charts to deploy the Non-RT-RIC functions in the
 OSC NONRTRIC integrated test environment can be found in the *./nonrtric* directory.
+
+The scripts located in *rappmanager/scripts/install* can be used for an automatic installation in the Kubernetes Cluster, see `Automatic Installation in Kubernetes <https://docs.o-ran-sc.org/projects/o-ran-sc-nonrtric-plt-rappmanager/en/latest/installation-guide.html>`_.
 
 For more information on installation of NonRT-RIC in Kubernetes, see `Deploy NONRTRIC in Kubernetes <https://wiki.o-ran-sc.org/display/RICNR/Release+I+-+Run+in+Kubernetes>`_.
 
