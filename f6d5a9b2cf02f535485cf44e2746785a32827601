@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bf66e4fe_ddf3d80d",
+        "filename": "sample-rapp-generator/rapp-sample-ics-consumer/asd.mf",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2024-06-05T10:19:26Z",
+      "side": 1,
+      "message": "ACM definition and instance files needs to be added here.\nFiles/ACM..",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 46
+      },
+      "revId": "f6d5a9b2cf02f535485cf44e2746785a32827601",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
