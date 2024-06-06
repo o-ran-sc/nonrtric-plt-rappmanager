@@ -1,0 +1,12 @@
+{
+  "info_type_id": "type1",
+  "job_owner": "demo",
+  "job_definition": {
+    "deliveryInfo": {
+      "topic": "mytopic",
+      "bootStrapServers": "kafka.default.svc.cluster.local:9092"
+    }
+  },
+  "job_result_uri": "http://kafka-producer:8080/producer/job",
+  "status_notification_uri": "http://kafka-producer:8080/producer/supervision"
+}
