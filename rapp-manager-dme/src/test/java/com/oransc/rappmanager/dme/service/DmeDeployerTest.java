@@ -148,7 +148,7 @@ class DmeDeployerTest {
     }
 
     @Test
-    void testPrimeRappWithoutDme() throws JsonProcessingException {
+    void testPrimeRappWithoutDme() {
         RappResources rappResources = rappDmeResourceBuilder.getResources();
         rappResources.setDme(null);
         Rapp rapp = getRapp(Optional.empty());
