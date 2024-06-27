@@ -18,7 +18,7 @@ from docs_conf.conf import *
 
 #branch configuration
 
-branch = 'latest'
+branch = 'j-release'
 baseurl = 'https://docs.o-ran-sc.org/projects/'
 selfurl = '%s/o-ran-sc-nonrtric-plt-rappmanager/en/%s' %(baseurl, branch)
 
