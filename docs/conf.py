@@ -18,8 +18,8 @@ from docs_conf.conf import *
 
 #branch configuration
 
-branch = 'latest'
-baseurl = 'https://docs.o-ran-sc.org/projects/'
+branch = 'j-release'
+baseurl = 'https://docs.o-ran-sc.org/projects'
 selfurl = '%s/o-ran-sc-nonrtric-plt-rappmanager/en/%s' %(baseurl, branch)
 
 linkcheck_ignore = [
@@ -46,5 +46,5 @@ redoc_uri = 'https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js
 intersphinx_mapping = {}
 
 intersphinx_mapping['nonrtric'] = ('%s/o-ran-sc-nonrtric/en/%s' %(baseurl, branch), None)
-intersphinx_mapping['participants'] = ('%s/participants' % selfurl, None)
+#intersphinx_mapping['participants'] = ('%s/participants' % selfurl, None)
 intersphinx_disabled_reftypes = ["*"]
