@@ -18,7 +18,7 @@ from docs_conf.conf import *
 
 #branch configuration
 
-branch = 'latest'
+branch = 'j-release'
 
 linkcheck_ignore = [
     'http://localhost.*',
