@@ -63,7 +63,7 @@ OSC NONRTRIC integrated test environment can be found in the *./nonrtric* direct
 
 The scripts located in *rappmanager/scripts/install* can be used for an automatic installation in the Kubernetes Cluster, see `Automatic Installation in Kubernetes <https://docs.o-ran-sc.org/projects/o-ran-sc-nonrtric-plt-rappmanager/en/latest/installation-guide.html>`_.
 
-For more information on installation of NonRT-RIC in Kubernetes, see `Deploy NONRTRIC in Kubernetes <https://wiki.o-ran-sc.org/display/RICNR/Release+I+-+Run+in+Kubernetes>`_.
+For more information on installation of NonRT-RIC in Kubernetes, see `Deploy NONRTRIC in Kubernetes <https://wiki.o-ran-sc.org/display/RICNR/Release+J+-+Run+in+Kubernetes>`_.
 
 For more information see `Integration and Testing documentation in the O-RAN-SC <https://docs.o-ran-sc.org/projects/o-ran-sc-it-dep/en/latest/index.html>`_.
 
