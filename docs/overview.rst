@@ -45,7 +45,8 @@ List of participants used by rApp manager sample rApp.
 * `A1PMS Participant <https://docs.onap.org/projects/onap-policy-parent/en/latest/clamp/acm/design-impl/participants/a1pms-participant.html>`_ - It interacts with A1PMS of NONRTRIC. It is capable of lifecycle managing A1PMS service.
 * `Kserve Participant <https://docs.onap.org/projects/onap-policy-parent/en/latest/clamp/acm/design-impl/participants/kserve-participant.html>`_ - It interacts with Kserve. It is capable of lifecycle managing Kserve inference service.
 * `Kubernetes Participant <https://docs.onap.org/projects/onap-policy-parent/en/latest/clamp/acm/design-impl/participants/k8s-participant.html>`_ - It interacts with Helm/Kubernetes. It is capable of lifecycle managing Helm charts. It expects the helm charts to be available in the mentioned repository as it doesn't handle the helm chart creation in the chart repository.
-
+* :doc:`DME Participant <participants:index>` -  It interacts with DME(ICS) of NONRTRIC. It is capable of lifecycle managing DME entities.
+  
 ACM composition and instance details can be provided as part of the rApp package and the package structure can be found in `Sample rApp package structure`_.
 
 DME
