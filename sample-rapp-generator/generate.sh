@@ -58,7 +58,7 @@ if [ -d "$DIRECTORY" ]; then
   checkHelmPackage
   rm -f $PACKAGENAME 2> /dev/null
   pushd $DIRECTORY
-  zip -r ../$PACKAGENAME * $(printf " -x %s" "${EXCLUDE_DIRS[@]}")
+  zip -r ../$PACKAGENAME * $([ ${#EXCLUDE_DIRS[@]} -gt 0 ] && printf " -x %s" "${EXCLUDE_DIRS[@]}")
   popd
   echo -e "rApp package $PACKAGENAME generated."
 else
