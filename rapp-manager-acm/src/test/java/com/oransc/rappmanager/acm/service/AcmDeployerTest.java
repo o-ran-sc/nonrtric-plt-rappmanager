@@ -102,14 +102,14 @@ class AcmDeployerTest {
     RappResourceBuilder rappResourceBuilder = new RappResourceBuilder();
     private final String validRappFile = "valid-rapp-package.csar";
     String validCsarFileLocation = "src/test/resources/";
-    String URI_ACM_COMPOSITIONS, URI_ACM_COMPOSITION, URI_ACM_INSTANCES, URI_ACM_INSTANCE;
+    String uriAcmCompositions, uriAcmComposition, uriAcmInstances, uriAcmInstance;
 
     @BeforeAll
     void initACMURI() {
-        URI_ACM_COMPOSITIONS = acmConfiguration.getBaseUrl() + "compositions";
-        URI_ACM_COMPOSITION = acmConfiguration.getBaseUrl() + "compositions/%s";
-        URI_ACM_INSTANCES = acmConfiguration.getBaseUrl() + "compositions/%s/instances";
-        URI_ACM_INSTANCE = acmConfiguration.getBaseUrl() + "compositions/%s/instances/%s";
+        uriAcmCompositions = acmConfiguration.getBaseUrl() + "compositions";
+        uriAcmComposition = acmConfiguration.getBaseUrl() + "compositions/%s";
+        uriAcmInstances = acmConfiguration.getBaseUrl() + "compositions/%s/instances";
+        uriAcmInstance = acmConfiguration.getBaseUrl() + "compositions/%s/instances/%s";
     }
 
     @BeforeEach
@@ -128,7 +128,7 @@ class AcmDeployerTest {
 
         CommissioningResponse commissioningResponseExpected = new CommissioningResponse();
         commissioningResponseExpected.setCompositionId(UUID.randomUUID());
-        mockServer.expect(ExpectedCount.once(), requestTo(URI_ACM_COMPOSITIONS)).andExpect(method(HttpMethod.POST))
+        mockServer.expect(ExpectedCount.once(), requestTo(uriAcmCompositions)).andExpect(method(HttpMethod.POST))
                 .andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                     .body(objectMapper.writeValueAsString(commissioningResponseExpected)));
         CommissioningResponse commissioningResponseActual = acmDeployer.createComposition(compositionPayload);
@@ -143,7 +143,7 @@ class AcmDeployerTest {
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED)
                             .rappResources(rappResources).build();
         String compositionPayload = rappCsarConfigurationHandler.getAcmCompositionPayload(rapp);
-        mockServer.expect(ExpectedCount.once(), requestTo(URI_ACM_COMPOSITIONS)).andExpect(method(HttpMethod.POST))
+        mockServer.expect(ExpectedCount.once(), requestTo(uriAcmCompositions)).andExpect(method(HttpMethod.POST))
                 .andRespond(withStatus(HttpStatus.BAD_GATEWAY));
         CommissioningResponse commissioningResponseActual = acmDeployer.createComposition(compositionPayload);
         mockServer.verify();
@@ -153,7 +153,7 @@ class AcmDeployerTest {
     @Test
     void testCompositionPriming() {
         UUID compositionId = UUID.randomUUID();
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmComposition, compositionId)))
                 .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.ACCEPTED));
 
         acmDeployer.primeACMComposition(compositionId, PrimeOrder.PRIME);
@@ -171,7 +171,7 @@ class AcmDeployerTest {
         rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
         InstantiationResponse instantiationResponse = new InstantiationResponse();
         instantiationResponse.setInstanceId(instanceId);
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_INSTANCES, compositionId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmInstances, compositionId)))
                 .andExpect(method(HttpMethod.POST)).andRespond(
                         withStatus(HttpStatus.ACCEPTED).contentType(MediaType.APPLICATION_JSON)
                                 .body(objectMapper.writeValueAsString(instantiationResponse)));
@@ -195,7 +195,7 @@ class AcmDeployerTest {
         rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
         InstantiationResponse instantiationResponse = new InstantiationResponse();
         instantiationResponse.setInstanceId(instanceId);
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_INSTANCES, compositionId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmInstances, compositionId)))
                 .andExpect(method(HttpMethod.POST)).andRespond(
                         withStatus(HttpStatus.ACCEPTED).contentType(MediaType.APPLICATION_JSON)
                                 .body(objectMapper.writeValueAsString(instantiationResponse)));
@@ -215,7 +215,7 @@ class AcmDeployerTest {
         RappInstance rappInstance = rappResourceBuilder.getRappInstance();
         rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
         InstantiationResponse instantiationResponse = new InstantiationResponse();
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_INSTANCES, compositionId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmInstances, compositionId)))
                 .andExpect(method(HttpMethod.POST)).andRespond(
                         withStatus(HttpStatus.ACCEPTED).contentType(MediaType.APPLICATION_JSON)
                                 .body(objectMapper.writeValueAsString(instantiationResponse)));
@@ -232,7 +232,7 @@ class AcmDeployerTest {
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
         RappInstance rappInstance = rappResourceBuilder.getRappInstance();
         rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_INSTANCES, compositionId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmInstances, compositionId)))
                 .andExpect(method(HttpMethod.POST)).andRespond(withStatus(HttpStatus.BAD_GATEWAY));
 
         boolean rappDeployStateActual = acmDeployer.deployRappInstance(rapp, rappInstance);
@@ -251,13 +251,13 @@ class AcmDeployerTest {
         expectAcmGetInstanceToReturnState(compositionId, instanceId, DeployState.DEPLOYED, LockState.LOCKED,
                 ExpectedCount.once());
 
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_INSTANCE, compositionId, instanceId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmInstance, compositionId, instanceId)))
                 .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.ACCEPTED));
 
         expectAcmGetInstanceToReturnState(compositionId, instanceId, DeployState.UNDEPLOYED, LockState.UNLOCKED,
                 ExpectedCount.once());
 
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_INSTANCE, compositionId, instanceId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmInstance, compositionId, instanceId)))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
 
         RappInstance rappInstance = rappResourceBuilder.getRappInstance();
@@ -279,7 +279,7 @@ class AcmDeployerTest {
         expectAcmGetInstanceToReturnState(compositionId, instanceId, DeployState.DEPLOYED, LockState.LOCKED,
                 ExpectedCount.once());
 
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_INSTANCE, compositionId, instanceId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmInstance, compositionId, instanceId)))
                 .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.ACCEPTED));
 
         expectAcmGetInstanceToReturnState(compositionId, instanceId, DeployState.UNDEPLOYING, LockState.UNLOCKING,
@@ -302,10 +302,10 @@ class AcmDeployerTest {
                             .state(RappState.PRIMED).build();
         expectAcmGetInstanceToReturnState(compositionId, instanceId, DeployState.DEPLOYED, LockState.LOCKED,
                 ExpectedCount.once());
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_INSTANCE, compositionId, instanceId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmInstance, compositionId, instanceId)))
                 .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.ACCEPTED));
         mockServer.expect(ExpectedCount.manyTimes(),
-                        requestTo(String.format(URI_ACM_INSTANCE, compositionId, instanceId))).andExpect(method(HttpMethod.GET))
+                        requestTo(String.format(uriAcmInstance, compositionId, instanceId))).andExpect(method(HttpMethod.GET))
                 .andRespond(withServerError());
         RappInstance rappInstance = rappResourceBuilder.getRappInstance();
         rappInstance.getAcm().setAcmInstanceId(instanceId);
@@ -342,7 +342,7 @@ class AcmDeployerTest {
         UUID compositionId = UUID.randomUUID();
         UUID instanceId = UUID.randomUUID();
 
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_INSTANCE, compositionId, instanceId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmInstance, compositionId, instanceId)))
                 .andExpect(method(HttpMethod.GET)).andRespond(withStatus(HttpStatus.BAD_GATEWAY));
 
         RappInstance rappInstance = rappResourceBuilder.getRappInstance();
@@ -363,10 +363,10 @@ class AcmDeployerTest {
 
         CommissioningResponse commissioningResponseExpected = new CommissioningResponse();
         commissioningResponseExpected.setCompositionId(compositionId);
-        mockServer.expect(ExpectedCount.once(), requestTo(URI_ACM_COMPOSITIONS)).andExpect(method(HttpMethod.POST))
+        mockServer.expect(ExpectedCount.once(), requestTo(uriAcmCompositions)).andExpect(method(HttpMethod.POST))
                 .andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                     .body(objectMapper.writeValueAsString(commissioningResponseExpected)));
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmComposition, compositionId)))
                 .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.ACCEPTED));
         boolean primeRapp = acmDeployer.primeRapp(rapp);
         mockServer.verify();
@@ -383,10 +383,10 @@ class AcmDeployerTest {
 
         CommissioningResponse commissioningResponseExpected = new CommissioningResponse();
         commissioningResponseExpected.setCompositionId(compositionId);
-        mockServer.expect(ExpectedCount.once(), requestTo(URI_ACM_COMPOSITIONS)).andExpect(method(HttpMethod.POST))
+        mockServer.expect(ExpectedCount.once(), requestTo(uriAcmCompositions)).andExpect(method(HttpMethod.POST))
                 .andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                     .body(objectMapper.writeValueAsString(commissioningResponseExpected)));
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmComposition, compositionId)))
                 .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
         boolean primeRapp = acmDeployer.primeRapp(rapp);
         mockServer.verify();
@@ -403,7 +403,7 @@ class AcmDeployerTest {
                             .compositionId(compositionId).rappResources(rappResources).build();
 
         CommissioningResponse commissioningResponseExpected = new CommissioningResponse();
-        mockServer.expect(ExpectedCount.once(), requestTo(URI_ACM_COMPOSITIONS)).andExpect(method(HttpMethod.POST))
+        mockServer.expect(ExpectedCount.once(), requestTo(uriAcmCompositions)).andExpect(method(HttpMethod.POST))
                 .andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                     .body(objectMapper.writeValueAsString(commissioningResponseExpected)));
         boolean primeRapp = acmDeployer.primeRapp(rapp);
@@ -421,15 +421,15 @@ class AcmDeployerTest {
 
         CommissioningResponse commissioningResponseExpected = new CommissioningResponse();
         commissioningResponseExpected.setCompositionId(compositionId);
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmComposition, compositionId)))
                 .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.OK));
         AutomationCompositionDefinition automationCompositionDefinition =
                 getAutomationCompositionDefinition(compositionId, AcTypeState.COMMISSIONED);
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmComposition, compositionId)))
                 .andExpect(method(HttpMethod.GET)).andRespond(
                         withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                 .body(objectMapper.writeValueAsString(automationCompositionDefinition)));
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmComposition, compositionId)))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(
                         withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                 .body(objectMapper.writeValueAsString(commissioningResponseExpected)));
@@ -449,20 +449,20 @@ class AcmDeployerTest {
 
         CommissioningResponse commissioningResponseExpected = new CommissioningResponse();
         commissioningResponseExpected.setCompositionId(compositionId);
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmComposition, compositionId)))
                 .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.OK));
         AutomationCompositionDefinition automationCompositionDefinition =
                 getAutomationCompositionDefinition(compositionId, AcTypeState.DEPRIMING);
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmComposition, compositionId)))
                 .andExpect(method(HttpMethod.GET)).andRespond(
                         withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                 .body(objectMapper.writeValueAsString(automationCompositionDefinition)));
         automationCompositionDefinition = getAutomationCompositionDefinition(compositionId, AcTypeState.COMMISSIONED);
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmComposition, compositionId)))
                 .andExpect(method(HttpMethod.GET)).andRespond(
                         withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                 .body(objectMapper.writeValueAsString(automationCompositionDefinition)));
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmComposition, compositionId)))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(
                         withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                 .body(objectMapper.writeValueAsString(commissioningResponseExpected)));
@@ -480,15 +480,15 @@ class AcmDeployerTest {
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED)
                             .compositionId(compositionId).rappResources(rappResources).build();
 
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmComposition, compositionId)))
                 .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.OK));
         AutomationCompositionDefinition automationCompositionDefinition =
                 getAutomationCompositionDefinition(compositionId, AcTypeState.COMMISSIONED);
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmComposition, compositionId)))
                 .andExpect(method(HttpMethod.GET)).andRespond(
                         withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                 .body(objectMapper.writeValueAsString(automationCompositionDefinition)));
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmComposition, compositionId)))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
 
         boolean deprimeRapp = acmDeployer.deprimeRapp(rapp);
@@ -504,11 +504,11 @@ class AcmDeployerTest {
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED)
                             .compositionId(compositionId).rappResources(rappResources).build();
 
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmComposition, compositionId)))
                 .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.OK));
         AutomationCompositionDefinition automationCompositionDefinition =
                 getAutomationCompositionDefinition(compositionId, AcTypeState.DEPRIMING);
-        mockServer.expect(ExpectedCount.manyTimes(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+        mockServer.expect(ExpectedCount.manyTimes(), requestTo(String.format(uriAcmComposition, compositionId)))
                 .andExpect(method(HttpMethod.GET)).andRespond(
                         withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                 .body(objectMapper.writeValueAsString(automationCompositionDefinition)));
@@ -526,9 +526,9 @@ class AcmDeployerTest {
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED)
                             .compositionId(compositionId).rappResources(rappResources).build();
 
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmComposition, compositionId)))
                 .andExpect(method(HttpMethod.PUT)).andRespond(withStatus(HttpStatus.OK));
-        mockServer.expect(ExpectedCount.manyTimes(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+        mockServer.expect(ExpectedCount.manyTimes(), requestTo(String.format(uriAcmComposition, compositionId)))
                 .andExpect(method(HttpMethod.GET)).andRespond(withServerError());
         boolean deprimeRapp = acmDeployer.deprimeRapp(rapp);
         mockServer.verify();
@@ -548,7 +548,7 @@ class AcmDeployerTest {
         UUID compositionId = UUID.randomUUID();
         CommissioningResponse commissioningResponseExpected = new CommissioningResponse();
         commissioningResponseExpected.setCompositionId(compositionId);
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmComposition, compositionId)))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(
                         withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                 .body(objectMapper.writeValueAsString(commissioningResponseExpected)));
@@ -562,7 +562,7 @@ class AcmDeployerTest {
         UUID compositionId = UUID.randomUUID();
         CommissioningResponse commissioningResponseExpected = new CommissioningResponse();
         commissioningResponseExpected.setCompositionId(compositionId);
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_ACM_COMPOSITION, compositionId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriAcmComposition, compositionId)))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
         CommissioningResponse commissioningResponse = acmDeployer.deleteComposition(compositionId);
         mockServer.verify();
@@ -577,7 +577,7 @@ class AcmDeployerTest {
         automationCompositionDeployed.setDeployState(deployState);
         automationCompositionDeployed.setLockState(lockState);
 
-        mockServer.expect(expectedCount, requestTo(String.format(URI_ACM_INSTANCE, compositionId, instanceId)))
+        mockServer.expect(expectedCount, requestTo(String.format(uriAcmInstance, compositionId, instanceId)))
                 .andExpect(method(HttpMethod.GET)).andRespond(
                         withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                 .body(objectMapper.writeValueAsString(automationCompositionDeployed)));

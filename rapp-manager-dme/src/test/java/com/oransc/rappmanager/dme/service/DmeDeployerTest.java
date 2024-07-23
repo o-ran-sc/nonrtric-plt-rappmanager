@@ -82,19 +82,19 @@ class DmeDeployerTest {
 
     RappDmeResourceBuilder rappDmeResourceBuilder = new RappDmeResourceBuilder();
 
-    private static final String validRappFile = "valid-rapp-package.csar";
-    private static final String validRappFileNewInfoType = "valid-rapp-package-new-info-type.csar";
+    private static final String VALID_RAPP_FILE = "valid-rapp-package.csar";
+    private static final String VALID_RAPP_FILE_NEW_INFO_TYPE = "valid-rapp-package-new-info-type.csar";
     String validCsarFileLocation = "src/test/resources/";
     ObjectMapper objectMapper = new ObjectMapper();
 
-    String URI_INFO_TYPES, URI_INFO_TYPE, URI_INFO_PRODUCER, URI_INFO_CONSUMER;
+    String uriInfoTypes, uriInfoType, uriInfoProducer, uriInfoConsumer;
 
     @BeforeAll
     void initACMURI() {
-        URI_INFO_TYPES = dmeConfiguration.getBaseUrl() + "/data-producer/v1/info-types";
-        URI_INFO_TYPE = dmeConfiguration.getBaseUrl() + "/data-producer/v1/info-types/%s";
-        URI_INFO_PRODUCER = dmeConfiguration.getBaseUrl() + "/data-producer/v1/info-producers/%s";
-        URI_INFO_CONSUMER = dmeConfiguration.getBaseUrl() + "/data-consumer/v1/info-jobs/%s";
+        uriInfoTypes = dmeConfiguration.getBaseUrl() + "/data-producer/v1/info-types";
+        uriInfoType = dmeConfiguration.getBaseUrl() + "/data-producer/v1/info-types/%s";
+        uriInfoProducer = dmeConfiguration.getBaseUrl() + "/data-producer/v1/info-producers/%s";
+        uriInfoConsumer = dmeConfiguration.getBaseUrl() + "/data-consumer/v1/info-jobs/%s";
     }
 
     @BeforeEach
@@ -111,11 +111,11 @@ class DmeDeployerTest {
         rapp.setPackageName(rappFile);
         rapp.setRappResources(rappResources);
         List<String> infoTypes = List.of();
-        mockServer.expect(ExpectedCount.once(), requestTo(URI_INFO_TYPES)).andExpect(method(HttpMethod.GET)).andRespond(
+        mockServer.expect(ExpectedCount.once(), requestTo(uriInfoTypes)).andExpect(method(HttpMethod.GET)).andRespond(
                 withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                         .body(objectMapper.writeValueAsString(infoTypes)));
         assertTrue(dmeDeployer.primeRapp(rapp));
-        if (rappFile.equals(validRappFileNewInfoType)) {
+        if (rappFile.equals(VALID_RAPP_FILE_NEW_INFO_TYPE)) {
             mockServer.verify();
         }
         if (isSuccess) {
@@ -126,22 +126,22 @@ class DmeDeployerTest {
     }
 
     private static Stream<Arguments> getSuccessParamsWithUnavailableInfoTypes() {
-        return Stream.of(Arguments.of(validRappFile, true), Arguments.of(validRappFileNewInfoType, false));
+        return Stream.of(Arguments.of(VALID_RAPP_FILE, true), Arguments.of(VALID_RAPP_FILE_NEW_INFO_TYPE, false));
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {validRappFile, validRappFileNewInfoType})
+    @ValueSource(strings = {VALID_RAPP_FILE, VALID_RAPP_FILE_NEW_INFO_TYPE})
     void testPrimeRappSuccessWithValidInfoType(String rappFile) throws JsonProcessingException {
         RappResources rappResources = rappDmeResourceBuilder.getResources();
         Rapp rapp = getRapp(Optional.empty());
         rapp.setPackageName(rappFile);
         rapp.setRappResources(rappResources);
         List<String> infoTypes = List.of("new-info-type-not-available");
-        mockServer.expect(ExpectedCount.once(), requestTo(URI_INFO_TYPES)).andExpect(method(HttpMethod.GET)).andRespond(
+        mockServer.expect(ExpectedCount.once(), requestTo(uriInfoTypes)).andExpect(method(HttpMethod.GET)).andRespond(
                 withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                         .body(objectMapper.writeValueAsString(infoTypes)));
         assertTrue(dmeDeployer.primeRapp(rapp));
-        if (rappFile.equals(validRappFileNewInfoType)) {
+        if (rappFile.equals(VALID_RAPP_FILE_NEW_INFO_TYPE)) {
             mockServer.verify();
         }
         assertNull(rapp.getReason());
@@ -152,7 +152,7 @@ class DmeDeployerTest {
         RappResources rappResources = rappDmeResourceBuilder.getResources();
         rappResources.setDme(null);
         Rapp rapp = getRapp(Optional.empty());
-        rapp.setPackageName(validRappFile);
+        rapp.setPackageName(VALID_RAPP_FILE);
         rapp.setRappResources(rappResources);
         assertTrue(dmeDeployer.primeRapp(rapp));
     }
@@ -194,7 +194,7 @@ class DmeDeployerTest {
     }
 
     Rapp getRapp(Optional<UUID> rappOptional) {
-        return Rapp.builder().rappId(rappOptional.orElse(UUID.randomUUID())).name("").packageName(validRappFile)
+        return Rapp.builder().rappId(rappOptional.orElse(UUID.randomUUID())).name("").packageName(VALID_RAPP_FILE)
                        .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
     }
 }

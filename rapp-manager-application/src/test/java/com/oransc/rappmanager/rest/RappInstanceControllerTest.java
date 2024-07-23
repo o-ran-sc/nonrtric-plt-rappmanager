@@ -299,10 +299,9 @@ class RappInstanceControllerTest {
         rappInstance.setState(RappInstanceState.UNDEPLOYED);
         Map<UUID, RappInstance> instances = new HashMap();
         instances.put(rappInstanceId, rappInstance);
-        Rapp rapp = Rapp.builder().rappId(rappId).name(String.valueOf(rappId)).packageName(validRappFile)
+        return Rapp.builder().rappId(rappId).name(String.valueOf(rappId)).packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.PRIMED).rappInstances(instances)
                             .build();
-        return rapp;
     }
 
 }

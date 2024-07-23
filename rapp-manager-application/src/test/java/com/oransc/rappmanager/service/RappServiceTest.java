@@ -75,7 +75,7 @@ class RappServiceTest {
 
     private final String validRappFile = "valid-rapp-package.csar";
 
-    private final String STATE_TRANSITION_NOT_PERMITTED = "State transition from %s to %s is not permitted.";
+    private final String stateTransitionNotPermitted = "State transition from %s to %s is not permitted.";
 
 
     @Test
@@ -97,7 +97,7 @@ class RappServiceTest {
         RappHandlerException rappHandlerException =
                 assertThrows(RappHandlerException.class, () -> rappService.primeRapp(rapp));
         assertEquals(HttpStatus.BAD_REQUEST, rappHandlerException.getStatusCode());
-        assertEquals(String.format(STATE_TRANSITION_NOT_PERMITTED, RappState.PRIMING, RappState.PRIMED),
+        assertEquals(String.format(stateTransitionNotPermitted, RappState.PRIMING, RappState.PRIMED),
                 rappHandlerException.getMessage());
         assertEquals(RappState.PRIMING, rapp.getState());
     }
@@ -194,7 +194,7 @@ class RappServiceTest {
         RappHandlerException rappHandlerException =
                 assertThrows(RappHandlerException.class, () -> rappService.deprimeRapp(rapp));
         assertEquals(HttpStatus.BAD_REQUEST, rappHandlerException.getStatusCode());
-        assertEquals(String.format(STATE_TRANSITION_NOT_PERMITTED, RappState.COMMISSIONED, RappState.COMMISSIONED),
+        assertEquals(String.format(stateTransitionNotPermitted, RappState.COMMISSIONED, RappState.COMMISSIONED),
                 rappHandlerException.getMessage());
         assertEquals(RappState.COMMISSIONED, rapp.getState());
     }

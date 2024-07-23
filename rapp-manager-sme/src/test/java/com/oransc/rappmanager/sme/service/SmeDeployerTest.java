@@ -84,20 +84,20 @@ class SmeDeployerTest {
     @Autowired
     ObjectMapper objectMapper;
     private final String validRappFile = "valid-rapp-package.csar";
-    String URI_PROVIDER_REGISTRATIONS, URI_PROVIDER_REGISTRATION, URI_PUBLISH_APIS, URI_PUBLISH_API, URI_INVOKERS,
-            URI_INVOKER;
+    String uriProviderRegistrations, uriProviderRegistration, uriPublishApis, uriPublishApi, uriInvokers,
+            uriInvoker;
 
     @BeforeAll
     void initSmeUri() {
-        URI_PROVIDER_REGISTRATIONS =
+        uriProviderRegistrations =
                 smeConfiguration.getBaseUrl() + smeConfiguration.getProviderBasePath() + "registrations";
-        URI_PROVIDER_REGISTRATION =
+        uriProviderRegistration =
                 smeConfiguration.getBaseUrl() + smeConfiguration.getProviderBasePath() + "registrations/%s";
-        URI_PUBLISH_APIS = smeConfiguration.getBaseUrl() + smeConfiguration.getPublishApiBasePath() + "%s/service-apis";
-        URI_PUBLISH_API =
+        uriPublishApis = smeConfiguration.getBaseUrl() + smeConfiguration.getPublishApiBasePath() + "%s/service-apis";
+        uriPublishApi =
                 smeConfiguration.getBaseUrl() + smeConfiguration.getPublishApiBasePath() + "%s/service-apis/%s";
-        URI_INVOKERS = smeConfiguration.getBaseUrl() + smeConfiguration.getInvokerBasePath() + "onboardedInvokers";
-        URI_INVOKER = smeConfiguration.getBaseUrl() + smeConfiguration.getInvokerBasePath() + "onboardedInvokers/%s";
+        uriInvokers = smeConfiguration.getBaseUrl() + smeConfiguration.getInvokerBasePath() + "onboardedInvokers";
+        uriInvoker = smeConfiguration.getBaseUrl() + smeConfiguration.getInvokerBasePath() + "onboardedInvokers/%s";
     }
 
     @BeforeEach
@@ -109,7 +109,7 @@ class SmeDeployerTest {
     void testCreateAMF() throws JsonProcessingException {
         String apiProvDomId = UUID.randomUUID().toString();
         APIProviderEnrolmentDetails apiProviderEnrolmentDetails = new APIProviderEnrolmentDetails(apiProvDomId);
-        mockServer.expect(ExpectedCount.once(), requestTo(URI_PROVIDER_REGISTRATIONS))
+        mockServer.expect(ExpectedCount.once(), requestTo(uriProviderRegistrations))
                 .andExpect(method(HttpMethod.POST)).andRespond(
                         withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                 .body(objectMapper.writeValueAsString(apiProviderEnrolmentDetails)));
@@ -120,7 +120,7 @@ class SmeDeployerTest {
 
     @Test
     void testCreateAMFFailure() {
-        mockServer.expect(ExpectedCount.once(), requestTo(URI_PROVIDER_REGISTRATIONS))
+        mockServer.expect(ExpectedCount.once(), requestTo(uriProviderRegistrations))
                 .andExpect(method(HttpMethod.POST)).andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
         APIProviderEnrolmentDetails apiProviderEnrolmentResponse = smeDeployer.createAMF();
         mockServer.verify();
@@ -131,11 +131,11 @@ class SmeDeployerTest {
     void testDeleteAMF() throws JsonProcessingException {
         String apiProvDomId = UUID.randomUUID().toString();
         APIProviderEnrolmentDetails apiProviderEnrolmentDetails = new APIProviderEnrolmentDetails(apiProvDomId);
-        mockServer.expect(ExpectedCount.once(), requestTo(URI_PROVIDER_REGISTRATIONS))
+        mockServer.expect(ExpectedCount.once(), requestTo(uriProviderRegistrations))
                 .andExpect(method(HttpMethod.POST)).andRespond(
                         withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                 .body(objectMapper.writeValueAsString(apiProviderEnrolmentDetails)));
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_PROVIDER_REGISTRATION, apiProvDomId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriProviderRegistration, apiProvDomId)))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
         smeDeployer.createAMF();
         smeDeployer.deleteAMF();
@@ -149,7 +149,7 @@ class SmeDeployerTest {
                 Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
                         .state(RappState.COMMISSIONED).build();
         APIProviderEnrolmentDetails apiProviderEnrolmentDetails = getProviderDomainApiEnrollmentDetails();
-        mockServer.expect(ExpectedCount.once(), requestTo(URI_PROVIDER_REGISTRATIONS))
+        mockServer.expect(ExpectedCount.once(), requestTo(uriProviderRegistrations))
                 .andExpect(method(HttpMethod.POST)).andRespond(
                         withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                 .body(objectMapper.writeValueAsString(apiProviderEnrolmentDetails)));
@@ -165,7 +165,7 @@ class SmeDeployerTest {
         Rapp rapp =
                 Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
                         .state(RappState.COMMISSIONED).build();
-        mockServer.expect(ExpectedCount.once(), requestTo(URI_PROVIDER_REGISTRATIONS))
+        mockServer.expect(ExpectedCount.once(), requestTo(uriProviderRegistrations))
                 .andExpect(method(HttpMethod.POST)).andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
         RappInstance rappInstance = getRappInstance();
         boolean createProviderDomain = smeDeployer.createProviderDomain(rapp, rappInstance);
@@ -176,7 +176,7 @@ class SmeDeployerTest {
     @Test
     void testDeleteProviderFunc() {
         UUID registrationId = UUID.randomUUID();
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_PROVIDER_REGISTRATION, registrationId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriProviderRegistration, registrationId)))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
         smeDeployer.deleteProviderFunc(String.valueOf(registrationId));
         mockServer.verify();
@@ -190,7 +190,7 @@ class SmeDeployerTest {
                 Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
                         .state(RappState.COMMISSIONED).build();
         ServiceAPIDescription serviceAPIDescription = getServiceApiDescription();
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_PUBLISH_APIS, apfId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriPublishApis, apfId)))
                 .andExpect(method(HttpMethod.POST)).andRespond(
                         withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                 .body(objectMapper.writeValueAsString(serviceAPIDescription)));
@@ -209,7 +209,7 @@ class SmeDeployerTest {
         Rapp rapp =
                 Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
                         .state(RappState.COMMISSIONED).build();
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_PUBLISH_APIS, apfId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriPublishApis, apfId)))
                 .andExpect(method(HttpMethod.POST)).andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
         RappInstance rappInstance = getRappInstance();
         rappInstance.getSme().setApfId(String.valueOf(apfId));
@@ -222,7 +222,7 @@ class SmeDeployerTest {
     void testDeletePublishApi() {
         String serviceApiId = String.valueOf(UUID.randomUUID());
         String apfId = String.valueOf(UUID.randomUUID());
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_PUBLISH_API, apfId, serviceApiId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriPublishApi, apfId, serviceApiId)))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
         smeDeployer.deletePublishApi(serviceApiId, apfId);
         mockServer.verify();
@@ -235,7 +235,7 @@ class SmeDeployerTest {
                 Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
                         .state(RappState.COMMISSIONED).build();
         APIInvokerEnrolmentDetails apiInvokerEnrolmentDetails = getApiInvokerEnrollmentDetails();
-        mockServer.expect(ExpectedCount.once(), requestTo(URI_INVOKERS)).andExpect(method(HttpMethod.POST)).andRespond(
+        mockServer.expect(ExpectedCount.once(), requestTo(uriInvokers)).andExpect(method(HttpMethod.POST)).andRespond(
                 withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                         .body(objectMapper.writeValueAsString(apiInvokerEnrolmentDetails)));
         RappInstance rappInstance = getRappInstance();
@@ -250,7 +250,7 @@ class SmeDeployerTest {
         Rapp rapp =
                 Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
                         .state(RappState.COMMISSIONED).build();
-        mockServer.expect(ExpectedCount.once(), requestTo(URI_INVOKERS)).andExpect(method(HttpMethod.POST))
+        mockServer.expect(ExpectedCount.once(), requestTo(uriInvokers)).andExpect(method(HttpMethod.POST))
                 .andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
         RappInstance rappInstance = getRappInstance();
         boolean createInvoker = smeDeployer.createInvoker(rapp, rappInstance);
@@ -261,7 +261,7 @@ class SmeDeployerTest {
     @Test
     void testDeleteInvoker() {
         String invokerId = String.valueOf(UUID.randomUUID());
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_INVOKER, invokerId)))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriInvoker, invokerId)))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
         smeDeployer.deleteInvoker(invokerId);
         mockServer.verify();
@@ -278,18 +278,18 @@ class SmeDeployerTest {
         Rapp rapp =
                 Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
                         .state(RappState.COMMISSIONED).build();
-        mockServer.expect(ExpectedCount.once(), requestTo(URI_PROVIDER_REGISTRATIONS))
+        mockServer.expect(ExpectedCount.once(), requestTo(uriProviderRegistrations))
                 .andExpect(method(HttpMethod.POST)).andRespond(
                         withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                 .body(objectMapper.writeValueAsString(apiProviderEnrolmentDetails)));
         ServiceAPIDescription serviceAPIDescription = getServiceApiDescription();
         mockServer.expect(ExpectedCount.once(),
-                        requestTo(String.format(URI_PUBLISH_APIS, apfProviderFunctionDetails.getApiProvFuncId())))
+                        requestTo(String.format(uriPublishApis, apfProviderFunctionDetails.getApiProvFuncId())))
                 .andExpect(method(HttpMethod.POST)).andRespond(
                         withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                 .body(objectMapper.writeValueAsString(serviceAPIDescription)));
         APIInvokerEnrolmentDetails apiInvokerEnrolmentDetails = getApiInvokerEnrollmentDetails();
-        mockServer.expect(ExpectedCount.once(), requestTo(URI_INVOKERS)).andExpect(method(HttpMethod.POST)).andRespond(
+        mockServer.expect(ExpectedCount.once(), requestTo(uriInvokers)).andExpect(method(HttpMethod.POST)).andRespond(
                 withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                         .body(objectMapper.writeValueAsString(apiInvokerEnrolmentDetails)));
         RappInstance rappInstance = getRappInstance();
@@ -310,13 +310,13 @@ class SmeDeployerTest {
         Rapp rapp =
                 Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
                         .state(RappState.COMMISSIONED).build();
-        mockServer.expect(ExpectedCount.once(), requestTo(URI_PROVIDER_REGISTRATIONS))
+        mockServer.expect(ExpectedCount.once(), requestTo(uriProviderRegistrations))
                 .andExpect(method(HttpMethod.POST)).andRespond(
                         withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                 .body(objectMapper.writeValueAsString(apiProviderEnrolmentDetails)));
         ServiceAPIDescription serviceAPIDescription = getServiceApiDescription();
         mockServer.expect(ExpectedCount.once(),
-                        requestTo(String.format(URI_PUBLISH_APIS, apfProviderFunctionDetails.getApiProvFuncId())))
+                        requestTo(String.format(uriPublishApis, apfProviderFunctionDetails.getApiProvFuncId())))
                 .andExpect(method(HttpMethod.POST)).andRespond(
                         withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                 .body(objectMapper.writeValueAsString(serviceAPIDescription)));
@@ -335,7 +335,7 @@ class SmeDeployerTest {
                 Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
                         .state(RappState.COMMISSIONED).build();
         APIInvokerEnrolmentDetails apiInvokerEnrolmentDetails = getApiInvokerEnrollmentDetails();
-        mockServer.expect(ExpectedCount.once(), requestTo(URI_INVOKERS)).andExpect(method(HttpMethod.POST)).andRespond(
+        mockServer.expect(ExpectedCount.once(), requestTo(uriInvokers)).andExpect(method(HttpMethod.POST)).andRespond(
                 withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                         .body(objectMapper.writeValueAsString(apiInvokerEnrolmentDetails)));
         RappInstance rappInstance = getRappInstance();
@@ -370,17 +370,17 @@ class SmeDeployerTest {
         Rapp rapp =
                 Rapp.builder().rappId(rappId).name("").packageName(validRappFile).packageLocation(validCsarFileLocation)
                         .state(RappState.COMMISSIONED).build();
-        mockServer.expect(ExpectedCount.once(), requestTo(URI_PROVIDER_REGISTRATIONS))
+        mockServer.expect(ExpectedCount.once(), requestTo(uriProviderRegistrations))
                 .andExpect(method(HttpMethod.POST)).andRespond(
                         withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                 .body(objectMapper.writeValueAsString(apiProviderEnrolmentDetails)));
         ServiceAPIDescription serviceAPIDescription = getServiceApiDescription();
         mockServer.expect(ExpectedCount.once(),
-                        requestTo(String.format(URI_PUBLISH_APIS, apfProviderFunctionDetails.getApiProvFuncId())))
+                        requestTo(String.format(uriPublishApis, apfProviderFunctionDetails.getApiProvFuncId())))
                 .andExpect(method(HttpMethod.POST)).andRespond(
                         withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
                                 .body(objectMapper.writeValueAsString(serviceAPIDescription)));
-        mockServer.expect(ExpectedCount.once(), requestTo(URI_INVOKERS)).andExpect(method(HttpMethod.POST))
+        mockServer.expect(ExpectedCount.once(), requestTo(uriInvokers)).andExpect(method(HttpMethod.POST))
                 .andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
         RappInstance rappInstance = getRappInstance();
         rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
@@ -399,19 +399,19 @@ class SmeDeployerTest {
                 String.valueOf(UUID.randomUUID()), String.valueOf(UUID.randomUUID()));
         Rapp rapp = Rapp.builder().rappId(rappId).name(rappId.toString()).packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_INVOKER, invokers.get(0))))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriInvoker, invokers.get(0))))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_INVOKER, invokers.get(1))))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriInvoker, invokers.get(1))))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_PUBLISH_API, apfId, serviceApis.get(0))))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriPublishApi, apfId, serviceApis.get(0))))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_PUBLISH_API, apfId, serviceApis.get(1))))
-                .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
-        mockServer.expect(ExpectedCount.once(),
-                        requestTo(String.format(URI_PROVIDER_REGISTRATION, providerFuncs.values().toArray()[0])))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriPublishApi, apfId, serviceApis.get(1))))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
         mockServer.expect(ExpectedCount.once(),
-                        requestTo(String.format(URI_PROVIDER_REGISTRATION, providerFuncs.values().toArray()[1])))
+                        requestTo(String.format(uriProviderRegistration, providerFuncs.values().toArray()[0])))
+                .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
+        mockServer.expect(ExpectedCount.once(),
+                        requestTo(String.format(uriProviderRegistration, providerFuncs.values().toArray()[1])))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
         RappInstance rappInstance = getRappInstance();
         rappInstance.getSme().setApfId(String.valueOf(apfId));
@@ -433,15 +433,15 @@ class SmeDeployerTest {
                 String.valueOf(UUID.randomUUID()), String.valueOf(UUID.randomUUID()));
         Rapp rapp = Rapp.builder().rappId(rappId).name(rappId.toString()).packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_PUBLISH_API, apfId, serviceApis.get(0))))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriPublishApi, apfId, serviceApis.get(0))))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_PUBLISH_API, apfId, serviceApis.get(1))))
-                .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
-        mockServer.expect(ExpectedCount.once(),
-                        requestTo(String.format(URI_PROVIDER_REGISTRATION, providerFuncs.values().toArray()[0])))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriPublishApi, apfId, serviceApis.get(1))))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
         mockServer.expect(ExpectedCount.once(),
-                        requestTo(String.format(URI_PROVIDER_REGISTRATION, providerFuncs.values().toArray()[1])))
+                        requestTo(String.format(uriProviderRegistration, providerFuncs.values().toArray()[0])))
+                .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
+        mockServer.expect(ExpectedCount.once(),
+                        requestTo(String.format(uriProviderRegistration, providerFuncs.values().toArray()[1])))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
         RappInstance rappInstance = getRappInstance();
         rappInstance.getSme().setApfId(String.valueOf(apfId));
@@ -461,9 +461,9 @@ class SmeDeployerTest {
         List<String> invokers = List.of(String.valueOf(UUID.randomUUID()), String.valueOf(UUID.randomUUID()));
         Rapp rapp = Rapp.builder().rappId(rappId).name(rappId.toString()).packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_INVOKER, invokers.get(0))))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriInvoker, invokers.get(0))))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_INVOKER, invokers.get(1))))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriInvoker, invokers.get(1))))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
         RappInstance rappInstance = getRappInstance();
         rappInstance.getSme().setApfId(String.valueOf(apfId));
@@ -496,19 +496,19 @@ class SmeDeployerTest {
                 String.valueOf(UUID.randomUUID()), String.valueOf(UUID.randomUUID()));
         Rapp rapp = Rapp.builder().rappId(rappId).name(rappId.toString()).packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_INVOKER, invokers.get(0))))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriInvoker, invokers.get(0))))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_INVOKER, invokers.get(1))))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriInvoker, invokers.get(1))))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_PUBLISH_API, apfId, serviceApis.get(0))))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriPublishApi, apfId, serviceApis.get(0))))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
-        mockServer.expect(ExpectedCount.once(), requestTo(String.format(URI_PUBLISH_API, apfId, serviceApis.get(1))))
-                .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
-        mockServer.expect(ExpectedCount.once(),
-                        requestTo(String.format(URI_PROVIDER_REGISTRATION, providerFuncs.values().toArray()[0])))
+        mockServer.expect(ExpectedCount.once(), requestTo(String.format(uriPublishApi, apfId, serviceApis.get(1))))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
         mockServer.expect(ExpectedCount.once(),
-                        requestTo(String.format(URI_PROVIDER_REGISTRATION, providerFuncs.values().toArray()[1])))
+                        requestTo(String.format(uriProviderRegistration, providerFuncs.values().toArray()[0])))
+                .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.NO_CONTENT));
+        mockServer.expect(ExpectedCount.once(),
+                        requestTo(String.format(uriProviderRegistration, providerFuncs.values().toArray()[1])))
                 .andExpect(method(HttpMethod.DELETE)).andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
         RappInstance rappInstance = getRappInstance();
         rappInstance.getSme().setApfId(String.valueOf(apfId));

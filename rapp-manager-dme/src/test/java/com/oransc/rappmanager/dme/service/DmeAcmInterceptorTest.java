@@ -57,7 +57,7 @@ class DmeAcmInterceptorTest {
     DmeAcmInterceptor dmeAcmInterceptor;
 
     RappDmeResourceBuilder rappDmeResourceBuilder = new RappDmeResourceBuilder();
-    private static final String validRappFile = "valid-rapp-package.csar";
+    private static final String VALID_RAPP_FILE = "valid-rapp-package.csar";
     String validCsarFileLocation = "src/test/resources/";
 
     @ParameterizedTest
@@ -68,7 +68,7 @@ class DmeAcmInterceptorTest {
                 new HashMap<>(Map.of(UUID.randomUUID(), new AutomationCompositionElement()));
         automationComposition.setElements(elements);
         assertEquals(1, automationComposition.getElements().size());
-        Rapp rApp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(validRappFile)
+        Rapp rApp = Rapp.builder().rappId(UUID.randomUUID()).name("").packageName(VALID_RAPP_FILE)
                             .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED)
                             .rappResources(rappDmeResourceBuilder.getResources()).build();
         dmeAcmInterceptor.injectAutomationComposition(automationComposition, rApp, rAppInstance);
