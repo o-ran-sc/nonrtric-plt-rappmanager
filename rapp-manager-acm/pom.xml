@@ -4,7 +4,7 @@
 * O-RAN-SC
 * %%
 * Copyright (C) 2023 Nordix Foundation
-* Copyright (C) 2023 OpenInfra Foundation Europe. All rights reserved.
+* Copyright (C) 2023-2024 OpenInfra Foundation Europe. All rights reserved.
 * %%
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -138,9 +138,9 @@
                             <configOptions>
                                 <sourceFolder>src/main/java</sourceFolder>
                                 <useJakartaEe>true</useJakartaEe>
-                                <invokerPackage>com.oransc.rappmanager.acm</invokerPackage>
-                                <apiPackage>com.oransc.rappmanager.acm.rest</apiPackage>
-                                <modelPackage>com.oransc.rappmanager.acm.data</modelPackage>
+                                <invokerPackage>org.oransc.rappmanager.acm</invokerPackage>
+                                <apiPackage>org.oransc.rappmanager.acm.rest</apiPackage>
+                                <modelPackage>org.oransc.rappmanager.acm.data</modelPackage>
                                 <generateClientAsBean>false</generateClientAsBean>
                             </configOptions>
                         </configuration>

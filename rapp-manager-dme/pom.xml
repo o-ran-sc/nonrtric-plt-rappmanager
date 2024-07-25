@@ -4,6 +4,7 @@
 * O-RAN-SC
 * %%
 * Copyright (C) 2023 Nordix Foundation
+* Copyright (C) 2023-2024 OpenInfra Foundation Europe. All rights reserved.
 * %%
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -91,9 +92,9 @@
                             <configOptions>
                                 <sourceFolder>src/main/java</sourceFolder>
                                 <useJakartaEe>true</useJakartaEe>
-                                <invokerPackage>com.oransc.rappmanager.dme</invokerPackage>
-                                <apiPackage>com.oransc.rappmanager.dme.rest</apiPackage>
-                                <modelPackage>com.oransc.rappmanager.dme.data</modelPackage>
+                                <invokerPackage>org.oransc.rappmanager.dme</invokerPackage>
+                                <apiPackage>org.oransc.rappmanager.dme.rest</apiPackage>
+                                <modelPackage>org.oransc.rappmanager.dme.data</modelPackage>
                                 <generateClientAsBean>false</generateClientAsBean>
                             </configOptions>
                         </configuration>

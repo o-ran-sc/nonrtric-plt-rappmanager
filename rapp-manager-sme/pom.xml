@@ -167,9 +167,9 @@
                             <configOptions>
                                 <sourceFolder>src/main/java</sourceFolder>
                                 <useJakartaEe>true</useJakartaEe>
-                                <invokerPackage>com.oransc.rappmanager.sme.provider</invokerPackage>
-                                <apiPackage>com.oransc.rappmanager.sme.provider.rest</apiPackage>
-                                <modelPackage>com.oransc.rappmanager.sme.provider.data</modelPackage>
+                                <invokerPackage>org.oransc.rappmanager.sme.provider</invokerPackage>
+                                <apiPackage>org.oransc.rappmanager.sme.provider.rest</apiPackage>
+                                <modelPackage>org.oransc.rappmanager.sme.provider.data</modelPackage>
                                 <generateClientAsBean>false</generateClientAsBean>
                             </configOptions>
                         </configuration>
@@ -196,9 +196,9 @@
                             <configOptions>
                                 <sourceFolder>src/main/java</sourceFolder>
                                 <useJakartaEe>true</useJakartaEe>
-                                <invokerPackage>com.oransc.rappmanager.sme.publishservice</invokerPackage>
-                                <apiPackage>com.oransc.rappmanager.sme.publishservice.rest</apiPackage>
-                                <modelPackage>com.oransc.rappmanager.sme.publishservice.data</modelPackage>
+                                <invokerPackage>org.oransc.rappmanager.sme.publishservice</invokerPackage>
+                                <apiPackage>org.oransc.rappmanager.sme.publishservice.rest</apiPackage>
+                                <modelPackage>org.oransc.rappmanager.sme.publishservice.data</modelPackage>
                                 <generateClientAsBean>false</generateClientAsBean>
                             </configOptions>
                         </configuration>
@@ -225,9 +225,9 @@
                             <configOptions>
                                 <sourceFolder>src/main/java</sourceFolder>
                                 <useJakartaEe>true</useJakartaEe>
-                                <invokerPackage>com.oransc.rappmanager.sme.invoker</invokerPackage>
-                                <apiPackage>com.oransc.rappmanager.sme.invoker.rest</apiPackage>
-                                <modelPackage>com.oransc.rappmanager.sme.invoker.data</modelPackage>
+                                <invokerPackage>org.oransc.rappmanager.sme.invoker</invokerPackage>
+                                <apiPackage>org.oransc.rappmanager.sme.invoker.rest</apiPackage>
+                                <modelPackage>org.oransc.rappmanager.sme.invoker.data</modelPackage>
                                 <generateClientAsBean>false</generateClientAsBean>
                             </configOptions>
                         </configuration>
