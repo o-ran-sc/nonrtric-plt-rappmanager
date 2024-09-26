@@ -52,6 +52,7 @@ import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.PrimeOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
+import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.oransc.rappmanager.acm.configuration.ACMConfiguration;
 import org.oransc.rappmanager.dme.service.DmeAcmInterceptor;
@@ -588,6 +589,7 @@ class AcmDeployerTest {
         automationCompositionDefinition.setCompositionId(compositionId);
         automationCompositionDefinition.setState(acTypeState);
         automationCompositionDefinition.setServiceTemplate(new ToscaServiceTemplate());
+        automationCompositionDefinition.setLastMsg(TimestampHelper.now());
         return automationCompositionDefinition;
     }
 }

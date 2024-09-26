@@ -29,7 +29,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
 import java.util.UUID;
-import org.apache.http.entity.ContentType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -119,7 +118,7 @@ class RappControllerTest {
     void testCreateRapp() throws Exception {
         String rappCsarPath = validCsarFileLocation + File.separator + validRappFile;
         MockMultipartFile multipartFile =
-                new MockMultipartFile("file", validRappFile, ContentType.MULTIPART_FORM_DATA.getMimeType(),
+                new MockMultipartFile("file", validRappFile, MediaType.MULTIPART_FORM_DATA.getType(),
                         new FileInputStream(rappCsarPath));
         mockMvc.perform(MockMvcRequestBuilders.multipart("/rapps/{rapp_id}", UUID.randomUUID()).file(multipartFile))
                 .andExpect(status().isAccepted());
@@ -132,7 +131,7 @@ class RappControllerTest {
     void testCreateInvalidRapp(String rAppPackageName) throws Exception {
         String rappCsarPath = validCsarFileLocation + File.separator + rAppPackageName;
         MockMultipartFile multipartFile =
-                new MockMultipartFile("file", rAppPackageName, ContentType.MULTIPART_FORM_DATA.getMimeType(),
+                new MockMultipartFile("file", rAppPackageName, MediaType.MULTIPART_FORM_DATA.getType(),
                         new FileInputStream(rappCsarPath));
         mockMvc.perform(MockMvcRequestBuilders.multipart("/rapps/{rapp_id}", UUID.randomUUID()).file(multipartFile))
                 .andExpect(status().isBadRequest());

@@ -91,16 +91,32 @@ paths:
                 items:
                   $ref: '#/components/schemas/ParticipantInformation'
               example:
-                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getMultiParticipantResponse.json'
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getMultipleParticipantResponse.json'
             application/yaml:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/ParticipantInformation'
               example:
-                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getMultiParticipantResponse.yaml'
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getMultipleParticipantResponse.yaml'
         401:
           description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        500:
+          description: Internal Server Error, returns an instance of
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
@@ -179,6 +195,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SimpleResponse'
+        500:
+          description: Internal Server Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
       security:
         - basicAuth: []
       x-interface info:
@@ -233,7 +265,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ToscaServiceTemplate'
               example:
-                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getParticipantResponse.yaml'
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getSingleParticipantResponse.yaml'
         401:
           description: Authentication Error, returns an instance of
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
@@ -252,6 +284,22 @@ paths:
                 $ref: '#/components/schemas/SimpleResponse'
         404:
           description: Specified participant not found, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        500:
+          description: Internal Server Error, returns an instance of
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
@@ -353,6 +401,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SimpleResponse'
+        500:
+          description: Internal Server Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
       security:
         - basicAuth: []
       x-interface info:
@@ -416,6 +480,22 @@ paths:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getAllCompositionDefinitions.yaml'
         401:
           description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        500:
+          description: Internal Server Error, returns an instance of
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
@@ -522,6 +602,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SimpleResponse'
+        500:
+          description: Internal Server Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
       security:
         - basicAuth: []
       x-interface info:
@@ -595,6 +691,22 @@ paths:
                 $ref: '#/components/schemas/SimpleResponse'
         404:
           description: Specified automation composition definition not found, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        500:
+          description: Internal Server Error, returns an instance of
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
@@ -710,6 +822,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SimpleResponse'
+        500:
+          description: Internal Server Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
       security:
         - basicAuth: []
       x-interface info:
@@ -809,6 +937,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SimpleResponse'
+        500:
+          description: Internal Server Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
       security:
         - basicAuth: []
       x-interface info:
@@ -867,12 +1011,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/AutomationCompositions'
               example:
-                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getCompositionInstancesResponse.json'
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getAllCompositionInstancesResponse.json'
             application/yaml:
               schema:
                 $ref: '#/components/schemas/AutomationCompositions'
               example:
-                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getCompositionInstancesResponse.yaml'
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getAllCompositionInstancesResponse.yaml'
         401:
           description: Authentication Error, returns an instance of
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
@@ -905,6 +1049,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SimpleResponse'
+        500:
+          description: Internal Server Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
       security:
         - basicAuth: []
       x-interface info:
@@ -913,14 +1073,15 @@ paths:
     post:
       tags:
         - Automation Composition Instance
-      summary: Create automation composition instance
-      description: Creates automation composition instance that use the sepcified automation composition definition. The ID of the created
-        automation composition instance is returned.
+      summary: Create, Update or Migrate an automation composition instance
+      description: Create, Update or Migrate an automation composition instance that uses the specified automation composition definition. The ID of the created
+        automation composition instance is returned. In the case of an update, the instanceId should be included in the request body.
+        In the case of a migrate, the instanceId and the compositionTargetId should be included in the request body.
       operationId: createCompositionInstance
       parameters:
         - name : compositionId
           in: path
-          description: The UUID of the automation composition definition on which to create instance
+          description: The UUID of the automation composition definition on which to create/update instance
           required: true
           schema:
             type: string
@@ -934,24 +1095,34 @@ paths:
       requestBody:
         description: Serialised instance of
           [AutomationComposition](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationComposition.java)
-          containing a automation composition instance to create
+          containing a automation composition instance to create/update
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/AutomationComposition'
-            example:
-              externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstance.json'
+            examples:
+              createValue:
+                summary: create
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstance.json'
+              updateValue:
+                summary: update
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstanceUpdate.json'
           application/yaml:
             schema:
               $ref: '#/components/schemas/AutomationComposition'
-            example:
-              externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstance.yaml'
+            examples:
+              createValue:
+                summary: create
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstance.yaml'
+              updateValue:
+                summary: update
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstanceUpdate.yaml'
         required: true
       responses:
         201:
           description: Serialised instance of
             [InstantiationResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/instantiation/InstantiationResponse.java)
-            containing the UUID of the created automation composition instance
+            containing the UUID of the created/updated automation composition instance
           headers:
             X-LatestVersion:
               $ref: '#/components/headers/X-LatestVersion'
@@ -966,12 +1137,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/InstantiationResponse'
               example:
-                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstancesResponse.json'
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstanceResponse.json'
             application/yaml:
               schema:
                 $ref: '#/components/schemas/InstantiationResponse'
               example:
-                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstancesResponse.yaml'
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstanceResponse.yaml'
         401:
           description: Authentication Error, returns an instance of
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
@@ -1006,6 +1177,22 @@ paths:
                 $ref: '#/components/schemas/SimpleResponse'
         400:
           description: Bad Request, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        500:
+          description: Internal Server Error, returns an instance of
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
@@ -1097,6 +1284,22 @@ paths:
                 $ref: '#/components/schemas/SimpleResponse'
         404:
           description: The automation composition instance was not found, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        500:
+          description: Internal Server Error, returns an instance of
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
@@ -1221,6 +1424,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SimpleResponse'
+        500:
+          description: Internal Server Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
       security:
         - basicAuth: []
       x-interface info:
@@ -1231,7 +1450,7 @@ paths:
       tags:
         - Automation Composition Instance
       summary: Delete an automation composition instance
-      description: Deletes a automation composition instance, returning the UUID of the deleted automation composition instance
+      description: Order a deletion of an automation composition instance, returning the UUID of the automation composition instance to be deleted
       operationId: deleteCompositionInstance
       parameters:
         - name : compositionId
@@ -1255,7 +1474,7 @@ paths:
             type: string
             format: uuid
       responses:
-        200:
+        202:
           description: Serialised instance of
             [InstantiationResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/instantiation/InstantiationResponse.java)
             containing the UUID of the deleted automation composition instance
@@ -1313,6 +1532,22 @@ paths:
                 $ref: '#/components/schemas/SimpleResponse'
         400:
           description: Bad Request, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        500:
+          description: Internal Server Error, returns an instance of
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:

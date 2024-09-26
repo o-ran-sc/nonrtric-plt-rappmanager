@@ -213,7 +213,7 @@ class RappCsarConfigurationHandlerTest {
     }
 
     @Test
-    void testGetSmeInvokerPayload() {
+    void testGetSmeInvokerPayload() throws JSONException {
         UUID rappId = UUID.randomUUID();
         RappSMEInstance rappSMEInstance = new RappSMEInstance();
         rappSMEInstance.setInvokers("invoker-app1");

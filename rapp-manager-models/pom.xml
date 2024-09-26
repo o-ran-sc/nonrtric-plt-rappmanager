@@ -55,6 +55,10 @@
             <version>${spring.statemachine.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-json</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.statemachine</groupId>
             <artifactId>spring-statemachine-test</artifactId>
             <version>${spring.statemachine.version}</version>
@@ -83,6 +87,11 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
