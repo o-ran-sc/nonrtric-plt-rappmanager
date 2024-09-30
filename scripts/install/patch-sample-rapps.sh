@@ -36,13 +36,19 @@ for file in $(find $WORKSPACE -type f -name "*.yaml"); do
   fi
 done
 
-echo "Replacing charts repo get url in json files....."
+echo "Replacing charts repo get url & cluster-ip in json files....."
 echo "Chart repository get URI : $CHART_REPO_GET_URI"
 for file in $(find $WORKSPACE -type f -name "*.json"); do
   sed -i "s|UPDATE_THIS_CHART_MUSEUM_GET_CHARTS_URI|${CHART_REPO_GET_URI}|g" "$file"
   if grep -q "$CHART_REPO_GET_URI" "$file"; then
     echo "$file is updated."
   fi
+
+  sed -i "s/UPDATE_THIS_CLUSTER_IP/$IP_ADDRESS/g" "$file"
+  if grep -q "$IP_ADDRESS" "$file"; then
+    echo "UPDATE_THIS_CLUSTER_IP updated in file: $file "
+  fi
 done
+
 
 echo "Patching Sample rApps completed."

@@ -1,0 +1,68 @@
+{
+  "name": "icsConsumerInstance",
+  "version": "1.0.1",
+  "compositionId": "DO_NOT_CHANGE_THIS_COMPOSITION_ID",
+  "description": "Demo automation composition instance consumer",
+  "elements": {
+    "d425fb6d-ebe3-432d-ba30-1d5ed9df58f0": {
+      "id": "d425fb6d-ebe3-432d-ba30-1d5ed9df58f0",
+      "definition": {
+        "name": "onap.policy.clamp.ac.element.K8S_StarterAutomationCompositionElement",
+        "version": "1.2.3"
+      },
+      "description": "Starter Automation Composition Element for ICS Consumer",
+      "properties": {
+        "startPhase": 0,
+        "chart": {
+          "chartId": {
+            "name": "ics-consumer",
+            "version": "0.1.0"
+          },
+          "namespace": "nonrtric",
+          "releaseName": "ics-consumer",
+          "podName": "kafka-consumer",
+          "repository": {
+            "repoName": "local",
+            "address": "UPDATE_THIS_CHART_MUSEUM_GET_CHARTS_URI"
+          }
+        }
+      }
+    },
+    "94f1af01-c759-48ca-91f2-f0b48c12fcee": {
+      "id": "94f1af01-c759-48ca-91f2-f0b48c12fcee",
+      "definition": {
+        "name": "onap.policy.clamp.ac.element.Http_StarterAutomationCompositionElement",
+        "version": "1.2.3"
+      },
+      "description": "Starter Automation Composition Element for the Demo ICS-Consumer",
+        "properties": {
+          "provider": "ONAP",
+          "uninitializedToPassiveTimeout": 180,
+          "startPhase": 1,
+          "baseUrl": "http://UPDATE_THIS_CLUSTER_IP:31112",
+          "httpHeaders": {
+            "Content-Type": "application/json"
+          },
+          "configurationEntities": [
+            {
+              "configurationEntityId": {
+                "name": "oran.demo.ics.consumer",
+                "version": "1.0.0"
+              },
+              "restSequence": [
+                {
+                  "restRequestId": {
+                    "name": "request1",
+                    "version": "1.0.1"
+                  },
+                  "httpMethod": "GET",
+                  "path": "/start",
+                  "expectedResponse": 200
+                }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

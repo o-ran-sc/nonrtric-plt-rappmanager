@@ -1,0 +1,68 @@
+{
+  "name": "icsProducerInstance",
+  "version": "1.0.1",
+  "compositionId": "DO_NOT_CHANGE_THIS_COMPOSITION_ID",
+  "description": "Demo automation composition instance 0",
+  "elements": {
+    "ea40d074-17c6-4f34-a6ea-6e464ac4cc38": {
+      "id": "ea40d074-17c6-4f34-a6ea-6e464ac4cc38",
+      "definition": {
+        "name": "onap.policy.clamp.ac.element.K8S_StarterAutomationCompositionElement",
+        "version": "1.2.3"
+      },
+      "description": "Starter Automation Composition Element for ICS Producer",
+      "properties": {
+        "startPhase": 0,
+        "chart": {
+          "chartId": {
+            "name": "ics-producer",
+            "version": "0.1.0"
+          },
+          "namespace": "nonrtric",
+          "releaseName": "ics-producer",
+          "podName": "kafka-producer",
+          "repository": {
+            "repoName": "local",
+            "address": "UPDATE_THIS_CHART_MUSEUM_GET_CHARTS_URI"
+          }
+        }
+      }
+    },
+    "709c62b3-8918-41b9-a747-d21eb79c6c24": {
+      "id": "709c62b3-8918-41b9-a747-d21eb79c6c24",
+      "definition": {
+        "name": "onap.policy.clamp.ac.element.Http_StarterAutomationCompositionElement",
+        "version": "1.2.3"
+      },
+      "description": "Starter Automation Composition Element for the Demo ICS-Producer",
+        "properties": {
+          "provider": "ONAP",
+          "uninitializedToPassiveTimeout": 180,
+          "startPhase": 1,
+          "baseUrl": "http://UPDATE_THIS_CLUSTER_IP:31111",
+          "httpHeaders": {
+            "Content-Type": "application/json"
+          },
+          "configurationEntities": [
+            {
+              "configurationEntityId": {
+                "name": "oran.demo.ics.producer",
+                "version": "1.0.0"
+              },
+              "restSequence": [
+                {
+                  "restRequestId": {
+                    "name": "request1",
+                    "version": "1.0.1"
+                  },
+                  "httpMethod": "GET",
+                  "path": "/publish/A",
+                  "expectedResponse": 200
+                }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
