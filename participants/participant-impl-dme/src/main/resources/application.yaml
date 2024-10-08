@@ -17,18 +17,26 @@ dme:
 
 participant:
   intermediaryParameters:
+    topics:
+      operationTopic: policy-acruntime-participant
+      syncTopic: acm-ppnt-sync
     reportingTimeIntervalMs: 120000
     description: Participant Description
     participantId: 101c62b3-8918-41b9-a747-d21eb79c6c08
     clampAutomationCompositionTopics:
       topicSources:
-        - topic: policy-acruntime-participant
+        - topic: ${participant.intermediaryParameters.topics.operationTopic}
+          servers:
+            - ${topicServer:kafka.default.svc.cluster.local:9092}
+          topicCommInfrastructure: NOOP
+          fetchTimeout: 15000
+        - topic: ${participant.intermediaryParameters.topics.syncTopic}
           servers:
             - ${topicServer:kafka.default.svc.cluster.local:9092}
           topicCommInfrastructure: NOOP
           fetchTimeout: 15000
       topicSinks:
-        - topic: policy-acruntime-participant
+        - topic: ${participant.intermediaryParameters.topics.operationTopic}
           servers:
             - ${topicServer:kafka.default.svc.cluster.local:9092}
           topicCommInfrastructure: NOOP
