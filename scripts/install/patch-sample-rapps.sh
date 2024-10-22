@@ -17,7 +17,10 @@
 #
 
 echo "######### Patching Sample rApps #########"
-
+echo "Replacing hardcoded variables inside sample-rapp-generator:"
+echo "UPDATE_THIS_MACHINE_IP"
+echo "UPDATE_THIS_CHART_MUSEUM_GET_CHARTS_URI"
+echo "UPDATE_THIS_CHART_MUSEUM_POST_CHARTS_URI"
 CWD=$(pwd)
 export WORKSPACE="$CWD/../../sample-rapp-generator"
 
@@ -36,13 +39,20 @@ for file in $(find $WORKSPACE -type f -name "*.yaml"); do
   fi
 done
 
-echo "Replacing charts repo get url in json files....."
+echo "Replacing charts repo get url and machine ip in json files....."
 echo "Chart repository get URI : $CHART_REPO_GET_URI"
 for file in $(find $WORKSPACE -type f -name "*.json"); do
   sed -i "s|UPDATE_THIS_CHART_MUSEUM_GET_CHARTS_URI|${CHART_REPO_GET_URI}|g" "$file"
   if grep -q "$CHART_REPO_GET_URI" "$file"; then
     echo "$file is updated."
   fi
-done
 
+  sed -i "s/UPDATE_THIS_MACHINE_IP/$IP_ADDRESS/g" "$file"
+  if grep -q "$IP_ADDRESS" "$file"; then
+    echo "UPDATE_THIS_MACHINE_IP updated in file: $file"
+  fi
+done
+echo "UPDATE_THIS_MACHINE_IP=$IP_ADDRESS"
+echo "UPDATE_THIS_CHART_MUSEUM_GET_CHARTS_URI=$CHART_REPO_GET_URI"
+echo "UPDATE_THIS_CHART_MUSEUM_POST_CHARTS_URI=$CHART_REPO_POST_URI"
 echo "Patching Sample rApps completed."

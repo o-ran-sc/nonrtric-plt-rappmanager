@@ -1,0 +1,9 @@
+{
+  "info_job_data_schema": {
+    "$schema":"http://json-schema.org/draft-07/schema#",
+    "title":"STD_Type1_1.0.0",
+    "description":"Type 1",
+    "topic": "mytopic",
+    "bootStrapServers": "kafka.default.svc.cluster.local:9092"
+    }
+}
