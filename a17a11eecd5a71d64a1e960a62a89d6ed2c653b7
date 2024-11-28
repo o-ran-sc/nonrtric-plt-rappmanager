@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5838bf20_af241a9a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002433
+      },
+      "writtenOn": "2024-11-28T10:20:58Z",
+      "side": 1,
+      "message": "tested with 1 sample rapp, it deployed correctly the ics consumer",
+      "revId": "a17a11eecd5a71d64a1e960a62a89d6ed2c653b7",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
