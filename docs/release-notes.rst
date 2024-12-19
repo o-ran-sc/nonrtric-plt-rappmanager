@@ -1,6 +1,6 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. http://creativecommons.org/licenses/by/4.0
-.. Copyright (C) 2023 OpenInfra Foundation Europe. All rights reserved.
+.. Copyright (C) 2023-2024 OpenInfra Foundation Europe. All rights reserved.
 
 =============
 Release-Notes
@@ -20,6 +20,8 @@ Version history rApp Manager
 | 2023-12-15 |  0.0.1   |  John Keeney     | I Release          |
 +------------+----------+------------------+--------------------+
 | 2024-06-26 |  0.1.0   |  John Keeney     | J Release          |
++------------+----------+------------------+--------------------+
+| 2024-12-19 |  0.2.0   |  John Keeney     | K Release          |
 +------------+----------+------------------+--------------------+
 
 
@@ -62,6 +64,26 @@ J Release
 |                             |                                                   |
 +-----------------------------+---------------------------------------------------+
 | **Purpose of the delivery** |  o-ran-sc/nonrtric-plt-rappmanager:0.1.0          |
+|                             |       Lots of functional improvements             |
+|                             |                                                   |
++-----------------------------+---------------------------------------------------+
+
+J Release
+---------
++-----------------------------+---------------------------------------------------+
+| **Project**                 | Non-RT RIC                                        |
+|                             |                                                   |
++-----------------------------+---------------------------------------------------+
+| **Repo/commit-ID**          |  a17a11eecd5a71d64a1e960a62a89d6ed2c653b7         |
+|                             |                                                   |
++-----------------------------+---------------------------------------------------+
+| **Release designation**     |  K                                                |
+|                             |                                                   |
++-----------------------------+---------------------------------------------------+
+| **Release date**            |  2024-12-19                                       |
+|                             |                                                   |
++-----------------------------+---------------------------------------------------+
+| **Purpose of the delivery** |  o-ran-sc/nonrtric-plt-rappmanager:0.2.0          |
 |                             |       Lots of functional improvements             |
 |                             |                                                   |
 +-----------------------------+---------------------------------------------------+
