@@ -1,10 +1,11 @@
 ---
 distribution_type: container
-container_release_tag: 0.1.0
+container_release_tag: 0.2.0
+# tag_release: false
 container_pull_registry: nexus3.o-ran-sc.org:10004
 container_push_registry: nexus3.o-ran-sc.org:10002
 project: nonrtric
-ref: 176e61f4c2210015324c61ac9722934d56a63f78
+ref: a17a11eecd5a71d64a1e960a62a89d6ed2c653b7
 containers:
     - name: nonrtric-plt-rappmanager
-      version: 0.1.0
+      version: 0.2.0
