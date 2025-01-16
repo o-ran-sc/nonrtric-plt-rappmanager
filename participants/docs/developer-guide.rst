@@ -7,7 +7,7 @@ Developer Guide
 
 This document provides a quickstart for developers of the Non-RT RIC DME Participant.
 
-Additional developer guides are available on the `O-RAN SC NONRTRIC Developer wiki <https://wiki.o-ran-sc.org/display/RICNR/Release+I>`_.
+Additional developer guides are available on the `O-RAN SC NONRTRIC Developer wiki <https://lf-o-ran-sc.atlassian.net/wiki/spaces/RICNR/pages/86802434/Release+K>`_.
 
 The DME Participant is a Java 17 web application built using the Spring Framework. Using Spring Boot
 dependencies, it runs as a standalone application.
@@ -53,7 +53,7 @@ Non-RT RIC can be also deployed in a Kubernetes cluster, `it/dep repository <htt
 hosts deployment and integration artifacts. Instructions and helm charts to deploy the Non-RT-RIC functions in the
 OSC NONRTRIC integrated test environment can be found in the *./nonrtric* directory.
 
-For more information on installation of NonRT-RIC in Kubernetes, see `Deploy NONRTRIC in Kubernetes <https://wiki.o-ran-sc.org/display/RICNR/Release+I+-+Run+in+Kubernetes>`_.
+For more information on installation of NonRT-RIC in Kubernetes, see `Deploy NONRTRIC in Kubernetes <https://lf-o-ran-sc.atlassian.net/wiki/spaces/RICNR/pages/86802787/Release+K+-+Run+in+Kubernetes>`_.
 
 For more information see `Integration and Testing documentation in the O-RAN-SC <https://docs.o-ran-sc.org/projects/o-ran-sc-it-dep/en/latest/index.html>`_.
 
