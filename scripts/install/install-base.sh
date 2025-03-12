@@ -2,7 +2,7 @@
 
 #  ============LICENSE_START===============================================
 #  Copyright (C) 2023 Nordix Foundation. All rights reserved.
-#  Copyright (C) 2023-2024 OpenInfra Foundation Europe. All rights reserved.
+#  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
 #  ========================================================================
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ HELM_VERSION=$(helm version --short)
 echo "Helm version $HELM_VERSION installed."
 
 ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-CM_VERSION="v0.16.1"
+CM_VERSION="v0.16.2"
 CM_PORT="8879"
 HELM_LOCAL_REPO="$ROOT_DIR/chartstorage"
 
