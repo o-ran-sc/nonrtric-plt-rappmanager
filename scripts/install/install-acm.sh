@@ -2,7 +2,7 @@
 
 #  ============LICENSE_START===============================================
 #  Copyright (C) 2023 Nordix Foundation. All rights reserved.
-#  Copyright (C) 2023-2024 OpenInfra Foundation Europe. All rights reserved.
+#  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
 #  ========================================================================
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -71,6 +71,9 @@ bash $K8S_VERSIONS_FILE
 
 echo "Enabling the access for the clusterroles..."
 kubectl apply -f resources/acm-role-binding.yaml
+
+# Replace the policy docker helm chart readiness with the latest version.
+yq eval ".global.image.readiness"=\"onap/oom/readiness:6.1.2\" -i $ACM_VALUES_FILE
 
 for element in "${ENABLE_COMPONENTS[@]}"; do
   echo "Enabling component $element"

@@ -2,7 +2,7 @@
 
 #  ============LICENSE_START===============================================
 #  Copyright (C) 2023 Nordix Foundation. All rights reserved.
-#  Copyright (C) 2023-2024 OpenInfra Foundation Europe. All rights reserved.
+#  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
 #  ========================================================================
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -55,6 +55,13 @@ if [[ "$1" == "dev" ]]; then
   yq eval ".dmeparticipant.dmeparticipant.image.tag"=\"$DME_PARTICIPANT_VERSION\" -i $RECEIPE_FILE
   yq eval ".dmeparticipant.dmeparticipant.imagePullPolicy=\"Always\"" -i $RECEIPE_FILE
 fi
+
+# There is no real way to disable the PV through the recipe file because kongstorage is deployed standalone.
+# The below command will not work
+#yq eval ".kongstorage.kongpv.enabled"="false" -i $RECEIPE_FILE
+# So, we have to make the change to disable PV in the values.yaml file of kongstorage directly after pulling it
+# from the git repo. This can be set to false if you want to use the default storage class.
+yq eval ".kongpv.enabled"="true" -i dep/nonrtric/helm/kongstorage/values.yaml
 
 sudo dep/bin/deploy-nonrtric -f $RECEIPE_FILE
 
