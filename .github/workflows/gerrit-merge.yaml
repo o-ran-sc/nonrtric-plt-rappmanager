@@ -96,9 +96,31 @@ jobs:
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+  call-sonarcloud-scan:
+    runs-on: ubuntu-latest
+    needs: notify
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.GERRIT_BRANCH }}
+          submodules: "true"
+      - name: Run SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.build.sourceEncoding=UTF-8
+            -Dsonar.organization=o-ran-sc
+            -Dsonar.projectBaseDir=.
+            -Dsonar.projectKey=o-ran-sc_nonrtric-plt-rappmanager
+            -Dsonar.projectName=nonrtric-plt-rappmanager
+            -Dsonar.sources=.
+            -Dsonar.verbose=true
+
   report-status:
     if: ${{ always() }}
-    needs: [notify, run-maven-sonar]
+    needs: [notify, run-maven-sonar, call-sonarcloud-scan]
     runs-on: ubuntu-latest
     steps:
       - name: Get workflow conclusion
