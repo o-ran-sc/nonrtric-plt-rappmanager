@@ -1,0 +1,997 @@
+{
+	"info": {
+		"_postman_id": "4dab7b43-234f-4695-b0ad-11bc178b1a62",
+		"name": "Demo Energy Saving rApp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14764781"
+	},
+	"item": [
+		{
+			"name": "Energy Saving Usecase",
+			"item": [
+				{
+					"name": "Cleanup",
+					"item": [
+						{
+							"name": "Get All Templates ACM-Direct",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"    let jsonResponse = JSON.parse(responseBody);",
+											"    let compositionCleanId = jsonResponse.service_templates[0].metadata.compositionId;",
+											"    console.log(\"compositionCleanId: \" + compositionCleanId);",
+											"    pm.collectionVariables.set(\"compositionCleanId\", compositionCleanId); // Fixed variable name",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{ACM_PWD}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{ACM_USER}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{REMOTE-IP}}:{{ACM_PORT}}/onap/policy/clamp/acm/v2/compositions",
+									"protocol": "http",
+									"host": [
+										"{{REMOTE-IP}}"
+									],
+									"port": "{{ACM_PORT}}",
+									"path": [
+										"onap",
+										"policy",
+										"clamp",
+										"acm",
+										"v2",
+										"compositions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Template ACM-Direct",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{ACM_PWD}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{ACM_USER}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{REMOTE-IP}}:{{ACM_PORT}}/onap/policy/clamp/acm/v2/compositions/{{compositionCleanId}}",
+									"protocol": "http",
+									"host": [
+										"{{REMOTE-IP}}"
+									],
+									"port": "{{ACM_PORT}}",
+									"path": [
+										"onap",
+										"policy",
+										"clamp",
+										"acm",
+										"v2",
+										"compositions",
+										"{{compositionCleanId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Instances ACM-Direct",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"    let jsonResponse = JSON.parse(responseBody);",
+											"    let instanceCleanId = jsonResponse.automationCompositionList[0].instanceId;",
+											"    console.log(\"instanceCleanId: \" + instanceCleanId);",
+											"    pm.collectionVariables.set(\"instanceCleanId\", instanceCleanId); // Fixed variable name",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{ACM_PWD}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{ACM_USER}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"K8DemoInstance0\",\r\n  \"version\": \"1.0.1\",\r\n  \"compositionId\": \"{{compositionId}}\",\r\n  \"description\": \"Demo automation composition instance 0\",\r\n  \"elements\": {\r\n    \"d7be552e-bcc5-4478-b64d-797dbaec8f55\": {\r\n      \"id\": \"d7be552e-bcc5-4478-b64d-797dbaec8f55\",\r\n      \"definition\": {\r\n        \"name\": \"onap.policy.clamp.ac.element.K8S_StarterAutomationCompositionElement\",\r\n        \"version\": \"1.2.3\"\r\n      },\r\n      \"description\": \"Starter Automation Composition Element for the Hello World\",\r\n      \"properties\": {\r\n        \"chart\": {\r\n          \"chartId\": {\r\n            \"name\": \"hello-world-chart\",\r\n            \"version\": \"0.1.0\"\r\n          },\r\n          \"namespace\": \"nonrtric\",\r\n          \"releaseName\": \"hello-world-chart\",\r\n          \"podName\": \"hello-world-chart\",\r\n          \"repository\": {\r\n            \"repoName\": \"local\",\r\n            \"address\": \"UPDATE_THIS_CHART_MUSEUM_GET_CHARTS_URI\"\r\n          },\r\n          \"overrideParams\": {\r\n            \"appId\": \"DO_NOT_CHANGE_THIS_RAPP_INSTANCE_ID\",\r\n            \"smeDiscoveryEndpoint\": \"DO_NOT_CHANGE_THIS_SME_DISCOVERY_ENDPOINT\"\r\n          }\r\n        }\r\n      }\r\n    }\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{REMOTE-IP}}:{{ACM_PORT}}/onap/policy/clamp/acm/v2/compositions/{{compositionCleanId}}/instances",
+									"protocol": "http",
+									"host": [
+										"{{REMOTE-IP}}"
+									],
+									"port": "{{ACM_PORT}}",
+									"path": [
+										"onap",
+										"policy",
+										"clamp",
+										"acm",
+										"v2",
+										"compositions",
+										"{{compositionCleanId}}",
+										"instances"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Instance ACM-Direct",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{ACM_PWD}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{ACM_USER}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"K8DemoInstance0\",\r\n  \"version\": \"1.0.1\",\r\n  \"compositionId\": \"{{compositionId}}\",\r\n  \"description\": \"Demo automation composition instance 0\",\r\n  \"elements\": {\r\n    \"d7be552e-bcc5-4478-b64d-797dbaec8f55\": {\r\n      \"id\": \"d7be552e-bcc5-4478-b64d-797dbaec8f55\",\r\n      \"definition\": {\r\n        \"name\": \"onap.policy.clamp.ac.element.K8S_StarterAutomationCompositionElement\",\r\n        \"version\": \"1.2.3\"\r\n      },\r\n      \"description\": \"Starter Automation Composition Element for the Hello World\",\r\n      \"properties\": {\r\n        \"chart\": {\r\n          \"chartId\": {\r\n            \"name\": \"hello-world-chart\",\r\n            \"version\": \"0.1.0\"\r\n          },\r\n          \"namespace\": \"nonrtric\",\r\n          \"releaseName\": \"hello-world-chart\",\r\n          \"podName\": \"hello-world-chart\",\r\n          \"repository\": {\r\n            \"repoName\": \"local\",\r\n            \"address\": \"UPDATE_THIS_CHART_MUSEUM_GET_CHARTS_URI\"\r\n          },\r\n          \"overrideParams\": {\r\n            \"appId\": \"DO_NOT_CHANGE_THIS_RAPP_INSTANCE_ID\",\r\n            \"smeDiscoveryEndpoint\": \"DO_NOT_CHANGE_THIS_SME_DISCOVERY_ENDPOINT\"\r\n          }\r\n        }\r\n      }\r\n    }\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{REMOTE-IP}}:{{ACM_PORT}}/onap/policy/clamp/acm/v2/compositions/{{compositionCleanId}}/instances/{{instanceCleanId}}",
+									"protocol": "http",
+									"host": [
+										"{{REMOTE-IP}}"
+									],
+									"port": "{{ACM_PORT}}",
+									"path": [
+										"onap",
+										"policy",
+										"clamp",
+										"acm",
+										"v2",
+										"compositions",
+										"{{compositionCleanId}}",
+										"instances",
+										"{{instanceCleanId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Undeploy Rapp Instance ACM-Direct",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{ACM_PWD}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{ACM_USER}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"deployOrder\": \"UNDEPLOY\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{REMOTE-IP}}:{{ACM_PORT}}/onap/policy/clamp/acm/v2/compositions/{{compositionCleanId}}/instances/{{instanceCleanId}}",
+									"protocol": "http",
+									"host": [
+										"{{REMOTE-IP}}"
+									],
+									"port": "{{ACM_PORT}}",
+									"path": [
+										"onap",
+										"policy",
+										"clamp",
+										"acm",
+										"v2",
+										"compositions",
+										"{{compositionCleanId}}",
+										"instances",
+										"{{instanceCleanId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Instance ACM-Direct",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"    let location = pm.response.headers.get('Location')",
+											"    console.log(\"location: \" + location)",
+											"    let composition1Id = location.split('/')[2];",
+											"    console.log(\"compositionId: \" + composition1Id)",
+											"    pm.environment.set(\"composition1Id\", composition1Id);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{ACM_PWD}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{ACM_USER}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"K8DemoInstance0\",\r\n  \"version\": \"1.0.1\",\r\n  \"compositionId\": \"{{compositionId}}\",\r\n  \"description\": \"Demo automation composition instance 0\",\r\n  \"elements\": {\r\n    \"d7be552e-bcc5-4478-b64d-797dbaec8f55\": {\r\n      \"id\": \"d7be552e-bcc5-4478-b64d-797dbaec8f55\",\r\n      \"definition\": {\r\n        \"name\": \"onap.policy.clamp.ac.element.K8S_StarterAutomationCompositionElement\",\r\n        \"version\": \"1.2.3\"\r\n      },\r\n      \"description\": \"Starter Automation Composition Element for the Hello World\",\r\n      \"properties\": {\r\n        \"chart\": {\r\n          \"chartId\": {\r\n            \"name\": \"hello-world-chart\",\r\n            \"version\": \"0.1.0\"\r\n          },\r\n          \"namespace\": \"nonrtric\",\r\n          \"releaseName\": \"hello-world-chart\",\r\n          \"podName\": \"hello-world-chart\",\r\n          \"repository\": {\r\n            \"repoName\": \"local\",\r\n            \"address\": \"UPDATE_THIS_CHART_MUSEUM_GET_CHARTS_URI\"\r\n          },\r\n          \"overrideParams\": {\r\n            \"appId\": \"DO_NOT_CHANGE_THIS_RAPP_INSTANCE_ID\",\r\n            \"smeDiscoveryEndpoint\": \"DO_NOT_CHANGE_THIS_SME_DISCOVERY_ENDPOINT\"\r\n          }\r\n        }\r\n      }\r\n    }\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{REMOTE-IP}}:{{ACM_PORT}}/onap/policy/clamp/acm/v2/compositions/{{compositionCleanId}}/instances/{{instanceCleanId}}",
+									"protocol": "http",
+									"host": [
+										"{{REMOTE-IP}}"
+									],
+									"port": "{{ACM_PORT}}",
+									"path": [
+										"onap",
+										"policy",
+										"clamp",
+										"acm",
+										"v2",
+										"compositions",
+										"{{compositionCleanId}}",
+										"instances",
+										"{{instanceCleanId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Deprime Rapp ACM-Direct",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{ACM_PWD}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{ACM_USER}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"primeOrder\": \"DEPRIME\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{REMOTE-IP}}:{{ACM_PORT}}/onap/policy/clamp/acm/v2/compositions/{{compositionCleanId}}",
+									"protocol": "http",
+									"host": [
+										"{{REMOTE-IP}}"
+									],
+									"port": "{{ACM_PORT}}",
+									"path": [
+										"onap",
+										"policy",
+										"clamp",
+										"acm",
+										"v2",
+										"compositions",
+										"{{compositionCleanId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Template ACM-Direct",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{ACM_PWD}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{ACM_USER}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{REMOTE-IP}}:{{ACM_PORT}}/onap/policy/clamp/acm/v2/compositions/{{compositionCleanId}}",
+									"protocol": "http",
+									"host": [
+										"{{REMOTE-IP}}"
+									],
+									"port": "{{ACM_PORT}}",
+									"path": [
+										"onap",
+										"policy",
+										"clamp",
+										"acm",
+										"v2",
+										"compositions",
+										"{{compositionCleanId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Participants ACM-Direct",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"    let location = pm.response.headers.get('Location')",
+											"    console.log(\"location: \" + location)",
+											"    let composition1Id = location.split('/')[2];",
+											"    console.log(\"compositionId: \" + composition1Id)",
+											"    pm.environment.set(\"composition1Id\", composition1Id);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{ACM_PWD}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{ACM_USER}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"tosca_definitions_version\": \"tosca_simple_yaml_1_3\",\r\n  \"data_types\": {\r\n    \"onap.datatypes.ToscaConceptIdentifier\": {\r\n      \"derived_from\": \"tosca.datatypes.Root\",\r\n      \"properties\": {\r\n        \"name\": {\r\n          \"type\": \"string\",\r\n          \"required\": true\r\n        },\r\n        \"version\": {\r\n          \"type\": \"string\",\r\n          \"required\": true\r\n        }\r\n      }\r\n    }\r\n  },\r\n  \"node_types\": {\r\n    \"org.onap.policy.clamp.acm.Participant\": {\r\n      \"version\": \"1.0.1\",\r\n      \"derived_from\": \"tosca.nodetypes.Root\",\r\n      \"properties\": {\r\n        \"provider\": {\r\n          \"type\": \"string\",\r\n          \"required\": false\r\n        }\r\n      }\r\n    },\r\n    \"org.onap.policy.clamp.acm.AutomationCompositionElement\": {\r\n      \"version\": \"1.0.1\",\r\n      \"derived_from\": \"tosca.nodetypes.Root\",\r\n      \"properties\": {\r\n        \"provider\": {\r\n          \"type\": \"string\",\r\n          \"required\": false\r\n        },\r\n        \"participantType\": {\r\n          \"type\": \"onap.datatypes.ToscaConceptIdentifier\",\r\n          \"required\": true\r\n        },\r\n        \"startPhase\": {\r\n          \"type\": \"integer\",\r\n          \"required\": false,\r\n          \"constraints\": [\r\n            {\r\n              \"greater-or-equal\": 0\r\n            }\r\n          ],\r\n          \"metadata\": {\r\n            \"common\": true\r\n          },\r\n          \"description\": \"A value indicating the start phase in which this automation composition element will be started, the first start phase is zero. Automation Composition Elements are started in their start_phase order and stopped in reverse start phase order. Automation Composition Elements with the same start phase are started and stopped simultaneously\"\r\n        },\r\n        \"passiveToRunningTimeout\": {\r\n          \"type\": \"integer\",\r\n          \"required\": false,\r\n          \"constraints\": [\r\n            {\r\n              \"greater_or_equal\": 0\r\n            }\r\n          ],\r\n          \"default\": 60,\r\n          \"metadata\": {\r\n            \"common\": true\r\n          },\r\n          \"description\": \"The maximum time in seconds to wait for a state chage from passive to running\"\r\n        },\r\n        \"runningToPassiveTimeout\": {\r\n          \"type\": \"integer\",\r\n          \"required\": false,\r\n          \"constraints\": [\r\n            {\r\n              \"greater_or_equal\": 0\r\n            }\r\n          ],\r\n          \"default\": 60,\r\n          \"metadata\": {\r\n            \"common\": true\r\n          },\r\n          \"description\": \"The maximum time in seconds to wait for a state chage from running to passive\"\r\n        },\r\n        \"passiveToUninitializedTimeout\": {\r\n          \"type\": \"integer\",\r\n          \"required\": false,\r\n          \"constraints\": [\r\n            {\r\n              \"greater_or_equal\": 0\r\n            }\r\n          ],\r\n          \"default\": 60,\r\n          \"metadata\": {\r\n            \"common\": true\r\n          },\r\n          \"description\": \"The maximum time in seconds to wait for a state chage from passive to uninitialized\"\r\n        }\r\n      }\r\n    },\r\n    \"org.onap.policy.clamp.acm.AutomationComposition\": {\r\n      \"version\": \"1.0.1\",\r\n      \"derived_from\": \"tosca.nodetypes.Root\",\r\n      \"properties\": {\r\n        \"provider\": {\r\n          \"type\": \"string\",\r\n          \"required\": false,\r\n          \"metadata\": {\r\n            \"common\": true\r\n          }\r\n        },\r\n        \"elements\": {\r\n          \"type\": \"list\",\r\n          \"required\": true,\r\n          \"metadata\": {\r\n            \"common\": true\r\n          },\r\n          \"entry_schema\": {\r\n            \"type\": \"onap.datatypes.ToscaConceptIdentifier\"\r\n          }\r\n        }\r\n      }\r\n    },\r\n    \"org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement\": {\r\n      \"version\": \"1.0.0\",\r\n      \"derived_from\": \"org.onap.policy.clamp.acm.AutomationCompositionElement\",\r\n      \"properties\": {\r\n        \"chart\": {\r\n          \"type\": \"string\",\r\n          \"required\": true\r\n        },\r\n        \"configs\": {\r\n          \"type\": \"list\",\r\n          \"required\": false\r\n        },\r\n        \"requirements\": {\r\n          \"type\": \"string\",\r\n          \"required\": false\r\n        },\r\n        \"templates\": {\r\n          \"type\": \"list\",\r\n          \"required\": false,\r\n          \"entry_schema\": null\r\n        },\r\n        \"values\": {\r\n          \"type\": \"string\",\r\n          \"required\": true\r\n        }\r\n      }\r\n    }\r\n  },\r\n  \"topology_template\": {\r\n    \"node_templates\": {\r\n      \"org.onap.k8s.acm.K8SAutomationCompositionParticipant\": {\r\n        \"version\": \"2.3.4\",\r\n        \"type\": \"org.onap.policy.clamp.acm.Participant\",\r\n        \"type_version\": \"1.0.1\",\r\n        \"description\": \"Participant for K8S\",\r\n        \"properties\": {\r\n          \"provider\": \"ONAP\"\r\n        }\r\n      },\r\n      \"onap.policy.clamp.ac.element.K8S_StarterAutomationCompositionElement\": {\r\n        \"version\": \"1.2.3\",\r\n        \"type\": \"org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement\",\r\n        \"type_version\": \"1.0.0\",\r\n        \"description\": \"Automation composition element for the K8S microservice for AC Element Starter\",\r\n        \"properties\": {\r\n          \"provider\": \"ONAP\",\r\n          \"startPhase\": 0,\r\n          \"uninitializedToPassiveTimeout\": 300,\r\n          \"podStatusCheckInterval\": 30\r\n        }\r\n      },\r\n      \"onap.policy.clamp.ac.element.AutomationCompositionDefinition\": {\r\n        \"version\": \"1.2.3\",\r\n        \"type\": \"org.onap.policy.clamp.acm.AutomationComposition\",\r\n        \"type_version\": \"1.0.1\",\r\n        \"description\": \"Automation composition for rapp deployment\",\r\n        \"properties\": {\r\n          \"provider\": \"ONAP\",\r\n          \"elements\": [\r\n            {\r\n              \"name\": \"onap.policy.clamp.ac.element.K8S_StarterAutomationCompositionElement\",\r\n              \"version\": \"1.2.3\"\r\n            }\r\n          ]\r\n        }\r\n      }\r\n    }\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{REMOTE-IP}}:{{ACM_PORT}}/onap/policy/clamp/acm/v2/participants",
+									"protocol": "http",
+									"host": [
+										"{{REMOTE-IP}}"
+									],
+									"port": "{{ACM_PORT}}",
+									"path": [
+										"onap",
+										"policy",
+										"clamp",
+										"acm",
+										"v2",
+										"participants"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Onboard ES Rapp",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "multipart/form-data",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/home/saul/Projects/oran-projects/nonrtric-prototyping/es-rapp/rapp-energy-saving.csar"
+								},
+								{
+									"key": "file2",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{REMOTE-IP}}:{{PORT}}/rapps/{{rappId}}",
+							"protocol": "http",
+							"host": [
+								"{{REMOTE-IP}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"rapps",
+								"{{rappId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Rapps",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{REMOTE-IP}}:{{PORT}}/rapps",
+							"protocol": "http",
+							"host": [
+								"{{REMOTE-IP}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"rapps"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Prime Rapp",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"primeOrder\": \"PRIME\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{REMOTE-IP}}:{{PORT}}/rapps/{{rappId}}",
+							"protocol": "http",
+							"host": [
+								"{{REMOTE-IP}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"rapps",
+								"{{rappId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Rapp Instances",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{REMOTE-IP}}:{{PORT}}/rapps/{{rappId}}/instance",
+							"protocol": "http",
+							"host": [
+								"{{REMOTE-IP}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"rapps",
+								"{{rappId}}",
+								"instance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Rapp Instance ES",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"if(jsonData != null && jsonData.rappInstanceId != null) {\r",
+									"\r",
+									"pm.collectionVariables.set(\"rappInstanceId\", jsonData.rappInstanceId);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"acm\":{\r\n        \"instance\": \"es-instance\"\r\n    },\r\n    \"sme\": {\r\n        \"providerFunction\": \"es-model-provider-function\",\r\n        \"serviceApis\": \"api-set-kserve-predictor\",\r\n        \"invokers\": \"invoker-app1\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{REMOTE-IP}}:{{PORT}}/rapps/{{rappId}}/instance",
+							"protocol": "http",
+							"host": [
+								"{{REMOTE-IP}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"rapps",
+								"{{rappId}}",
+								"instance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Rapp Instance",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{REMOTE-IP}}:{{PORT}}/rapps/{{rappId}}/instance/{{rappInstanceId}}",
+							"protocol": "http",
+							"host": [
+								"{{REMOTE-IP}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"rapps",
+								"{{rappId}}",
+								"instance",
+								"{{rappInstanceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deploy Rapp Instance",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"deployOrder\": \"DEPLOY\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{REMOTE-IP}}:{{PORT}}/rapps/{{rappId}}/instance/{{rappInstanceId}}",
+							"protocol": "http",
+							"host": [
+								"{{REMOTE-IP}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"rapps",
+								"{{rappId}}",
+								"instance",
+								"{{rappInstanceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Undeploy Rapp Instance",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"deployOrder\": \"UNDEPLOY\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{REMOTE-IP}}:{{PORT}}/rapps/{{rappId}}/instance/{{rappInstanceId}}",
+							"protocol": "http",
+							"host": [
+								"{{REMOTE-IP}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"rapps",
+								"{{rappId}}",
+								"instance",
+								"{{rappInstanceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Rapp Instance",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://{{REMOTE-IP}}:{{PORT}}/rapps/{{rappId}}/instance/{{rappInstanceId}}",
+							"protocol": "http",
+							"host": [
+								"{{REMOTE-IP}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"rapps",
+								"{{rappId}}",
+								"instance",
+								"{{rappInstanceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deprime Rapp",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"primeOrder\": \"DEPRIME\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{REMOTE-IP}}:{{PORT}}/rapps/{{rappId}}",
+							"protocol": "http",
+							"host": [
+								"{{REMOTE-IP}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"rapps",
+								"{{rappId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete ES Rapp",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://{{REMOTE-IP}}:{{PORT}}/rapps/{{rappId}}",
+							"protocol": "http",
+							"host": [
+								"{{REMOTE-IP}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"rapps",
+								"{{rappId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Predict",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"signature_name\": \"serving_default\",\n    \"instances\": [\n        [\n            [\n                8.15,\n                11.51,\n                57.12\n            ]\n        ]\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{REMOTE-IP}}:{{PREDICT_PORT}}/v1/models/es-aiml-model:predict",
+							"protocol": "http",
+							"host": [
+								"{{REMOTE-IP}}"
+							],
+							"port": "{{PREDICT_PORT}}",
+							"path": [
+								"v1",
+								"models",
+								"es-aiml-model:predict"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Model readiness",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:40077/v1/models/es-aiml-model",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "40077",
+							"path": [
+								"v1",
+								"models",
+								"es-aiml-model"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "REMOTE-IP",
+			"value": "localhost"
+		},
+		{
+			"key": "ACM_PORT",
+			"value": "30442"
+		},
+		{
+			"key": "compositionCleanId",
+			"value": "969b740c-dde4-410c-ade2-8db2061e1531"
+		},
+		{
+			"key": "instanceCleanId",
+			"value": "1aaed9b1-4d23-441f-9107-5e3f36f4f323"
+		},
+		{
+			"key": "PORT",
+			"value": "36797"
+		},
+		{
+			"key": "rappId",
+			"value": "energy-saving-1"
+		},
+		{
+			"key": "rappInstanceId",
+			"value": "083dea57-f177-4c0e-be1b-a3282d16f586"
+		},
+		{
+			"key": "PREDICT_PORT",
+			"value": "40077"
+		},
+		{
+			"key": "ACM_USER",
+			"value": "runtimeUser"
+		},
+		{
+			"key": "ACM_PWD",
+			"value": "ZiboTipdZeyt9]"
+		}
+	]
+}

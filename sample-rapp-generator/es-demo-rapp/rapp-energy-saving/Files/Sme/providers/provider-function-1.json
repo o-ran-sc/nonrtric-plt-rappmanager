@@ -1,0 +1,20 @@
+{
+  "apiProvDomInfo": "Provider domain",
+  "apiProvFuncs": [
+    {
+      "apiProvFuncInfo": "Energy Saving as APF",
+      "apiProvFuncRole": "APF",
+      "regInfo": {
+        "apiProvPubKey": "NOT USED here"
+      }
+    },
+    {
+      "apiProvFuncInfo": "Energy Saving as AEF",
+      "apiProvFuncRole": "AEF",
+      "regInfo": {
+        "apiProvPubKey": "NOT USED here"
+      }
+    }
+  ],
+  "regSec": "plain"
+}

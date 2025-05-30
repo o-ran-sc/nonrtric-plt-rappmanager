@@ -1,0 +1,23 @@
+metadata:
+  application_name: rapp-energy-saving
+  application_provider: Ericsson Software Technology (O-RAN SC NONRTRIC team)
+  release_date_time: 2025-06-03T12:34:00+00:00
+  entry_definition_type: asd
+
+Source: asd.mf
+Source: Definitions/asd.yaml
+Source: Definitions/asd_types.yaml
+Source: TOSCA-Metadata/TOSCA.meta
+Source: Files/Acm/definition/compositions.json
+Source: Files/Acm/instances/es-instance.json
+Source: Files/Acm/instances/k8s-instance.json
+Source: Files/Acm/instances/kserve-instance.json
+Source: Files/SME/invokers/invoker-app1.json
+Source: Files/SME/invokers/invoker-ncmp.json
+Source: Files/SME/invokers/invoker-kserve-predictor.json
+Source: Files/SME/invokers/invoker-influxdb.json
+Source: Files/Sme/provider/provider-function-1.json
+Source: Files/Sme/provider/es-model-provider-function.json
+Source: Files/Sme/serviceapis/api-set-1.json
+Source: Files/Sme/serviceapis/api-set-2.json
+Source: Files/Sme/serviceapis/api-set-kserve-predictor.json
