@@ -1,0 +1,29 @@
+{
+  "name": "KserveInstance0",
+  "version": "1.0.1",
+  "compositionId": "DO_NOT_CHANGE_THIS_COMPOSITION_ID",
+  "description": "Demo automation composition instance 0",
+  "elements": {
+    "709c62b3-8918-41b9-a747-d21eb79c6c20": {
+      "id": "709c62b3-8918-41b9-a747-d21eb79c6c20",
+      "definition": {
+        "name": "onap.policy.clamp.ac.element.KserveAutomationCompositionElement",
+        "version": "1.2.3"
+      },
+      "description": "Starter Automation Composition Element for the Demo",
+      "properties": {
+        "kserveInferenceEntities": [
+          {
+            "kserveInferenceEntityId": {
+              "name": "es-aiml-model-entity",
+              "version": "1.0.1"
+            },
+            "name": "es-aiml-model",
+            "namespace": "kserve-test",
+            "payload": "{\"apiVersion\": \"serving.kserve.io/v1beta1\",\"kind\": \"InferenceService\",\"metadata\": {\"name\": \"es-aiml-model\"},\"spec\": {\"predictor\": {\"tensorflow\": {\"storageUri\": \"https://huggingface.co/saulgillEST/es-aiml-model/resolve/main/Model.zip\"}}}}"
+          }
+        ]
+      }
+    }
+  }
+}

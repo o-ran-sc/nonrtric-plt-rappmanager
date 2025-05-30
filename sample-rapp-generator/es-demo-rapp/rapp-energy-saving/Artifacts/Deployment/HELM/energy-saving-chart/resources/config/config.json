@@ -1,0 +1,35 @@
+{
+  "SME": {
+    "sme_discovery_endpoint": "{{ .Values.environment.smeDiscoveryEndpoint }}",
+    "host": "localhost",
+    "port": 31575,
+    "ncmp_invoker_id": "{{ .Values.environment.appId }}",
+    "ncmp_api_name": "{{ .Values.ncmp.apiName }}",
+    "ncmp_resource_name": "{{ .Values.ncmp.resourceName }}",
+    "resource_id": "{{ .Values.ncmp.resourceId}}",
+    "influxdb_invoker_id": "{{ .Values.environment.appId }}",
+    "influxdb_api_name": "{{ .Values.influxdb.apiName }}",
+    "influxdb_resource_name": "{{ .Values.influxdb.resourceName }}",
+    "kserve_invoker_id": "{{ .Values.environment.appId }}",
+    "kserve_api_name": "{{ .Values.kserve.apiName }}",
+    "kserve_resource_name": "{{ .Values.kserve.resourceName }}",
+    "teiv_invoker_id": "{{ .Values.environment.appId }}",
+    "teiv_api_name": "{{ .Values.teiv.apiName }}",
+    "teiv_resource_name": "{{ .Values.teiv.resourceName }}",
+    "odufunction_id": "{{ .Values.teiv.oduFunctionId }}"
+  },
+  "DB": {
+    "host": "localhost",
+    "port": 8086,
+    "bucket": "{{ .Values.influxdb.bucket }}",
+    "org": "{{ .Values.influxdb.org }}",
+    "token": "{{ .Values.influxdb.token }}",
+    "user": "{{ .Values.influxdb.user }}",
+    "password": "{{ .Values.influxdb.password }}",
+    "example_data_file": "example_data.json",
+    "database": "{{ .Values.influxdb.bucket }}",
+    "measurement": "CellReports",
+    "ssl": false,
+    "address": "http://localhost:8086"
+  }
+}

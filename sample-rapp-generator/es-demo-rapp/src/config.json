@@ -1,0 +1,35 @@
+{
+  "SME": {
+    "sme_discovery_endpoint": "http://localhost:31575/service-apis/v1/allServiceAPIs",
+    "host": "localhost",
+    "port": 31575,
+    "ncmp_invoker_id": "6a965002-ed7c-4f69-855c-ab9196f86e61",
+    "ncmp_api_name": "ncmp-dmi-plugin-http",
+    "ncmp_resource_name": "root",
+    "resource_id": "/_3gpp-common-managed-element:ManagedElement=ManagedElement-002/_3gpp-nr-nrm-gnbdufunction:GNBDUFunction=GNBDUFunction-001/_3gpp-nr-nrm-nrcelldu:NRCellDU=NRCellDU-001/attributes",
+    "influxdb_invoker_id": "6a965002-ed7c-4f69-855c-ab9196f86e61",
+    "influxdb_api_name": "influxdb2-http",
+    "influxdb_resource_name": "root",
+    "kserve_invoker_id": "6a965002-ed7c-4f69-855c-ab9196f86e61",
+    "kserve_api_name": "es-predictor-http",
+    "kserve_resource_name": "root",
+    "teiv_invoker_id": "6a965002-ed7c-4f69-855c-ab9196f86e61",
+    "teiv_api_name": "topology-exposure-http",
+    "teiv_resource_name": "root",
+    "odufunction_id": "GNBDUFunction-001"
+  },
+  "DB": {
+    "host": "localhost",
+    "port": 8086,
+    "bucket": "pm-bucket",
+    "org": "est",
+    "token": "WcrfLfqC63uCxfDa15C1sb6WtG5fhzrS",
+    "user": "admin",
+    "password": "mySuP3rS3cr3tT0keN",
+    "example_data_file": "example_data.json",
+    "database": "pm-bucket",
+    "measurement": "CellReports",
+    "ssl": false,
+    "address": "http://localhost:8086"
+  }
+}

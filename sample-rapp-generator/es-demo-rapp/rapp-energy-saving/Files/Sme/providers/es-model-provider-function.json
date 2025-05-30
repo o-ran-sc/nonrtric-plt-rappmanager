@@ -1,0 +1,20 @@
+{
+  "apiProvDomInfo": "ES Model Provider domain",
+  "apiProvFuncs": [
+    {
+      "apiProvFuncInfo": "ES Prediction as APF",
+      "apiProvFuncRole": "APF",
+      "regInfo": {
+        "apiProvPubKey": "NOT USED here"
+      }
+    },
+    {
+      "apiProvFuncInfo": "ES Prediction as AEF",
+      "apiProvFuncRole": "AEF",
+      "regInfo": {
+        "apiProvPubKey": "NOT USED here"
+      }
+    }
+  ],
+  "regSec": "plain"
+}

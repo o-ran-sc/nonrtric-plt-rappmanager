@@ -1,0 +1,36 @@
+{
+  "apiName": "es-predictor-http",
+  "description": "ES Prediction model endpoints",
+  "aefProfiles": [
+    {
+      "aefId": "ES Predictor as AEF",
+      "description": "ES predictor API",
+      "versions": [
+        {
+          "apiVersion": "",
+          "resources": [
+            {
+              "resourceName": "root",
+              "commType": "REQUEST_RESPONSE",
+              "uri": "/",
+              "operations": [
+                "POST",
+                "GET",
+                "PUT",
+                "DELETE",
+                "PATCH"
+              ]
+            }
+          ]
+        }
+      ],
+      "protocol": "HTTP_1_1",
+      "interfaceDescriptions": [
+        {
+          "ipv4Addr": "es-aiml-model-predictor.kserve-test.svc.cluster.local",
+          "port": 80
+        }
+      ]
+    }
+  ]
+}
