@@ -2,7 +2,7 @@
 
 #  ============LICENSE_START===============================================
 #  Copyright (C) 2023 Nordix Foundation. All rights reserved.
-#  Copyright (C) 2024 OpenInfra Foundation Europe. All rights reserved.
+#  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
 #  ========================================================================
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -33,8 +33,9 @@ if ! command -v helm &> /dev/null; then
   exit 1
 fi
 
+ORIGINAL_DIR=$(pwd)
 DIRECTORY=${1%/}
-PACKAGENAME="$DIRECTORY.csar"
+PACKAGENAME="$(basename "$DIRECTORY").csar"
 HELM_DIR="$DIRECTORY/Artifacts/Deployment/HELM"
 EXCLUDE_DIRS=()
 
@@ -56,9 +57,9 @@ checkHelmPackage() {
 
 if [ -d "$DIRECTORY" ]; then
   checkHelmPackage
-  rm -f $PACKAGENAME 2> /dev/null
+  rm -f $ORIGINAL_DIR/$PACKAGENAME 2> /dev/null
   pushd $DIRECTORY
-  zip -r ../$PACKAGENAME * $([ ${#EXCLUDE_DIRS[@]} -gt 0 ] && printf " -x %s" "${EXCLUDE_DIRS[@]}")
+  zip -r $ORIGINAL_DIR/$PACKAGENAME * $([ ${#EXCLUDE_DIRS[@]} -gt 0 ] && printf " -x %s" "${EXCLUDE_DIRS[@]}")
   popd
   echo -e "rApp package $PACKAGENAME generated."
 else

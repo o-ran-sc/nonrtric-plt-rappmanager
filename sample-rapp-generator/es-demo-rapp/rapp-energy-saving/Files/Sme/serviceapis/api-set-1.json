@@ -1,0 +1,32 @@
+{
+  "apiName": "Energy Saving API Set 1",
+  "description": "Simple Energy Saving API",
+  "aefProfiles": [
+    {
+      "aefId": "Energy Saving as AEF",
+      "description": "Energy Saving API",
+      "versions": [
+        {
+          "apiVersion": "",
+          "resources": [
+            {
+              "resourceName": "energysaving",
+              "commType": "REQUEST_RESPONSE",
+              "uri": "/energysaving/v1",
+              "operations": [
+                "GET"
+              ]
+            }
+          ]
+        }
+      ],
+      "protocol": "HTTP_1_1",
+      "interfaceDescriptions": [
+        {
+          "ipv4Addr": "energysaving.nonrtric.svc.cluster.local",
+          "port": 8080
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "apiName": "Energy Saving API Set 2",
+  "description": "Simple Energy Saving API for Subpath",
+  "aefProfiles": [
+    {
+      "aefId": "Energy Saving as AEF",
+      "description": "Energy Saving API for Subpath",
+      "versions": [
+        {
+          "apiVersion": "",
+          "resources": [
+            {
+              "resourceName": "energysaving",
+              "commType": "REQUEST_RESPONSE",
+              "uri": "/energysaving/v1/subpath1",
+              "operations": [
+                "GET"
+              ]
+            }
+          ]
+        }
+      ],
+      "protocol": "HTTP_1_1",
+      "interfaceDescriptions": [
+        {
+          "ipv4Addr": "energysaving.nonrtric.svc.cluster.local",
+          "port": 8080
+        }
+      ]
+    }
+  ]
+}
