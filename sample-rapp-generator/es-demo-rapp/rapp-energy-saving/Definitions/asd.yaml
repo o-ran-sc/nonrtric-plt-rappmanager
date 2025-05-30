@@ -1,0 +1,30 @@
+tosca_definitions_version: tosca_simple_yaml_1_2
+
+description: rApp energy saving
+
+imports:
+  - asd_types.yaml
+
+topology_template:
+  node_templates:
+    applicationServiceDescriptor:
+      type: tosca.nodes.asd
+      description: "rapp-energy-saving"
+      properties:
+        descriptor_id: 364545c9-f1b1-48bb-a774-2b999e47692d
+        descriptor_invariant_id: 97f18c6e-125d-470e-81a2-a36034989acd
+        descriptor_version: 1.0
+        schema_version: 2.0
+        function_description: rApp description
+        provider: Ericsson Software Technology (O-RAN SC NONRTRIC team)
+        application_name: rapp-energy-saving
+        application_version: 1.0
+      artifacts:
+        energy-saving:
+          type: tosca.artifacts.asd.deploymentItem
+          file: "Artifacts/Deployment/HELM/energy-saving-rapp-0.1.0.tgz"
+          properties:
+            artifact_type: "helm_chart"
+            target_server: "chartmuseum"
+            target_server_uri: "http://10.101.1.170:18080/api/charts"
+            item_id: 1

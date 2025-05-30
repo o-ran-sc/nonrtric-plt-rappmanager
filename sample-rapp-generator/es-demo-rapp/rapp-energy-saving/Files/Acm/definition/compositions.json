@@ -1,0 +1,254 @@
+{
+  "tosca_definitions_version": "tosca_simple_yaml_1_3",
+  "data_types": {
+    "onap.datatypes.ToscaConceptIdentifier": {
+      "derived_from": "tosca.datatypes.Root",
+      "properties": {
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "version": {
+          "type": "string",
+          "required": true
+        }
+      }
+    },
+    "org.onap.datatypes.policy.clamp.acm.kserveAutomationCompositionElement.KserveInferenceEntity": {
+      "version": "1.0.0",
+      "derived_from": "tosca.datatypes.Root",
+      "properties": {
+        "kserveEntityId": {
+          "type": "onap.datatypes.ToscaConceptIdentifier",
+          "required": true,
+          "description": "The name and version of a Configuration Entity to be handled by the Kserve Automation Composition Element"
+        },
+        "name": {
+          "type": "string",
+          "required": true,
+          "description": "Inference service name to be created"
+        },
+        "payload": {
+          "type": "string",
+          "required": true,
+          "description": "Inference Service payload"
+        }
+      }
+    }
+  },
+  "node_types": {
+    "org.onap.policy.clamp.acm.Participant": {
+      "version": "1.0.1",
+      "derived_from": "tosca.nodetypes.Root",
+      "properties": {
+        "provider": {
+          "type": "string",
+          "required": false
+        }
+      }
+    },
+    "org.onap.policy.clamp.acm.AutomationCompositionElement": {
+      "version": "1.0.1",
+      "derived_from": "tosca.nodetypes.Root",
+      "properties": {
+        "provider": {
+          "type": "string",
+          "required": false
+        },
+        "participantType": {
+          "type": "onap.datatypes.ToscaConceptIdentifier",
+          "required": true
+        },
+        "startPhase": {
+          "type": "integer",
+          "required": false,
+          "constraints": [
+            {
+              "greater-or-equal": 0
+            }
+          ],
+          "metadata": {
+            "common": true
+          },
+          "description": "A value indicating the start phase in which this automation composition element will be started, the first start phase is zero. Automation Composition Elements are started in their start_phase order and stopped in reverse start phase order. Automation Composition Elements with the same start phase are started and stopped simultaneously"
+        },
+        "passiveToRunningTimeout": {
+          "type": "integer",
+          "required": false,
+          "constraints": [
+            {
+              "greater_or_equal": 0
+            }
+          ],
+          "default": 60,
+          "metadata": {
+            "common": true
+          },
+          "description": "The maximum time in seconds to wait for a state chage from passive to running"
+        },
+        "runningToPassiveTimeout": {
+          "type": "integer",
+          "required": false,
+          "constraints": [
+            {
+              "greater_or_equal": 0
+            }
+          ],
+          "default": 60,
+          "metadata": {
+            "common": true
+          },
+          "description": "The maximum time in seconds to wait for a state chage from running to passive"
+        },
+        "passiveToUninitializedTimeout": {
+          "type": "integer",
+          "required": false,
+          "constraints": [
+            {
+              "greater_or_equal": 0
+            }
+          ],
+          "default": 60,
+          "metadata": {
+            "common": true
+          },
+          "description": "The maximum time in seconds to wait for a state chage from passive to uninitialized"
+        }
+      }
+    },
+    "org.onap.policy.clamp.acm.AutomationComposition": {
+      "version": "1.0.1",
+      "derived_from": "tosca.nodetypes.Root",
+      "properties": {
+        "provider": {
+          "type": "string",
+          "required": false,
+          "metadata": {
+            "common": true
+          }
+        },
+        "elements": {
+          "type": "list",
+          "required": true,
+          "metadata": {
+            "common": true
+          },
+          "entry_schema": {
+            "type": "onap.datatypes.ToscaConceptIdentifier"
+          }
+        }
+      }
+    },
+    "org.onap.policy.clamp.acm.KserveAutomationCompositionElement": {
+      "version": "1.0.1",
+      "derived_from": "org.onap.policy.clamp.acm.AutomationCompositionElement",
+      "properties": {
+        "kserveInferenceEntities": {
+          "type": "list",
+          "required": true,
+          "entry_schema": {
+            "type": "org.onap.datatypes.policy.clamp.acm.kserveAutomationCompositionElement.KserveInferenceEntity",
+            "type_version": "1.0.0"
+          },
+          "description": "The configuration entities of Kserve inference service"
+        }
+      }
+    },
+    "org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement": {
+      "version": "1.0.0",
+      "derived_from": "org.onap.policy.clamp.acm.AutomationCompositionElement",
+      "properties": {
+        "chart": {
+          "type": "string",
+          "required": true
+        },
+        "configs": {
+          "type": "list",
+          "required": false
+        },
+        "requirements": {
+          "type": "string",
+          "required": false
+        },
+        "templates": {
+          "type": "list",
+          "required": false,
+          "entry_schema": null
+        },
+        "values": {
+          "type": "string",
+          "required": true
+        }
+      }
+    }
+  },
+  "topology_template": {
+    "node_templates": {
+      "org.onap.policy.clamp.acm.KserveParticipant": {
+        "version": "2.3.4",
+        "type": "org.onap.policy.clamp.acm.Participant",
+        "type_version": "1.0.1",
+        "description": "Participant for Kserve requests",
+        "properties": {
+          "provider": "ONAP"
+        }
+      },
+      "org.onap.k8s.acm.K8SAutomationCompositionParticipant": {
+        "version": "2.3.4",
+        "type": "org.onap.policy.clamp.acm.Participant",
+        "type_version": "1.0.1",
+        "description": "Participant for K8S",
+        "properties": {
+          "provider": "ONAP"
+        }
+      },
+      "onap.policy.clamp.ac.element.KserveAutomationCompositionElement": {
+        "version": "1.2.3",
+        "type": "org.onap.policy.clamp.acm.KserveAutomationCompositionElement",
+        "type_version": "1.0.1",
+        "description": "Automation composition element for the Kserve Requests",
+        "properties": {
+          "provider": "ONAP",
+          "startPhase": 0,
+          "participantType": {
+            "name": "org.onap.policy.clamp.acm.KserveParticipant",
+            "version": "2.3.4"
+          },
+          "uninitializedToPassiveTimeout": 300,
+          "statusCheckInterval": 30
+        }
+      },
+      "onap.policy.clamp.ac.element.K8S_StarterAutomationCompositionElement": {
+        "version": "1.2.3",
+        "type": "org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement",
+        "type_version": "1.0.0",
+        "description": "Automation composition element for the K8S microservice for AC Element Starter",
+        "properties": {
+          "provider": "ONAP",
+          "startPhase": 1,
+          "uninitializedToPassiveTimeout": 300,
+          "podStatusCheckInterval": 30
+        }
+      },
+      "onap.policy.clamp.ac.element.AutomationCompositionDefinition": {
+        "version": "1.2.3",
+        "type": "org.onap.policy.clamp.acm.AutomationComposition",
+        "type_version": "1.0.1",
+        "description": "Automation composition for rapp deployment",
+        "properties": {
+          "provider": "ONAP",
+          "elements": [
+            {
+              "name": "onap.policy.clamp.ac.element.K8S_StarterAutomationCompositionElement",
+              "version": "1.2.3"
+            },
+            {
+              "name": "onap.policy.clamp.ac.element.KserveAutomationCompositionElement",
+              "version": "1.2.3"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

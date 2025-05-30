@@ -1,0 +1,35 @@
+{
+  "name": "K8ESInstance0",
+  "version": "1.0.1",
+  "compositionId": "DO_NOT_CHANGE_THIS_COMPOSITION_ID",
+  "description": "Energy Saving automation composition instance 0",
+  "elements": {
+    "d7be552e-bcc5-4478-b64d-797dbaec8f55": {
+      "id": "d7be552e-bcc5-4478-b64d-797dbaec8f55",
+      "definition": {
+        "name": "onap.policy.clamp.ac.element.K8S_StarterAutomationCompositionElement",
+        "version": "1.2.3"
+      },
+      "description": "Starter Automation Composition Element for the Hello World",
+      "properties": {
+        "chart": {
+          "chartId": {
+            "name": "energy-saving-rapp",
+            "version": "0.1.0"
+          },
+          "namespace": "nonrtric",
+          "releaseName": "energy-saving-rapp",
+          "podName": "energy-saving-rapp",
+          "repository": {
+            "repoName": "local",
+            "address": "http://10.101.1.170:18080"
+          },
+          "overrideParams": {
+            "environment.appId": "DO_NOT_CHANGE_THIS_RAPP_INSTANCE_ID",
+            "environment.smeDiscoveryEndpoint": "DO_NOT_CHANGE_THIS_SME_DISCOVERY_ENDPOINT"
+          }
+        }
+      }
+    }
+  }
+}
