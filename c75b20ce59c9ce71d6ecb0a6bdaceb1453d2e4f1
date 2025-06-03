@@ -24,6 +24,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "78267687_896caf4a",
+        "filename": "sample-rapp-generator/es-demo-rapp/README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1002638
+      },
+      "writtenOn": "2025-06-03T15:47:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "051564f8_f74d7fef",
+      "range": {
+        "startLine": 14,
+        "startChar": 32,
+        "endLine": 14,
+        "endChar": 59
+      },
+      "revId": "c75b20ce59c9ce71d6ecb0a6bdaceb1453d2e4f1",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5e8ef171_aac10da4",
@@ -47,6 +71,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c37fd9bb_abe55a14",
+        "filename": "sample-rapp-generator/es-demo-rapp/cloudEventConsumerFor-itdep-installation.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1002638
+      },
+      "writtenOn": "2025-06-03T15:47:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5e8ef171_aac10da4",
+      "range": {
+        "startLine": 33,
+        "startChar": 151,
+        "endLine": 33,
+        "endChar": 183
+      },
+      "revId": "c75b20ce59c9ce71d6ecb0a6bdaceb1453d2e4f1",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "40202651_976f974c",
@@ -60,6 +108,30 @@
       "writtenOn": "2025-06-03T11:28:40Z",
       "side": 1,
       "message": "is this correct?",
+      "range": {
+        "startLine": 25,
+        "startChar": 15,
+        "endLine": 25,
+        "endChar": 28
+      },
+      "revId": "c75b20ce59c9ce71d6ecb0a6bdaceb1453d2e4f1",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dbd72d53_535c887f",
+        "filename": "sample-rapp-generator/es-demo-rapp/rapp-energy-saving/Artifacts/Deployment/HELM/energy-saving-chart/values.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1002638
+      },
+      "writtenOn": "2025-06-03T15:47:45Z",
+      "side": 1,
+      "message": "Yes, but I replaced it with a nexus uri",
+      "parentUuid": "40202651_976f974c",
       "range": {
         "startLine": 25,
         "startChar": 15,
@@ -95,6 +167,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bbecfe49_e08cf863",
+        "filename": "sample-rapp-generator/es-demo-rapp/rapp-energy-saving/Definitions/asd.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1002638
+      },
+      "writtenOn": "2025-06-03T15:47:45Z",
+      "side": 1,
+      "message": "Spoke with Aravindhan on this. There is a patching script for the rApps - I altered it to replace placeholders for all the required fields around chartmuseum. Also altered the README to instruct users to follow this step before generate.sh. @John, I will let you mark this resolved if you are happy",
+      "parentUuid": "3fe30aa5_1dcbd064",
+      "range": {
+        "startLine": 29,
+        "startChar": 38,
+        "endLine": 29,
+        "endChar": 65
+      },
+      "revId": "c75b20ce59c9ce71d6ecb0a6bdaceb1453d2e4f1",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a12d175d_e9f76097",
         "filename": "sample-rapp-generator/es-demo-rapp/rapp-energy-saving/asd.mf",
         "patchSetId": 3
@@ -106,6 +202,30 @@
       "writtenOn": "2025-06-03T11:28:40Z",
       "side": 1,
       "message": "could update perhaps",
+      "range": {
+        "startLine": 4,
+        "startChar": 21,
+        "endLine": 4,
+        "endChar": 41
+      },
+      "revId": "c75b20ce59c9ce71d6ecb0a6bdaceb1453d2e4f1",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "10286d98_37da9ee1",
+        "filename": "sample-rapp-generator/es-demo-rapp/rapp-energy-saving/asd.mf",
+        "patchSetId": 3
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1002638
+      },
+      "writtenOn": "2025-06-03T15:47:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a12d175d_e9f76097",
       "range": {
         "startLine": 4,
         "startChar": 21,
@@ -139,6 +259,30 @@
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "46a1ca70_5ea24bc8",
+        "filename": "sample-rapp-generator/es-demo-rapp/src/data.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1002638
+      },
+      "writtenOn": "2025-06-03T15:47:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6b5bcca_74ccc3a2",
+      "range": {
+        "startLine": 209,
+        "startChar": 0,
+        "endLine": 231,
+        "endChar": 48
+      },
+      "revId": "c75b20ce59c9ce71d6ecb0a6bdaceb1453d2e4f1",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d62aa371_20a49654",
@@ -152,6 +296,30 @@
       "writtenOn": "2025-06-03T11:28:40Z",
       "side": 1,
       "message": "Does all this commented code need to be un-commented?",
+      "range": {
+        "startLine": 48,
+        "startChar": 3,
+        "endLine": 64,
+        "endChar": 1
+      },
+      "revId": "c75b20ce59c9ce71d6ecb0a6bdaceb1453d2e4f1",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "42d0991e_a588636c",
+        "filename": "sample-rapp-generator/es-demo-rapp/src/ncmp_client.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1002638
+      },
+      "writtenOn": "2025-06-03T15:47:45Z",
+      "side": 1,
+      "message": "I have removed some parts. Other parts I want to keep commented because it will be useful when the ncmp stuff is finally working. I don\u0027t want to have to rewrite. @John, I will let you mark this resolved if you are happy",
+      "parentUuid": "d62aa371_20a49654",
       "range": {
         "startLine": 48,
         "startChar": 3,
