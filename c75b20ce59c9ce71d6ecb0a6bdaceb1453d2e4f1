@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "051564f8_f74d7fef",
+        "filename": "sample-rapp-generator/es-demo-rapp/README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-06-03T11:28:40Z",
+      "side": 1,
+      "message": "should we use the osc gerrit as the main reference for downlaoding/cloning?",
+      "range": {
+        "startLine": 14,
+        "startChar": 32,
+        "endLine": 14,
+        "endChar": 59
+      },
+      "revId": "c75b20ce59c9ce71d6ecb0a6bdaceb1453d2e4f1",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40202651_976f974c",
+        "filename": "sample-rapp-generator/es-demo-rapp/rapp-energy-saving/Artifacts/Deployment/HELM/energy-saving-chart/values.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-06-03T11:28:40Z",
+      "side": 1,
+      "message": "is this correct?",
+      "range": {
+        "startLine": 25,
+        "startChar": 15,
+        "endLine": 25,
+        "endChar": 28
+      },
+      "revId": "c75b20ce59c9ce71d6ecb0a6bdaceb1453d2e4f1",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3fe30aa5_1dcbd064",
+        "filename": "sample-rapp-generator/es-demo-rapp/rapp-energy-saving/Definitions/asd.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-06-03T11:28:40Z",
+      "side": 1,
+      "message": "Does this need to be externalized somehow?",
+      "range": {
+        "startLine": 29,
+        "startChar": 38,
+        "endLine": 29,
+        "endChar": 65
+      },
+      "revId": "c75b20ce59c9ce71d6ecb0a6bdaceb1453d2e4f1",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a12d175d_e9f76097",
+        "filename": "sample-rapp-generator/es-demo-rapp/rapp-energy-saving/asd.mf",
+        "patchSetId": 3
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-06-03T11:28:40Z",
+      "side": 1,
+      "message": "could update perhaps",
+      "range": {
+        "startLine": 4,
+        "startChar": 21,
+        "endLine": 4,
+        "endChar": 41
+      },
+      "revId": "c75b20ce59c9ce71d6ecb0a6bdaceb1453d2e4f1",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f6b5bcca_74ccc3a2",
+        "filename": "sample-rapp-generator/es-demo-rapp/src/data.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-06-03T11:28:40Z",
+      "side": 1,
+      "message": "can remove this commented code?",
+      "range": {
+        "startLine": 209,
+        "startChar": 0,
+        "endLine": 231,
+        "endChar": 48
+      },
+      "revId": "c75b20ce59c9ce71d6ecb0a6bdaceb1453d2e4f1",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d62aa371_20a49654",
+        "filename": "sample-rapp-generator/es-demo-rapp/src/ncmp_client.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-06-03T11:28:40Z",
+      "side": 1,
+      "message": "Does all this commented code need to be un-commented?",
+      "range": {
+        "startLine": 48,
+        "startChar": 3,
+        "endLine": 64,
+        "endChar": 1
+      },
+      "revId": "c75b20ce59c9ce71d6ecb0a6bdaceb1453d2e4f1",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
