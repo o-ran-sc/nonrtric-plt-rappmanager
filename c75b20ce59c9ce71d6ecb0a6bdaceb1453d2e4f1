@@ -26,6 +26,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5e8ef171_aac10da4",
+        "filename": "sample-rapp-generator/es-demo-rapp/cloudEventConsumerFor-itdep-installation.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2025-06-03T13:59:45Z",
+      "side": 1,
+      "message": "Can be an argument. This will be different for each kafkauser creation?",
+      "range": {
+        "startLine": 33,
+        "startChar": 151,
+        "endLine": 33,
+        "endChar": 183
+      },
+      "revId": "c75b20ce59c9ce71d6ecb0a6bdaceb1453d2e4f1",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "40202651_976f974c",
         "filename": "sample-rapp-generator/es-demo-rapp/rapp-energy-saving/Artifacts/Deployment/HELM/energy-saving-chart/values.yaml",
         "patchSetId": 3
