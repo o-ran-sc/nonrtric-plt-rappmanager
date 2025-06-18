@@ -2,6 +2,7 @@
 
 #  ============LICENSE_START===============================================
 #  Copyright (C) 2023 Nordix Foundation. All rights reserved.
+#  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
 #  ========================================================================
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -51,9 +52,9 @@ if [ -z "$KSERVE_CRD_RESPONSE" ]; then
   done
   echo "Waiting for cert-manager to get initialized..."
 
-  echo "Installing Kserve v0.10.0 ..."
-  kubectl apply -f https://github.com/kserve/kserve/releases/download/v0.10.0/kserve.yaml
-  kubectl apply -f https://github.com/kserve/kserve/releases/download/v0.10.0/kserve-runtimes.yaml
+  echo "Installing Kserve v0.11.2 ..."
+  kubectl apply -f https://github.com/kserve/kserve/releases/download/v0.11.2/kserve.yaml
+  kubectl apply -f https://github.com/kserve/kserve/releases/download/v0.11.2/kserve-runtimes.yaml
   echo "Patching Kserve ..."
   kubectl patch configmap/inferenceservice-config -n kserve --type=strategic -p '{"data": {"deploy": "{\"defaultDeploymentMode\": \"RawDeployment\"}"}}'
   echo "Kserve installation completed."
