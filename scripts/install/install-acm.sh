@@ -24,7 +24,8 @@ ENABLE_COMPONENTS=(policy-models-simulator policy-clamp-runtime-acm policy-clamp
 DISABLE_COMPONENTS=(policy-api policy-pap policy-apex-pdp policy-pdpd-cl policy-xacml-pdp policy-distribution policy-clamp-ac-pf-ppnt policy-clamp-ac-http-ppnt)
 
 ACM_VALUES_FILE="docker/helm/policy/values.yaml"
-A1PMS_CONFIGURATION_FILE="docker/helm/policy/components/policy-clamp-ac-a1pms-ppnt/resources/config/A1pmsParticipantParameters.yaml"
+A1PMS_CONFIGURATION_FILE="docker/helm/policy/components/policy-clamp-ac-a1pms-ppnt/values.yaml"
+POLICY_RUNTIME_CONFIGURATION_FILE="docker/helm/policy/components/policy-clamp-runtime-acm/values.yaml"
 K8S_CONFIGURATION_FILE="docker/helm/policy/components/policy-clamp-ac-k8s-ppnt/values.yaml"
 K8S_VERSIONS_FILE="docker/compose/get-k8s-versions.sh"
 KAFKA_DIR="docker/helm/cp-kafka"
@@ -91,7 +92,12 @@ yq eval '.a1pms.baseUrl="'$A1PMS_HOST'"' -i $A1PMS_CONFIGURATION_FILE
 echo "Updating the k8s participant repo list"
 yq eval '.repoList.helm.repos += {"repoName":"local","address":"'$CHART_REPO_GET_URI'"}' -i $K8S_CONFIGURATION_FILE
 
+echo "Updating Policy Runtime timeout configuration"
+yq eval '.runtime.participantParameters.maxStatusWaitMs=900000' -i $POLICY_RUNTIME_CONFIGURATION_FILE
+yq eval '.runtime.participantParameters.maxOperationWaitMs=990000' -i $POLICY_RUNTIME_CONFIGURATION_FILE
+
 echo "Building policy helm charts..."
+helm repo add jaeger https://raw.githubusercontent.com/hansehe/jaeger-all-in-one/master/helm/charts
 helm dependency build docker/helm/policy/
 
 echo "Installing policy helm charts..."
