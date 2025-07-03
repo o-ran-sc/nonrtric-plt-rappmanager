@@ -11,3 +11,4 @@ sphinx_bootstrap_theme
 sphinxcontrib-redoc
 lfdocs-conf
 urllib3~=1.26.15
+pillow==11.2.1
