@@ -1,6 +1,6 @@
 /*
  * ============LICENSE_START======================================================================
- * Copyright (C) 2023-2024 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,9 +45,9 @@ import org.oransc.rappmanager.sme.service.SmeLifecycleManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -61,13 +61,13 @@ class RappControllerTest {
     @Autowired
     private RappCacheService rappCacheService;
 
-    @MockBean
+    @MockitoBean
     AcmDeployer acmDeployer;
 
-    @MockBean
+    @MockitoBean
     DmeDeployer dmeDeployer;
 
-    @MockBean
+    @MockitoBean
     SmeLifecycleManager smeLifecycleManager;
 
     private final String validRappFile = "valid-rapp-package.csar";

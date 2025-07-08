@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,20 +41,20 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.oransc.participant.dme.exception.DmeException;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 class AcA1PmsClientTest {
 
-    @MockBean
+    @MockitoBean
     DataProducerRegistrationApiClient dataProducerRegistrationApiClient;
 
-    @MockBean
+    @MockitoBean
     DataConsumerApiClient dataConsumerApiClient;
 
-    @MockBean
+    @MockitoBean
     AcDmeClient acDmeClient;
 
     ObjectMapper objectMapper = new ObjectMapper();
@@ -159,6 +160,7 @@ class AcA1PmsClientTest {
     private static Stream<Arguments> getDeleteDataConsumers() {
         return Stream.of(Arguments.of(Set.of("consumer1")), Arguments.of(Set.of()));
     }
+
     private static Stream<Arguments> getInfoTypes() {
         return Stream.of(Arguments.of(Map.of("infotype1", "{}")), Arguments.of(Map.of()));
     }

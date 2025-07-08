@@ -70,10 +70,10 @@ import org.oransc.rappmanager.models.statemachine.RappInstanceStateMachineConfig
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
@@ -87,13 +87,13 @@ import org.springframework.web.client.RestTemplate;
 class AcmDeployerTest {
 
     MockRestServiceServer mockServer;
-    @SpyBean
+    @MockitoSpyBean
     AcmDeployer acmDeployer;
     @Autowired
     RestTemplate restTemplate;
     @Autowired
     ACMConfiguration acmConfiguration;
-    @SpyBean
+    @MockitoSpyBean
     RappInstanceStateMachine rappInstanceStateMachine;
     @Autowired
     RappCsarConfigurationHandler rappCsarConfigurationHandler;

@@ -45,10 +45,10 @@ import org.oransc.rappmanager.models.rapp.RappState;
 import org.oransc.rappmanager.sme.service.SmeLifecycleManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
@@ -56,13 +56,13 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class DeploymentArtifactsServiceTest {
 
-    @SpyBean
+    @MockitoSpyBean
     DeploymentArtifactsService deploymentArtifactsService;
     @Autowired
     RestTemplate restTemplate;
     @Autowired
     RappCsarConfigurationHandler rappCsarConfigurationHandler;
-    @MockBean
+    @MockitoBean
     SmeLifecycleManager smeLifecycleManager;
 
     MockRestServiceServer mockServer;
