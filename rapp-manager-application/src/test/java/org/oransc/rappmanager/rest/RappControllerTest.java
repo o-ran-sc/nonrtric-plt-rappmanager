@@ -138,6 +138,12 @@ class RappControllerTest {
     }
 
     @Test
+    void testCreateInvalidMultipartRapp() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/rapps/{rapp_id}", UUID.randomUUID()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void testPrimeRapp() throws Exception {
         UUID rappId = UUID.randomUUID();
         Rapp rapp = Rapp.builder().rappId(rappId).name(String.valueOf(rappId)).packageName(validRappFile)
@@ -165,6 +171,23 @@ class RappControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(rappPrimeOrder)))
                 .andExpect(status().isNotFound());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", " ", "{}", "{asdasd}", "{ \"primeOrder\": \"INVALID\"}", "{ \"primeOrder\": \"\"}"})
+    void testPrimeRappInvalidPayload(String payload) throws Exception {
+        UUID rappId = UUID.randomUUID();
+        Rapp rapp = Rapp.builder().rappId(rappId).name(String.valueOf(rappId)).packageName(validRappFile)
+                            .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
+        AsdMetadata asdMetadata = new AsdMetadata();
+        asdMetadata.setDescriptorId(UUID.randomUUID().toString());
+        asdMetadata.setDescriptorInvariantId(UUID.randomUUID().toString());
+        asdMetadata.setDeploymentItems(List.of());
+        rapp.setAsdMetadata(asdMetadata);
+        rappCacheService.putRapp(rapp);
+        mockMvc.perform(MockMvcRequestBuilders.put("/rapps/{rapp_id}", rappId).contentType(MediaType.APPLICATION_JSON)
+                                .content(payload)).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").exists());
     }
 
     @Test

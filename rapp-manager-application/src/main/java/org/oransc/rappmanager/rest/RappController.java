@@ -19,6 +19,7 @@
 
 package org.oransc.rappmanager.rest;
 
+import jakarta.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -77,7 +78,7 @@ public class RappController {
 
     @PostMapping("{rapp_id}")
     public ResponseEntity<Rapp> createRapp(@PathVariable("rapp_id") String rappId,
-            @RequestPart("file") MultipartFile csarFilePart) throws IOException {
+            @Valid @RequestPart("file") MultipartFile csarFilePart) throws IOException {
         if (rappValidationHandler.isValidRappPackage(csarFilePart)) {
             File csarFile = new File(
                     rappCsarConfigurationHandler.getRappPackageLocation(rappManagerConfiguration.getCsarLocation(),
@@ -103,7 +104,7 @@ public class RappController {
 
     @PutMapping("{rapp_id}")
     public ResponseEntity<String> primeRapp(@PathVariable("rapp_id") String rappId,
-            @RequestBody RappPrimeOrder rappPrimeOrder) {
+            @Valid @RequestBody RappPrimeOrder rappPrimeOrder) {
         // @formatter:off
         return rappCacheService.getRapp(rappId)
                        .map(rapp -> Optional.ofNullable(rappPrimeOrder.getPrimeOrder())

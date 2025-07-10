@@ -56,8 +56,6 @@
         <openapi.jackson.databind.nullable.version>0.2.6</openapi.jackson.databind.nullable.version>
         <spring.statemachine.version>4.0.1</spring.statemachine.version>
         <spring.context.version>6.2.8</spring.context.version>
-        <jakarta.validation.api.version>3.1.1</jakarta.validation.api.version>
-        <jakarta.annotation.api.version>3.0.0</jakarta.annotation.api.version>
         <jakarta.servlet.api.version>6.1.0</jakarta.servlet.api.version>
         <io.swagger.version>2.2.34</io.swagger.version>
         <slf4j.version>2.1.0-alpha1</slf4j.version>

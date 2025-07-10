@@ -1,7 +1,6 @@
 /*-
  * ============LICENSE_START======================================================================
- * Copyright (C) 2023 Nordix Foundation. All rights reserved.
- * Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +16,27 @@
  * ============LICENSE_END========================================================================
  */
 
-package org.oransc.rappmanager.models.rapp;
+package org.oransc.rappmanager.models.validators;
 
-import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@Data
-public class RappPrimeOrder {
+@Documented
+@Constraint(validatedBy = AtleastOneFieldShouldNotBeNullValidator.class)
+@Target({ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface AtleastOneFieldShouldNotBeNull {
 
-    @NotNull
-    PrimeOrder primeOrder;
+    String[] fields();
 
+    String message() default "At least one of these fields must not be null";
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
 }

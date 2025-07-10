@@ -1,20 +1,20 @@
 rappmanager:
   csarlocation: src/test/resources/csar
   acm:
-    baseurl: http://localhost:30442/onap/policy/clamp/acm/v2/
+    baseurl: http://localhost:55562/onap/policy/clamp/acm/v2/
     username: runtimeUser
     password: zb!XztG34
     maxRetries: 10
     retryInterval: 2 #seconds
   sme:
-    baseurl: http://localhost:56571
+    baseurl: http://10.101.3.69:31575
     providerBasePath: /api-provider-management/v1/
     invokerBasePath: /api-invoker-management/v1/
     publishApiBasePath: /published-apis/v1/
     maxRetries: 3
     retryInterval: 2 #seconds
   dme:
-    baseurl: http://localhost:63475
+    baseurl: http://localhost:55626
 
   rapps:
     env:

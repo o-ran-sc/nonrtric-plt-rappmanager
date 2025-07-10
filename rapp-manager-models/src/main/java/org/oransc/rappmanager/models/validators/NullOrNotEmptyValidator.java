@@ -1,7 +1,6 @@
 /*-
  * ============LICENSE_START======================================================================
- * Copyright (C) 2023 Nordix Foundation. All rights reserved.
- * Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +16,16 @@
  * ============LICENSE_END========================================================================
  */
 
-package org.oransc.rappmanager.models.rapp;
+package org.oransc.rappmanager.models.validators;
 
-import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+import org.apache.commons.lang3.ObjectUtils;
 
-@Data
-public class RappPrimeOrder {
+public class NullOrNotEmptyValidator implements ConstraintValidator<NullOrNotEmpty, Object> {
 
-    @NotNull
-    PrimeOrder primeOrder;
-
+    @Override
+    public boolean isValid(Object obj, ConstraintValidatorContext constraintValidatorContext) {
+        return obj == null || !ObjectUtils.isEmpty(obj);
+    }
 }

@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START======================================================================
  * Copyright (C) 2023 Nordix Foundation. All rights reserved.
- * Copyright (C) 2023-2024 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 
 package org.oransc.rappmanager.rest;
 
+import jakarta.validation.Valid;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -61,7 +62,7 @@ public class RappInstanceController {
 
     @PostMapping
     public ResponseEntity<RappInstance> createRappInstance(@PathVariable("rapp_id") String rappId,
-            @RequestBody RappInstance rappInstance) {
+            @Valid @RequestBody RappInstance rappInstance) {
         return rappCacheService.getRapp(rappId).map(rapp -> {
             rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
             rapp.getRappInstances().put(rappInstance.getRappInstanceId(), rappInstance);
@@ -71,7 +72,7 @@ public class RappInstanceController {
 
     @GetMapping("{rapp_instance_id}")
     public ResponseEntity<RappInstance> getRappInstance(@PathVariable("rapp_id") String rappId,
-            @PathVariable("rapp_instance_id") UUID rappInstanceId) {
+            @Valid @PathVariable("rapp_instance_id") UUID rappInstanceId) {
         return rappCacheService.getRapp(rappId).map(rapp -> Pair.of(rapp, rapp.getRappInstances().get(rappInstanceId)))
                        .filter(rappPair -> rappPair.getLeft().getRappInstances().containsKey(rappInstanceId))
                        .map(rappPair -> {
@@ -85,8 +86,8 @@ public class RappInstanceController {
 
     @PutMapping("{rapp_instance_id}")
     public ResponseEntity<String> deployRappInstance(@PathVariable("rapp_id") String rappId,
-            @PathVariable("rapp_instance_id") UUID rappInstanceId,
-            @RequestBody RappInstanceDeployOrder rappInstanceDeployOrder) {
+            @Valid @PathVariable("rapp_instance_id") UUID rappInstanceId,
+            @Valid @RequestBody RappInstanceDeployOrder rappInstanceDeployOrder) {
         //@formatter:off
         return rappCacheService.getRapp(rappId)
                    .filter(rapp -> rapp.getRappInstances().containsKey(rappInstanceId))
@@ -102,7 +103,7 @@ public class RappInstanceController {
 
     @DeleteMapping("{rapp_instance_id}")
     public ResponseEntity<String> deleteRappInstance(@PathVariable("rapp_id") String rappId,
-            @PathVariable("rapp_instance_id") UUID rappInstanceId) {
+            @Valid @PathVariable("rapp_instance_id") UUID rappInstanceId) {
         return rappCacheService.getRapp(rappId).filter(rApp -> rApp.getRappInstances().containsKey(rappInstanceId))
                        .map(rApp -> rappService.deleteRappInstance(rApp, rappInstanceId)).orElseThrow(
                         () -> new RappHandlerException(HttpStatus.NOT_FOUND,

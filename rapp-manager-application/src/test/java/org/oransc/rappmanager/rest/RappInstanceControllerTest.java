@@ -29,12 +29,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.oransc.rappmanager.acm.service.AcmDeployer;
 import org.oransc.rappmanager.dme.service.DmeDeployer;
 import org.oransc.rappmanager.models.cache.RappCacheService;
 import org.oransc.rappmanager.models.rapp.Rapp;
 import org.oransc.rappmanager.models.rapp.RappState;
 import org.oransc.rappmanager.models.rappinstance.DeployOrder;
+import org.oransc.rappmanager.models.rappinstance.RappACMInstance;
 import org.oransc.rappmanager.models.rappinstance.RappInstance;
 import org.oransc.rappmanager.models.rappinstance.RappInstanceDeployOrder;
 import org.oransc.rappmanager.models.rappinstance.RappInstanceState;
@@ -105,6 +108,9 @@ class RappInstanceControllerTest {
         UUID rappInstanceId = UUID.randomUUID();
         RappInstance rappInstance = new RappInstance();
         rappInstance.setRappInstanceId(rappInstanceId);
+        RappACMInstance rappACMInstance = new RappACMInstance();
+        rappACMInstance.setInstance("test-instance");
+        rappInstance.setAcm(rappACMInstance);
         rappInstance.setState(RappInstanceState.UNDEPLOYED);
         Rapp rapp = Rapp.builder().rappId(rappId).name(String.valueOf(rappId)).packageName(validRappFile)
                             .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
@@ -120,6 +126,9 @@ class RappInstanceControllerTest {
     void testCreateRappInstanceFailure() throws Exception {
         RappInstance rappInstance = new RappInstance();
         rappInstance.setRappInstanceId(UUID.randomUUID());
+        RappACMInstance rappACMInstance = new RappACMInstance();
+        rappACMInstance.setInstance("test-instance");
+        rappInstance.setAcm(rappACMInstance);
         rappInstance.setState(RappInstanceState.UNDEPLOYED);
         mockMvc.perform(MockMvcRequestBuilders.post("/rapps/{rapp_id}/instance", UUID.randomUUID())
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -154,6 +163,28 @@ class RappInstanceControllerTest {
         rappCacheService.putRapp(rapp);
         mockMvc.perform(MockMvcRequestBuilders.get("/rapps/{rapp_id}/instance/{instance_id}", rappId, rappInstanceId))
                 .andExpect(status().isNotFound());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", " ", "{}", "{\"acm\":\"\"}", "{\"sme\":\"\"}", "{\"dme\":\"\"}", "{\"acm\":{}}",
+            "{\"sme\":{}}", "{\"dme\":{}}", "{\"acm\":{\"instance\":\"\"}}", "{\"sme\":{\"providerFunction\":\"\"}}",
+            "{\"dme\":{\"infoTypesProducer\":\"\"}}"})
+    void testCreateRappInstanceInvalidPayload(String payload) throws Exception {
+        UUID rappId = UUID.randomUUID();
+        Rapp rapp = Rapp.builder().rappId(rappId).name(String.valueOf(rappId)).packageName(validRappFile)
+                            .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
+        rappCacheService.putRapp(rapp);
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/rapps/{rapp_id}/instance", rappId).contentType(MediaType.APPLICATION_JSON)
+                        .content(payload)).andExpect(status().isBadRequest()).andExpect(jsonPath("$.message").exists());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"123", "asdasd", "non-uuid-string"})
+    void testGetRappInstanceInvalidInstanceParameter(String rAppInstanceId) throws Exception {
+        UUID rappId = UUID.randomUUID();
+        mockMvc.perform(MockMvcRequestBuilders.get("/rapps/{rapp_id}/instance/{instance_id}", rappId, rAppInstanceId))
+                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.message").exists());
     }
 
     @Test
@@ -204,6 +235,33 @@ class RappInstanceControllerTest {
                                 UUID.randomUUID()).contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(rappInstanceDeployOrder)))
                 .andExpect(status().isNotFound());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", " ", "{}", "{asdasd}", "{ \"deployOrder\": \"INVALID\"}", "{ \"deployOrder\": \"\"}"})
+    void testDeployRappInstanceInvalidPayload(String payload) throws Exception {
+        UUID rappId = UUID.randomUUID();
+        UUID rappInstanceId = UUID.randomUUID();
+        Rapp rapp = getRapp(rappId, rappInstanceId);
+        rappCacheService.putRapp(rapp);
+        rappInstanceStateMachine.onboardRappInstance(rappInstanceId);
+        RappInstanceDeployOrder rappInstanceDeployOrder = new RappInstanceDeployOrder();
+        rappInstanceDeployOrder.setDeployOrder(DeployOrder.DEPLOY);
+        when(acmDeployer.deployRappInstance(any(), any())).thenReturn(true);
+        when(smeDeployer.deployRappInstance(any(), any())).thenReturn(true);
+        when(dmeDeployer.deployRappInstance(any(), any())).thenReturn(true);
+        mockMvc.perform(MockMvcRequestBuilders.put("/rapps/{rapp_id}/instance/{instance_id}", rappId, rappInstanceId)
+                                .contentType(MediaType.APPLICATION_JSON).content(payload))
+                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.message").exists());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"123", "asdasd", "non-uuid-string"})
+    void testDeployRappInstanceInvalidInstanceParameter(String rAppInstanceId) throws Exception {
+        UUID rappId = UUID.randomUUID();
+        mockMvc.perform(MockMvcRequestBuilders.put("/rapps/{rapp_id}/instance/{instance_id}", rappId, rAppInstanceId)
+                                .contentType(MediaType.APPLICATION_JSON).content("{}"))
+                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.message").exists());
     }
 
     @Test
@@ -291,6 +349,15 @@ class RappInstanceControllerTest {
         mockMvc.perform(
                         MockMvcRequestBuilders.delete("/rapps/{rapp_id}/instance/{instance_id}", rappId, rappInstanceId))
                 .andExpect(status().isNotFound());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"123", "asdasd", "non-uuid-string"})
+    void testDeleteRappInstanceInvalidInstanceParameter(String rAppInstanceId) throws Exception {
+        UUID rappId = UUID.randomUUID();
+        mockMvc.perform(
+                        MockMvcRequestBuilders.delete("/rapps/{rapp_id}/instance/{instance_id}", rappId, rAppInstanceId))
+                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.message").exists());
     }
 
     Rapp getRapp(UUID rappId, UUID rappInstanceId) {
