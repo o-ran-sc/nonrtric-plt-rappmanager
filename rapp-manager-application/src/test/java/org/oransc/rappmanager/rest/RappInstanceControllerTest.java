@@ -27,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -35,6 +36,7 @@ import org.oransc.rappmanager.acm.service.AcmDeployer;
 import org.oransc.rappmanager.dme.service.DmeDeployer;
 import org.oransc.rappmanager.models.cache.RappCacheService;
 import org.oransc.rappmanager.models.rapp.Rapp;
+import org.oransc.rappmanager.models.rapp.RappResources;
 import org.oransc.rappmanager.models.rapp.RappState;
 import org.oransc.rappmanager.models.rappinstance.DeployOrder;
 import org.oransc.rappmanager.models.rappinstance.RappACMInstance;
@@ -112,8 +114,10 @@ class RappInstanceControllerTest {
         rappACMInstance.setInstance("test-instance");
         rappInstance.setAcm(rappACMInstance);
         rappInstance.setState(RappInstanceState.UNDEPLOYED);
+        RappResources rappResources = new RappResources();
+        rappResources.setAcm(RappResources.ACMResources.builder().compositionInstances(Set.of("test-instance")).build());
         Rapp rapp = Rapp.builder().rappId(rappId).name(String.valueOf(rappId)).packageName(validRappFile)
-                            .packageLocation(validCsarFileLocation).state(RappState.PRIMED).build();
+                            .packageLocation(validCsarFileLocation).rappResources(rappResources).state(RappState.PRIMED).build();
         rappCacheService.putRapp(rapp);
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/rapps/{rapp_id}/instance", rappId).contentType(MediaType.APPLICATION_JSON)

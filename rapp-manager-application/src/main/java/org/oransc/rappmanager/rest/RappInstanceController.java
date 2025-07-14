@@ -31,6 +31,7 @@ import org.oransc.rappmanager.models.rapp.Rapp;
 import org.oransc.rappmanager.models.rappinstance.DeployOrder;
 import org.oransc.rappmanager.models.rappinstance.RappInstance;
 import org.oransc.rappmanager.models.rappinstance.RappInstanceDeployOrder;
+import org.oransc.rappmanager.models.rappinstance.validator.RappInstanceValidationHandler;
 import org.oransc.rappmanager.models.statemachine.RappInstanceStateMachine;
 import org.oransc.rappmanager.service.RappService;
 import org.springframework.http.HttpStatus;
@@ -51,6 +52,7 @@ public class RappInstanceController {
 
     private final RappCacheService rappCacheService;
     private final RappInstanceStateMachine rappInstanceStateMachine;
+    private final RappInstanceValidationHandler rappInstanceValidationHandler;
     private final RappService rappService;
     private static final String RAPP_INSTANCE_NOT_FOUND = "rApp instance %s not found.";
 
@@ -64,6 +66,7 @@ public class RappInstanceController {
     public ResponseEntity<RappInstance> createRappInstance(@PathVariable("rapp_id") String rappId,
             @Valid @RequestBody RappInstance rappInstance) {
         return rappCacheService.getRapp(rappId).map(rapp -> {
+            rappInstanceValidationHandler.validateRappInstance(rapp, rappInstance);
             rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
             rapp.getRappInstances().put(rappInstance.getRappInstanceId(), rappInstance);
             return ResponseEntity.ok(rappInstance);
