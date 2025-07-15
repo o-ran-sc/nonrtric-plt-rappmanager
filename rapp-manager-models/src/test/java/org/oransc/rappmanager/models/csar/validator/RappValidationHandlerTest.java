@@ -19,6 +19,7 @@
 
 package org.oransc.rappmanager.models.csar.validator;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
@@ -63,7 +64,7 @@ class RappValidationHandlerTest {
         MultipartFile multipartFile =
                 new MockMultipartFile(rappCsarPath, rappCsarPath, ContentType.MULTIPART_FORM_DATA.getMimeType(),
                         new FileInputStream(rappCsarPath));
-        assertEquals(Boolean.TRUE, rappValidationHandler.isValidRappPackage(multipartFile));
+        assertDoesNotThrow(() -> rappValidationHandler.isValidRappPackage(multipartFile));
     }
 
     @ParameterizedTest

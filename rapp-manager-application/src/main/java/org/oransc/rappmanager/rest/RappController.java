@@ -79,27 +79,19 @@ public class RappController {
     @PostMapping("{rapp_id}")
     public ResponseEntity<Rapp> createRapp(@PathVariable("rapp_id") String rappId,
             @Valid @RequestPart("file") MultipartFile csarFilePart) throws IOException {
-        if (rappValidationHandler.isValidRappPackage(csarFilePart)) {
-            File csarFile = new File(
-                    rappCsarConfigurationHandler.getRappPackageLocation(rappManagerConfiguration.getCsarLocation(),
-                            rappId, csarFilePart.getOriginalFilename()).toUri());
-            csarFile.getParentFile().mkdirs();
-            Files.copy(csarFilePart.getInputStream(), csarFile.getAbsoluteFile().toPath(),
-                    StandardCopyOption.REPLACE_EXISTING);
-            Rapp rapp = Rapp.builder().name(rappId).packageLocation(rappManagerConfiguration.getCsarLocation())
-                                .packageName(csarFile.getName()).state(RappState.COMMISSIONED).build();
-            rapp.setRappResources(rappCsarConfigurationHandler.getRappResource(rapp));
-            rapp.setAsdMetadata(rappCsarConfigurationHandler.getAsdMetadata(rapp));
-            rappCacheService.putRapp(rapp);
-            return ResponseEntity.accepted().build();
-        } else {
-            if (rappId == null) {
-                logger.info("Invalid Rapp package with null rAppId");
-            } else {
-                logger.info("Invalid Rapp package for {}", rappId);
-            }
-            throw new RappHandlerException(HttpStatus.BAD_REQUEST, "Invalid rApp package.");
-        }
+        rappValidationHandler.isValidRappPackage(csarFilePart);
+        File csarFile = new File(
+                rappCsarConfigurationHandler.getRappPackageLocation(rappManagerConfiguration.getCsarLocation(), rappId,
+                        csarFilePart.getOriginalFilename()).toUri());
+        csarFile.getParentFile().mkdirs();
+        Files.copy(csarFilePart.getInputStream(), csarFile.getAbsoluteFile().toPath(),
+                StandardCopyOption.REPLACE_EXISTING);
+        Rapp rapp = Rapp.builder().name(rappId).packageLocation(rappManagerConfiguration.getCsarLocation())
+                            .packageName(csarFile.getName()).state(RappState.COMMISSIONED).build();
+        rapp.setRappResources(rappCsarConfigurationHandler.getRappResource(rapp));
+        rapp.setAsdMetadata(rappCsarConfigurationHandler.getAsdMetadata(rapp));
+        rappCacheService.putRapp(rapp);
+        return ResponseEntity.accepted().build();
     }
 
     @PutMapping("{rapp_id}")
