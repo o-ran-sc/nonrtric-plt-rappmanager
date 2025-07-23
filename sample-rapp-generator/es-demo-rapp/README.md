@@ -135,3 +135,11 @@ SME cleanup requires some manual steps.
        ```
 5. This should conclude the SME cleanup. Then we can attempt to redeploy the rApp again with whatever
    changes we made to fix the issues.
+
+## Acknowledgements
+This project was based on the [OSC Non-RT RIC Energy Saving rAPP](https://github.com/bmw-ece-ntust/nonrtric-rapp-energysaving). Many thanks to the original authors for their work.
+
+### Citation
+```text
+Lan, Y., Zhang, H., & Bimo, F. A. (2025). nonrtric-rapp-energysaving (Version 1.0.0) [Computer software]. https://github.com/bmw-ece-ntust/nonrtric-rapp-energysaving
+```
