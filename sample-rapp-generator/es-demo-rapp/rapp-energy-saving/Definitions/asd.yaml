@@ -22,7 +22,7 @@ topology_template:
       artifacts:
         energy-saving:
           type: tosca.artifacts.asd.deploymentItem
-          file: "Artifacts/Deployment/HELM/energy-saving-rapp-0.1.0.tgz"
+          file: "Artifacts/Deployment/HELM/energy-saving-rapp-0.2.5.tgz"
           properties:
             artifact_type: "helm_chart"
             target_server: "chartmuseum"

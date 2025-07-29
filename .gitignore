@@ -37,3 +37,5 @@ build/
 
 openapi/sme/
 *.csar
+
+**/__pycache__/

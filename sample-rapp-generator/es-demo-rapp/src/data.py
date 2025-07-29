@@ -47,6 +47,8 @@ class DATABASE(object):
         self.influx_invoker_id = None
         self.influx_api_name = None
         self.influx_resource_name = None
+        self.time_range = None
+        self.measurements = None
         self.config()
 
         # Set pandas options to display all rows and columns
@@ -94,7 +96,7 @@ class DATABASE(object):
             time.sleep(120)
 
     # Query information
-    def read_data(self, train=False, valid=False, limit=False):
+    def read_data_old(self, train=False, valid=False, limit=False):
 
         self.data = None
         query = 'from(bucket:"{}")'.format(self.bucket)
@@ -104,6 +106,29 @@ class DATABASE(object):
         #query += ' |> filter(fn: (r) => r["_field"] == "CellID" or r["_field"] == "RRC.ConnMean" or r["_field"] == "DRB.UEThpUl" or r["_field"] == "RRU.PrbUsedUl" or r["_field"] == "PEE.AvgPower") '
         query += ' |> pivot(rowKey: ["_time"], columnKey: ["_field"], valueColumn: "_value") '
         result = self.query(query)
+        self.data = result
+        return result
+
+    def read_data(self, train=False, valid=False, limit=False):
+        self.data = None
+        query = 'from(bucket:"{}")'.format(self.bucket)
+
+        time_range = getattr(self, 'time_range', '-10m')
+        query += f'|> range(start: {time_range}) '
+
+        measurements = getattr(self, 'measurements', ['o-ran-pm'])
+        if isinstance(measurements, str):
+            measurements = [measurements]
+
+        measurement_filters = [f'r["_measurement"] == "{m}"' for m in measurements]
+        query += f' |> filter(fn: (r) => {" or ".join(measurement_filters)})'
+
+        query += ' |> filter(fn: (r) => r["_field"] == "CellID" or r["_field"] == "DRB.UEThpUl" or r["_field"] == "RRU.PrbUsedUl" or r["_field"] == "PEE.AvgPower") '
+        # Keep _measurement in the rowKey to preserve it
+        query += ' |> pivot(rowKey: ["_time", "_measurement"], columnKey: ["_field"], valueColumn: "_value") '
+
+        result = self.query(query)
+        #logger.debug(f"Data grouped by measurement:\n{result.groupby('_measurement').size()}")
         self.data = result
         return result
 
@@ -129,39 +154,28 @@ class DATABASE(object):
 
     def generate_synthetic_data(self):
         data = []
-        fields = ["CellID", "DRB.UEThpUl", "RRU.PrbUsedUl", "PEE.AvgPower"]
-        # fields = ["CellID", "DRB.UEThpUl", "RRU.PrbUsedUl", "PEE.AvgPower", "RRC.ConnMean"]
-        other_fields = ["TestFilterField1", "TestFilterField2", "TestFilterField3", "TestFilterField4"]
-        measurements = ["o-ran-pm", "test-filter-measurement1", "test-filter-measurement2", "test-filter-measurement3", "test-filter-measurement4"]
+        fields = ["CellID", "DRB.UEThpUl", "RRU.PrbUsedUl", "PEE.AvgPower", "GranularityPeriod", "RRC.ConnMean", "RRU.PrbTotDl", "DRB.UEThpDl"]
+        measurements = ["o-ran-pm", "ManagedElement=o-du-pynts-1122,ManagedElement=o-du-pynts-1122,GNBDUFunction=1,NRCellDU=1", "ManagedElement=o-du-pynts-1123,ManagedElement=o-du-pynts-1123,GNBDUFunction=1,NRCellDU=1"]
 
         # Generate matching records (synchronized _time for each group of 4)
         for _ in range(50):  # 50 records, each with 4 rows sharing the same time
             common_time = datetime.now() - timedelta(minutes=random.randint(0, 60))
             iso_time = common_time.isoformat()
+            measurement = random.choice(measurements)
 
             for field in fields:
                 value = (
-                    f"S{random.randint(1,9)}/B{random.randint(1,9)}/C{random.randint(1,9)}"
-                    if field == "CellID"
-                    else round(random.uniform(1, 100), 2)
+                    f"S{random.randint(1,9)}/B{random.randint(1,9)}/C{random.randint(1,9)}" if field == "CellID"
+                    else (900 if field == "GranularityPeriod"
+                    else str(round(random.uniform(1, 100), 5)))
                 )
                 record = {
                     "_time": iso_time,
-                    "_measurement": "o-ran-pm",
+                    "_measurement": measurement,
                     "_field": field,
                     "_value": value
                 }
                 data.append(record)
-
-        # Generate non-matching records (randomized)
-        for _ in range(50):
-            record = {
-                "_time": (datetime.now() - timedelta(minutes=random.randint(0, 60))).isoformat(),
-                "_measurement": random.choice(measurements),
-                "_field": random.choice(other_fields),
-                "_value": str(round(random.uniform(0, 100), 2))
-            }
-            data.append(record)
 
         # Log data to be written
         print(pd.DataFrame(data).to_string())
@@ -202,6 +216,7 @@ class DATABASE(object):
         self.port = influx_config.get("port")
         self.ssl = influx_config.get("ssl")
         self.dbname = influx_config.get("database")
-        self.meas = influx_config.get("measurement")
         self.user = influx_config.get("user")
         self.password = influx_config.get("password")
+        self.time_range = influx_config.get("time_range")
+        self.measurements = influx_config.get("measurements")

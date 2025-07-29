@@ -59,6 +59,17 @@ class ASSIST(object):
     def send_request_to_server(self, json_data, randomize=False):
 
         if(not randomize):
+
+            if isinstance(json_data, dict) and "instances" in json_data:
+                json_data["instances"] = [
+                    [
+                        [float(val) for val in sublist]
+                        for sublist in instance
+                    ]
+                    for instance in json_data["instances"]
+                ]
+
+
             with open('input.json', 'w') as f:
                 json.dump(json_data, f)
 
@@ -69,8 +80,7 @@ class ASSIST(object):
             host = self.kserve_url.split('/')[2].split(':')[0]
             headers = {'Host': host }
 
-            with open('input.json', 'rb') as f:
-                response = requests.post(url, headers=headers, data=f)
+            response = requests.post(url, headers=headers, json=json_data)
             logger.info("Prediction result")
             logger.info(response.text)
             return response.status_code, response.text

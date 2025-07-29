@@ -19,6 +19,7 @@ import argparse
 import time
 import pandas as pd
 import schedule
+from threading import Lock
 import logging
 from data import DATABASE
 from assist import ASSIST
@@ -67,13 +68,52 @@ class ESrapp():
 
         # Create policy type and policy instance
         #self.policy_manager.create_policy_type()
+        self.inference_lock = Lock()
+        self._running = False
+
 
     def entry(self):
-        schedule.every(10).seconds.do(self.inference)
+        if self._running:
+            logger.warning("ES rApp is already running")
+            return
 
-        while True:
-            schedule.run_pending()
+        self._running = True
+        self.job = schedule.every(10).seconds.do(self.safe_inference)
+        last_run = 0
 
+        try:
+            while self._running:
+                now = time.time()
+                if now - last_run >= 10:  # 10 second interval
+                    self.safe_inference()
+                    last_run = now
+                time.sleep(1)
+
+        except KeyboardInterrupt:
+            logger.info("ES rApp shutting down gracefully")
+        except Exception as e:
+            logger.error(f"Error in entry loop: {str(e)}", exc_info=True)
+        finally:
+            try:
+                schedule.cancel_job(self.job)
+            except:
+                pass
+            self._running = False
+            try:
+                if self.inference_lock.locked():
+                    self.inference_lock.release()
+            except:
+                pass
+
+    def safe_inference(self):
+        if not self.inference_lock.acquire(blocking=False):
+            logger.warning("Previous inference still running, skipping this iteration")
+            return
+
+        try:
+            self.inference()
+        finally:
+            self.inference_lock.release()
     # Send data to ML rApp
     def inference(self):
         data = self.db.read_data()
@@ -83,48 +123,59 @@ class ESrapp():
             return
 
         data_mapping = self.mapping(data)
-        groups = data_mapping.groupby("CellID")
+        # Group the data by CellID and _measurement. This means that even if cell ids are the same, but the measurement is different, they will be processed separately.
+        groups = data_mapping.groupby(["CellID", "_measurement"])
         for group_name, group_data in groups:
             json_data = self.generate_json_data(group_data)
             logger.info(f"Send data to ML rApp {group_name}: {json_data}")
             status_code, response_text = self.assist.send_request_to_server(json_data, randomize=self.random_predictions)
             if not self.check_and_perform_action(response_text):
-                cell_id_number = group_data['cellidnumber'].iloc[0]
+                cell_id_name = group_data['CellID'].iloc[0]
+                du_name = self.extract_managed_element(group_data['_measurement'].iloc[0])
+                full_cell_id = cell_id_name + "-" + du_name
                 logger.info(f"Turn on the cell {group_name}")
-                # Create policy instance with the cell_id_number before performing action
-                #self.policy_manager.create_policy_instance(cell_id_number)
                 # Wait for 3 seconds before performing the action
                 time.sleep(3)
 
-                if cell_id_number not in self.cell_power_status:
-                    logger.debug(f"Cell {cell_id_number} not in local cache. Adding it...")
-                    self.cell_power_status[cell_id_number] = "off"
+                if full_cell_id not in self.cell_power_status:
+                    logger.debug(f"Cell {full_cell_id} not in local cache. Adding it...")
+                    self.cell_power_status[full_cell_id] = "off"
                 # Check if the cell is already powered on
-                if self.cell_power_status[cell_id_number] == "on":
-                    logger.debug(f"Cell {cell_id_number} is already powered on.")
+                if self.cell_power_status[full_cell_id] == "on":
+                    logger.debug(f"Cell {full_cell_id} is already powered on.")
                     # continue
                 else:
-                    self.ncmp_client.power_on_cell(cell_id_number)
-                    self.cell_power_status[cell_id_number] = "on"
+                    self.ncmp_client.power_on_cell(full_cell_id)
+                    self.cell_power_status[full_cell_id] = "on"
             else:
-                cell_id_number = group_data['cellidnumber'].iloc[0]
+                du_name = self.extract_managed_element(group_data['_measurement'].iloc[0])
+                cell_id_name = group_data['CellID'].iloc[0]
+                full_cell_id = cell_id_name + "-" + du_name
                 logger.info(f"Turn off the cell {group_name}")
-                # Create policy instance with the cell_id_number before performing action
-                #self.policy_manager.create_policy_instance(cell_id_number)
                 # Wait for 3 seconds before performing the action
                 time.sleep(3)
 
-                if cell_id_number not in self.cell_power_status:
-                    logger.debug(f"Cell {cell_id_number} not in local cache. Adding it...")
-                    self.cell_power_status[cell_id_number] = "on"
+                if full_cell_id not in self.cell_power_status:
+                    logger.debug(f"Cell {full_cell_id} not in local cache. Adding it...")
+                    self.cell_power_status[full_cell_id] = "on"
 
-                if self.cell_power_status[cell_id_number] == "off":
-                    logger.debug(f"Cell {cell_id_number} is already powered off.")
+                if self.cell_power_status[full_cell_id] == "off":
+                    logger.debug(f"Cell {full_cell_id} is already powered off.")
                     # continue
                 else:
-                    self.ncmp_client.power_off_cell(cell_id_number)
-                    self.cell_power_status[cell_id_number] = "off"
+                    self.ncmp_client.power_off_cell(full_cell_id)
+                    self.cell_power_status[full_cell_id] = "off"
 
+    def extract_managed_element(self, measurement):
+        if '=' not in measurement or ',' not in measurement:
+            return measurement
+
+        parts = measurement.split(',')
+        for part in parts:
+            if part.startswith('ManagedElement='):
+                return part.split('=')[1]
+
+        return measurement
     # Generate the input data for ML rApp
     def generate_json_data(self, data):
         # rrc_conn_mean_values = data["RRC.ConnMean"].tolist()

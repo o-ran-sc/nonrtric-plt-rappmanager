@@ -25,7 +25,7 @@ image:
   repository: "nexus3.onap.org:10001/estdemoimages/es-rapp"
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "0.1.1"
+  tag: "0.2.5"
 
 imagePullSecrets: []
 nameOverride: "energy-saving-rapp"
@@ -102,13 +102,18 @@ environment:
   smeDiscoveryEndpoint: "http://sme-discovery.default.svc.cluster.local:8080/service-apis/v1/allServiceAPIs"
 
 influxdb:
-  token: "WcrfLfqC63uCxfDa15C1sb6WtG5fhzrS"
+  token: "hIVMgY7vn3M772PSk3yrI2IjeWzybPw0"
   user: "admin"
   password: "mySuP3rS3cr3tT0keN"
-  bucket: "pm-bucket"
+  bucket: "pm-logg-bucket"
   org: "est"
   apiName: "influxdb2-http"
   resourceName: "root"
+  timeRange: "-6h"
+  measurements:
+    - "ManagedElement=o-du-pynts-1122,ManagedElement=o-du-pynts-1122,GNBDUFunction=1,NRCellDU=1"
+    - "ManagedElement=o-du-pynts-1123,ManagedElement=o-du-pynts-1123,GNBDUFunction=1,NRCellDU=1"
+    - "o-ran-pm"
 
 
 ncmp:
@@ -127,5 +132,5 @@ teiv:
 
 appStartup:
   command: ["/bin/sh", "-c"]
-  args: [ "python main.py --generate_db_data=True --use_sme_db=True --random_predictions=False" ]
+  args: [ "python main.py --generate_db_data=False --use_sme_db=True --random_predictions=False" ]
 

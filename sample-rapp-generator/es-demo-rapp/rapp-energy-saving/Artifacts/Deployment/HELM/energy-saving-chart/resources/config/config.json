@@ -28,7 +28,8 @@
     "password": "{{ .Values.influxdb.password }}",
     "example_data_file": "example_data.json",
     "database": "{{ .Values.influxdb.bucket }}",
-    "measurement": "CellReports",
+    "time_range": "{{ .Values.influxdb.timeRange }}",
+    "measurements": {{ .Values.influxdb.measurements | toJson }},
     "ssl": false,
     "address": "http://localhost:8086"
   }

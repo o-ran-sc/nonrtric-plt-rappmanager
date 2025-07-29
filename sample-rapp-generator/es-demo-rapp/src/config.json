@@ -19,17 +19,22 @@
     "odufunction_id": "GNBDUFunction-001"
   },
   "DB": {
-    "host": "localhost",
-    "port": 8086,
-    "bucket": "pm-bucket",
+    "host": "10.101.3.89",
+    "port": 31812,
+    "bucket": "pm-logg-bucket",
     "org": "est",
-    "token": "WcrfLfqC63uCxfDa15C1sb6WtG5fhzrS",
+    "token": "hIVMgY7vn3M772PSk3yrI2IjeWzybPw0",
     "user": "admin",
     "password": "mySuP3rS3cr3tT0keN",
     "example_data_file": "example_data.json",
-    "database": "pm-bucket",
-    "measurement": "CellReports",
+    "database": "pm-logg-bucket",
+    "time_range": "-30d",
+    "measurements": [
+        "ManagedElement=o-du-pynts-1122,ManagedElement=o-du-pynts-1122,GNBDUFunction=1,NRCellDU=1",
+        "ManagedElement=o-du-pynts-1123,ManagedElement=o-du-pynts-1123,GNBDUFunction=1,NRCellDU=1",
+        "o-ran-pm"
+    ],
     "ssl": false,
-    "address": "http://localhost:8086"
+    "address": "http://10.101.3.89:31812"
   }
 }
