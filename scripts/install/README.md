@@ -1,5 +1,14 @@
 ## Installation of Rapp Manager
 
+> [!CAUTION]
+> **Deprecated Installation Method**
+>
+> This installation approach is no longer maintained or supported.
+>
+> Please follow the latest installation [guide](https://github.com/o-ran-sc/it-dep/tree/master/smo-install) for the recommended and actively maintained setup.
+>
+> A dedicated flavour configuration for installing rAppmanager is available [here](https://github.com/o-ran-sc/it-dep/blob/master/smo-install/helm-override/rappmanager/README.md).
+
 Rapp Manager application requires the following components,
 
 * ONAP ACM
