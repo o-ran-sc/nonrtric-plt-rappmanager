@@ -175,8 +175,8 @@ paths:
               $ref: '#/components/schemas/RappInstanceDeployOrder'
         required: true
       responses:
-        '200':
-          description: OK
+        '202':
+          description: Accepted
         '400':
           description: Bad Request
         '404':
