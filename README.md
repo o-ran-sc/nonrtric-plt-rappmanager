@@ -1,4 +1,11 @@
-# rApp Manager (This is a prototype)
+# rApp Manager (Experimental O-RAN-SC Module)
+
+![Status: Not for Production](https://img.shields.io/badge/status-not--for--production-red)
+![Status: Experimental](https://img.shields.io/badge/CVE%20Support-none-lightgrey)
+
+> [!WARNING]
+> This repository is pre-spec and not intended for production use. No CVE remediation or production guarantees apply.
+
 rApp manager is an application which lifecycle manages the rApp.
 
 <mark>**rApp packaging model used here is purely a prototype**</mark>
