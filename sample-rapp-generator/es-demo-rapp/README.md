@@ -21,6 +21,30 @@ The instructions below describe how to:
 For a complete guide on the installation of the SMO rApp platform,
 please follow the instructions [here](https://gerrit.o-ran-sc.org/r/gitweb?p=it/dep.git;a=blob_plain;f=smo-install/README.md;hb=HEAD).
 
+As an additional note, a special flavour of the SMO installation is available for the Energy Saving rApp demo.
+This flavour is located in the `smo-install/helm-override/ranpm-pynts-es-rapp` directory. 
+There is some detail on flavours [here](https://github.com/o-ran-sc/it-dep/blob/master/smo-install/README.md).
+This flavour is designed to install the SMO components required for the Energy Saving rapp demo.
+After all the other steps in the SMO installation guide are completed, you can run the following command to 
+install the Energy Saving rApp flavour:
+
+```bash
+./dep/smo-install/scripts/layer-2/2-install-oran.sh ranpm-pynts-es-rapp dev
+```
+
+Once all the components are installed and ready, you can proceed with the install of the DU simulators.
+These will start a flow of sample data through the system, which will be used by the Energy Saving rApp demo.
+wait around 10 minutes after all the components are installed before proceeding with the next simulator install.
+
+```bash
+./dep/smo-install/scripts/layer-2/2-install-simulators.sh ranpm-pynts-es-rapp
+```
+
+```text
+NOTE: The installation is just pointed at with the above commands. For the full installation and details of flavours, go to the smo installation docs.
+```
+[SMO Install Guide](https://github.com/o-ran-sc/it-dep/blob/master/smo-install/README.md)
+
 ### Energy Saving rApp Deployment Preparation
 1. The rApp needs to know the address and port of your chart repository. We can do this by running the following command:
    ```bash

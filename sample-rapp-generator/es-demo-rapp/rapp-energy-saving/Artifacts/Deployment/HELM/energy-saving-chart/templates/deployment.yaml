@@ -63,6 +63,11 @@ spec:
               value: {{ .Values.environment.appId | quote }}
             - name: SME_DISCOVERY_ENDPOINT
               value: {{ .Values.environment.smeDiscoveryEndpoint | quote }}
+            - name: INFLUX_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: token
+                  name: {{ .Values.influxdb.tokenSecretName | quote }}
           volumeMounts:
             - mountPath: /app/config.json
               name: config

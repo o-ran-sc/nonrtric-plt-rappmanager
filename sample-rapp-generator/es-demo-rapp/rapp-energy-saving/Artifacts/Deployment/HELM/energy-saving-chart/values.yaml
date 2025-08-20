@@ -25,7 +25,7 @@ image:
   repository: "nexus3.onap.org:10001/estdemoimages/es-rapp"
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "0.2.5"
+  tag: "0.2.16"
 
 imagePullSecrets: []
 nameOverride: "energy-saving-rapp"
@@ -103,13 +103,15 @@ environment:
 
 influxdb:
   token: "hIVMgY7vn3M772PSk3yrI2IjeWzybPw0"
+  # This token secret is part of the smo install. The rapp will expect that this secret is created in the same namespace as the rapp.
+  tokenSecretName: influxdb-api-token
   user: "admin"
   password: "mySuP3rS3cr3tT0keN"
   bucket: "pm-logg-bucket"
   org: "est"
   apiName: "influxdb2-http"
   resourceName: "root"
-  timeRange: "-6h"
+  timeRange: "-5m"
   measurements:
     - "ManagedElement=o-du-pynts-1122,ManagedElement=o-du-pynts-1122,GNBDUFunction=1,NRCellDU=1"
     - "ManagedElement=o-du-pynts-1123,ManagedElement=o-du-pynts-1123,GNBDUFunction=1,NRCellDU=1"
@@ -117,9 +119,11 @@ influxdb:
 
 
 ncmp:
-  apiName: "ncmp-dmi-plugin-http"
+  apiName: "cps-core-http"
   resourceName: "root"
   resourceId: "/_3gpp-common-managed-element:ManagedElement=ManagedElement-002/_3gpp-nr-nrm-gnbdufunction:GNBDUFunction=GNBDUFunction-001/_3gpp-nr-nrm-nrcelldu:NRCellDU=NRCellDU-001/attributes"
+  managedElementId: "ManagedElement-002"
+  gnbduFunctionId: "GNBDUFunction-001"
 
 kserve:
   apiName: "es-predictor-http"
@@ -128,7 +132,7 @@ kserve:
 teiv:
   apiName: "topology-exposure-http"
   resourceName: "root"
-  oduFunctionId: "GNBDUFunction-001"
+  oduFunctionId: "urn:oran:smo:teiv:GNBDUFunction-001"
 
 appStartup:
   command: ["/bin/sh", "-c"]

@@ -7,6 +7,8 @@
     "ncmp_api_name": "{{ .Values.ncmp.apiName }}",
     "ncmp_resource_name": "{{ .Values.ncmp.resourceName }}",
     "resource_id": "{{ .Values.ncmp.resourceId}}",
+    "ncmp_managed_element_id": "{{ .Values.ncmp.managedElementId }}",
+    "ncmp_gnbdufunction_id": "{{ .Values.ncmp.gnbduFunctionId }}",
     "influxdb_invoker_id": "{{ .Values.environment.appId }}",
     "influxdb_api_name": "{{ .Values.influxdb.apiName }}",
     "influxdb_resource_name": "{{ .Values.influxdb.resourceName }}",
