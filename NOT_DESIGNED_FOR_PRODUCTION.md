@@ -23,4 +23,4 @@ Any use in products or deployments is at the user's own risk.
 For production-grade implementations, please consult finalized O-RAN specifications and implementations that explicitly state compliance and maintenance support.
 
 ---
-2025 highstreet technologies USA Corp. / O-RAN-SC OAM / OpenInfra Foundation Europe - Licensed under the terms in the [Apache 2.0 LICENSE file](../LICENSES).
+2025 highstreet technologies USA Corp. / O-RAN-SC OAM / OpenInfra Foundation Europe - Licensed under the terms in the [Apache 2.0 LICENSE file](LICENSE.txt).
