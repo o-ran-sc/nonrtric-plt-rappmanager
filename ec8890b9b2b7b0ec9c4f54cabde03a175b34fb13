@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "afaa2753_42990247",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-08-21T13:25:43Z",
+      "side": 1,
+      "message": "We can merge this now and close https://jira.linuxfoundation.org/plugins/servlet/desk/portal/2/IT-28418 \nWe wanted to wait for some sample / agreement on how to mark a repo or some of its contents as \"Prototype / Not for Production Use\". \nWe have added some info in the ReadMe \u0026 added a text file stating this. \nSee \nhttps://gerrit.o-ran-sc.org/r/c/nonrtric/plt/rappmanager/+/14826\nhttps://gerrit.o-ran-sc.org/r/c/nonrtric/plt/rappmanager/+/14839",
+      "revId": "ec8890b9b2b7b0ec9c4f54cabde03a175b34fb13",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
