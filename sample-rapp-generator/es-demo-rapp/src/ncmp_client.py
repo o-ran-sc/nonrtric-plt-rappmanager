@@ -17,6 +17,7 @@
 
 import json
 import logging
+import requests
 from sme_client import SMEClient
 
 logger = logging.getLogger(__name__)
@@ -32,6 +33,8 @@ class NCMP_CLIENT(object):
         self.ncmp_invoker_id = sme_config.get("ncmp_invoker_id")
         self.ncmp_api_name = sme_config.get("ncmp_api_name")
         self.ncmp_resource_name = sme_config.get("ncmp_resource_name")
+        self.ncmp_me = sme_config.get("ncmp_managed_element_id", "ManagedElement-002")
+        self.ncmp_gnb = sme_config.get("ncmp_gnbdufunction_id", "GNBDUFunction-001")
         self.resourse_identifier = sme_config.get("resource_id")
         self.ncmp_uri = None
 
@@ -45,61 +48,74 @@ class NCMP_CLIENT(object):
 
         print("Discovered NCMP URI: ", self.ncmp_uri)
 
-    def power_off_cell(self, endpoint):
+    def power_off_cell(self, cell_with_node):
 
+        passthrough_request = self.make_passthrough_request(cell_with_node)
         # This log is all it does in testing
-        logger.info("Powering-off cell " + str(endpoint) + " successful")
+        logger.info("Powering-off cell " + str(cell_with_node) + " in progress...")
 
         # It expects the SME ncmp endpoint to call power off
         # endpoint_with_query = f"{endpoint}?resourceIdentifier={self.resourse_identifier}"
         #
-        # headers = {
-        #     "Content-Type": "application/json"
-        # }
-        #
-        # body = {
-        #     "attributes": {
-        #         "administrativeState": "LOCKED"
-        #     }
-        # }
-        #
-        # response = requests.patch(endpoint_with_query, data=body, headers=headers)
-        #
-        # if response.status_code == 200:
-        #     logger.info("Power-off successful. " + response.text)
-        #     return response.json()
-        # else:
-        #     logger.error(f"Error in connection to NCMP for power off: {response.status_code}")
-        #     logger.error(response.text)
-        #     return None
+        headers = {
+            "Content-Type": "application/json"
+        }
 
-    def power_on_cell(self, endpoint):
+        body = {
+            "attributes": {
+                "administrativeState": "LOCKED"
+            }
+        }
+
+        response = requests.patch(passthrough_request, json=body, headers=headers)
+
+        if response.status_code == 200:
+            logger.info("Power-off successful. " + response.text)
+            return True
+        else:
+            logger.error(f"Error in connection to NCMP for power off: {response.status_code}")
+            logger.error(response.text)
+            return False
+
+    def power_on_cell(self, cell_with_node):
 
         # This log is all it does in testing
-        logger.info("Powering-on cell " + str(endpoint) + " successful")
+        passthrough_request = self.make_passthrough_request(cell_with_node)
+        logger.info("Powering-on cell " + str(cell_with_node) + " in progress...")
 
         # It expects the SME ncmp endpoint to call power on
         # endpoint_with_query = f"{endpoint}?resourceIdentifier={self.resourse_identifier}"
-        #
-        # headers = {
-        #     "Content-Type": "application/json"
-        # }
-        #
-        # body = {
-        #     "attributes": {
-        #         "administrativeState": "UNLOCKED"
-        #     }
-        # }
-        #
-        # response = requests.patch(endpoint_with_query, data=body, headers=headers)
-        #
-        # if response.status_code == 200:
-        #     logger.info("Power-on successful. " + response.text)
-        #     return response.json()
-        # else:
-        #     logger.error(f"Error in connection to NCMP for power on: {response.status_code}")
-        #     logger.error(response.text)
-        #     return None
+
+        headers = {
+            "Content-Type": "application/json"
+        }
+
+        body = {
+            "attributes": {
+                "administrativeState": "UNLOCKED"
+            }
+        }
+
+        response = requests.patch(passthrough_request, json=body, headers=headers)
+
+        if response.status_code == 200:
+            logger.info("Power-on successful. " + response.text)
+            return True
+        else:
+            logger.error(f"Error in connection to NCMP for power on: {response.status_code}")
+            logger.error(response.text)
+            return False
+
+    def make_passthrough_request(self, cell_with_node):
+        node_id = cell_with_node.split('_')[1]
+        cell_id = cell_with_node.split('_')[0]
+
+        endpoint = f"ncmp/v1/ch/{node_id}/data/ds/ncmp-datastore%3Apassthrough-running"
+        query_param = (f"?resourceIdentifier=/_3gpp-common-managed-element:ManagedElement={self.ncmp_me}"
+                       f"/_3gpp-nr-nrm-gnbdufunction:GNBDUFunction={self.ncmp_gnb}"
+                       f"/_3gpp-nr-nrm-nrcelldu:NRCellDU={cell_id}/attributes")
+
+        return f"{self.ncmp_uri}{endpoint}{query_param}"
 
 # if __name__ == "__main__":
 #     logging.basicConfig(level=logging.INFO)  # Set up logging for better visibility

@@ -15,9 +15,9 @@
         "chart": {
           "chartId": {
             "name": "energy-saving-rapp",
-            "version": "0.2.5"
+            "version": "0.2.16"
           },
-          "namespace": "nonrtric",
+          "namespace": "smo",
           "releaseName": "energy-saving-rapp",
           "podName": "energy-saving-rapp",
           "repository": {

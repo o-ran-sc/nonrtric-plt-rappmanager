@@ -43,12 +43,12 @@ class TEIV_CLIENT(object):
             resource_name=self.teiv_resource_name
         )
 
-        self.teiv_uri = sme_client.discover_service()
+        self.teiv_uri = sme_client.discover_service() + "topology-inventory/v1alpha11/"
 
         print("Discovered TEIV URI: ", self.teiv_uri)
 
-    def get_nrcelldus(self, odufunction_id):
-
+    def get_nrcelldus(self):
+        odufunction_id = self.odufunction_id
         scope_filter = f"/provided-by-oduFunction[@id=\"{odufunction_id}\"]"
         encoded_scope_filter = urllib.parse.quote(scope_filter)
         endpoint = (
@@ -59,8 +59,9 @@ class TEIV_CLIENT(object):
         response = requests.get(endpoint)
         
         if response.status_code == 200:
-            logger.info("Retrieved NRCellDUs. " + response.text)
-            return response.json()
+            nrcelldu_ids = self.search_entity_data_for_ids(response.json())
+            logger.info(f"Retrieved NRCellDU IDs form TEIV: {nrcelldu_ids}")
+            return nrcelldu_ids
         else:
             logger.error(f"Error in connection to TEIV: {response.status_code}")
             logger.error(response.text)
@@ -71,7 +72,11 @@ class TEIV_CLIENT(object):
         ids = []
         for item in items:
             for key in item:
-                ids.extend(entity.get('id') for entity in item[key] if 'id' in entity)
+                ids.extend(
+                    entity.get('id').split(':')[-1]
+                    for entity in item[key]
+                    if 'id' in entity
+                )
         return ids
 
 # if __name__ == "__main__":
@@ -80,5 +85,4 @@ class TEIV_CLIENT(object):
 #     # Instantiate the TEIVClient
 #     teiv_client = TEIV_CLIENT()
 #
-#     nrcelldu_json = teiv_client.get_nrcelldus(teiv_client.odufunction_id)
-#     nrcelldu_ids = teiv_client.search_entity_data_for_ids(nrcelldu_json)
+#     nrcelldu_json = teiv_client.get_nrcelldus()

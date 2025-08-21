@@ -4,9 +4,11 @@
     "host": "localhost",
     "port": 31575,
     "ncmp_invoker_id": "6a965002-ed7c-4f69-855c-ab9196f86e61",
-    "ncmp_api_name": "ncmp-dmi-plugin-http",
+    "ncmp_api_name": "cps-core-http",
     "ncmp_resource_name": "root",
     "resource_id": "/_3gpp-common-managed-element:ManagedElement=ManagedElement-002/_3gpp-nr-nrm-gnbdufunction:GNBDUFunction=GNBDUFunction-001/_3gpp-nr-nrm-nrcelldu:NRCellDU=NRCellDU-001/attributes",
+    "ncmp_managed_element_id": "ManagedElement-002",
+    "ncmp_gnbdufunction_id": "GNBDUFunction-001",
     "influxdb_invoker_id": "6a965002-ed7c-4f69-855c-ab9196f86e61",
     "influxdb_api_name": "influxdb2-http",
     "influxdb_resource_name": "root",
@@ -16,7 +18,7 @@
     "teiv_invoker_id": "6a965002-ed7c-4f69-855c-ab9196f86e61",
     "teiv_api_name": "topology-exposure-http",
     "teiv_resource_name": "root",
-    "odufunction_id": "GNBDUFunction-001"
+    "odufunction_id": "urn:oran:smo:teiv:GNBDUFunction-001"
   },
   "DB": {
     "host": "10.101.3.89",

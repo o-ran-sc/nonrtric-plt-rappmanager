@@ -14,7 +14,7 @@
 #  limitations under the License.
 #  ============LICENSE_END=================================================
 #
-
+import os
 import time
 import logging
 from influxdb.exceptions import InfluxDBClientError, InfluxDBServerError
@@ -145,7 +145,7 @@ class DATABASE(object):
                 time.sleep(60)
 
     def mapping(self, data):
-        data[['S', 'B', 'C']] = data['CellID'].str.extract(r'S(\d+)/[BN](\d+)/C(\d+)')
+        data[['S', 'B', 'C']] = data['CellID'].str.extract(r'S(\d+)-[BN](\d+)-C(\d+)')
         data[['S', 'B', 'C']] = data[['S', 'B', 'C']].astype(int)
         data = data.sort_values(by=['B', 'S', 'C'])
         data['cellidnumber'] = data.groupby(['B', 'S', 'C']).ngroup().add(1)
@@ -165,7 +165,7 @@ class DATABASE(object):
 
             for field in fields:
                 value = (
-                    f"S{random.randint(1,9)}/B{random.randint(1,9)}/C{random.randint(1,9)}" if field == "CellID"
+                    f"S{random.randint(1,9)}-B{random.randint(1,9)}-C{random.randint(1,9)}" if field == "CellID"
                     else (900 if field == "GranularityPeriod"
                     else str(round(random.uniform(1, 100), 5)))
                 )
@@ -208,7 +208,13 @@ class DATABASE(object):
 
         # Initialize the InfluxDB client
         influx_config = config.get("DB", {})
-        self.token = influx_config.get("token")
+
+        if os.getenv('INFLUX_TOKEN'):
+            self.token = os.getenv('INFLUX_TOKEN')
+        else:
+            logger.info("INFLUX_TOKEN environment variable is not set.")
+            self.token = influx_config.get("token")
+
         self.org = influx_config.get("org")
         self.bucket = influx_config.get("bucket")
         self.address = influx_config.get("address")

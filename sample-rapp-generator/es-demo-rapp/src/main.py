@@ -131,40 +131,44 @@ class ESrapp():
             status_code, response_text = self.assist.send_request_to_server(json_data, randomize=self.random_predictions)
             if not self.check_and_perform_action(response_text):
                 cell_id_name = group_data['CellID'].iloc[0]
+                # Check if the cell is in TEIV
+                self.check_cell_in_teiv(cell_id_name)
                 du_name = self.extract_managed_element(group_data['_measurement'].iloc[0])
-                full_cell_id = cell_id_name + "-" + du_name
+                cell_with_node = cell_id_name + "_" + du_name
                 logger.info(f"Turn on the cell {group_name}")
                 # Wait for 3 seconds before performing the action
                 time.sleep(3)
 
-                if full_cell_id not in self.cell_power_status:
-                    logger.debug(f"Cell {full_cell_id} not in local cache. Adding it...")
-                    self.cell_power_status[full_cell_id] = "off"
+                if cell_with_node not in self.cell_power_status:
+                    logger.debug(f"Cell {cell_with_node} not in local cache. Adding it...")
+                    self.cell_power_status[cell_with_node] = "off"
                 # Check if the cell is already powered on
-                if self.cell_power_status[full_cell_id] == "on":
-                    logger.debug(f"Cell {full_cell_id} is already powered on.")
+                if self.cell_power_status[cell_with_node] == "on":
+                    logger.debug(f"Cell {cell_with_node} is already powered on.")
                     # continue
                 else:
-                    self.ncmp_client.power_on_cell(full_cell_id)
-                    self.cell_power_status[full_cell_id] = "on"
+                    self.ncmp_client.power_on_cell(cell_with_node)
+                    self.cell_power_status[cell_with_node] = "on"
             else:
                 du_name = self.extract_managed_element(group_data['_measurement'].iloc[0])
                 cell_id_name = group_data['CellID'].iloc[0]
-                full_cell_id = cell_id_name + "-" + du_name
+                # Check if the cell is in TEIV
+                self.check_cell_in_teiv(cell_id_name)
+                cell_with_node = cell_id_name + "_" + du_name
                 logger.info(f"Turn off the cell {group_name}")
                 # Wait for 3 seconds before performing the action
                 time.sleep(3)
 
-                if full_cell_id not in self.cell_power_status:
-                    logger.debug(f"Cell {full_cell_id} not in local cache. Adding it...")
-                    self.cell_power_status[full_cell_id] = "on"
+                if cell_with_node not in self.cell_power_status:
+                    logger.debug(f"Cell {cell_with_node} not in local cache. Adding it...")
+                    self.cell_power_status[cell_with_node] = "on"
 
-                if self.cell_power_status[full_cell_id] == "off":
-                    logger.debug(f"Cell {full_cell_id} is already powered off.")
+                if self.cell_power_status[cell_with_node] == "off":
+                    logger.debug(f"Cell {cell_with_node} is already powered off.")
                     # continue
                 else:
-                    self.ncmp_client.power_off_cell(full_cell_id)
-                    self.cell_power_status[full_cell_id] = "off"
+                    if self.ncmp_client.power_off_cell(cell_with_node):
+                        self.cell_power_status[cell_with_node] = "off"
 
     def extract_managed_element(self, measurement):
         if '=' not in measurement or ',' not in measurement:
@@ -201,7 +205,7 @@ class ESrapp():
     def mapping(self, data):
         data = pd.DataFrame(data)
         # TODO: This regex is not likely to match all cell IDs. Will need to be improved.
-        data[['S', 'B', 'C']] = data['CellID'].str.extract(r'S(\d+)/[BN](\d+)/C(\d+)')
+        data[['S', 'B', 'C']] = data['CellID'].str.extract(r'S(\d+)-[BN](\d+)-C(\d+)')
         data[['S', 'B', 'C']] = data[['S', 'B', 'C']].astype(int)
         data = data.sort_values(by=['B', 'S', 'C'])
         data['cellidnumber'] = data.groupby(['B', 'S', 'C']).ngroup().add(1)
@@ -220,20 +224,15 @@ class ESrapp():
                     return False
         return False
 
+    # Check if the cell is in TEIV cell inventory
+    def check_cell_in_teiv(self, cell_id):
+        # Check if the cell ID is in the TEIV cell inventory
+        self.teiv_cells = self.teiv_client.get_nrcelldus()
 
-
-    # def get_teiv_cells(self):
-    #     # Get the TEIV cells from the teiv
-    #     odufunction_id = self.teiv_client.odufunction_id
-    #     logger.info("ODU function ID: " + str(odufunction_id))
-    #     # Get the NRCellDUs from the TEIV
-    #     nrcelldus = self.teiv_client.get_nrcelldus(odufunction_id)
-    #     if nrcelldus is None:
-    #         logger.error("Failed to retrieve NRCellDUs.")
-    #         return None
-    #     # Extract the cell IDs from the NRCellDUs
-    #     self.teiv_cells = self.teiv_client.search_entity_data_for_ids(nrcelldus)
-    #     logger.info("NRCellDUs: " + str(self.nrcelldus))
+        if cell_id in self.teiv_cells:
+            logger.info(f"Cell {cell_id} is in the TEIV cell inventory.")
+        else:
+            logger.info(f"Cell {cell_id} is not in the TEIV cell inventory.")
 
 
 if __name__ == "__main__":
