@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "41c18698_32b64cc7",
+        "filename": "sample-rapp-generator/es-demo-rapp/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2025-08-21T07:42:44Z",
+      "side": 1,
+      "message": "Release mode of installation also supported. This has been described well in the it/dep SMO-Install documentation.",
+      "range": {
+        "startLine": 32,
+        "startChar": 72,
+        "endLine": 32,
+        "endChar": 75
+      },
+      "revId": "53fd619323dc8db8fc8a43cf2a55ed1a52f3c74c",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
