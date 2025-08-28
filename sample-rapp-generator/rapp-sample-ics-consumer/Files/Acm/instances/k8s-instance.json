@@ -19,7 +19,7 @@
           },
           "namespace": "nonrtric",
           "releaseName": "ics-consumer",
-          "podName": "ics-consumer",
+          "podName": "kafka-consumer",
           "repository": {
             "repoName": "local",
             "address": "UPDATE_THIS_CHART_MUSEUM_GET_CHARTS_URI"

@@ -58,8 +58,9 @@ public class RappInstanceController {
 
     @GetMapping
     public ResponseEntity<Map<UUID, RappInstance>> getAllRappInstances(@PathVariable("rapp_id") String rappId) {
-        return rappCacheService.getRapp(rappId).map(Rapp::getRappInstances).map(ResponseEntity::ok).orElseThrow(
-                () -> new RappHandlerException(HttpStatus.NOT_FOUND, "No instance found for rApp '" + rappId + "'."));
+        return rappCacheService.getRapp(rappId).map(rappService::syncRappState).map(Rapp::getRappInstances)
+                       .map(ResponseEntity::ok).orElseThrow(() -> new RappHandlerException(HttpStatus.NOT_FOUND,
+                        "No instance found for rApp '" + rappId + "'."));
     }
 
     @PostMapping

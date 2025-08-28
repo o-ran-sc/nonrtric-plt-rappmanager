@@ -19,7 +19,7 @@
           },
           "namespace": "nonrtric",
           "releaseName": "ics-producer",
-          "podName": "ics-producer",
+          "podName": "kafka-producer",
           "repository": {
             "repoName": "local",
             "address": "UPDATE_THIS_CHART_MUSEUM_GET_CHARTS_URI"

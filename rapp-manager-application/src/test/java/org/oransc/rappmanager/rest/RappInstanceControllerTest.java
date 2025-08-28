@@ -91,6 +91,7 @@ class RappInstanceControllerTest {
         UUID rappInstanceId = UUID.randomUUID();
         Rapp rapp = getRapp(rappId, rappInstanceId);
         rappCacheService.putRapp(rapp);
+        rappInstanceStateMachine.onboardRappInstance(rappInstanceId);
         mockMvc.perform(MockMvcRequestBuilders.get("/rapps/{rapp_id}/instance", rappId)).andExpect(status().isOk())
                 .andExpect(
                         jsonPath("$." + rappInstanceId.toString() + ".rappInstanceId").value(rappInstanceId.toString()))

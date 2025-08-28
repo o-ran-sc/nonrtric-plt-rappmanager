@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START======================================================================
  * Copyright (C) 2023 Nordix Foundation. All rights reserved.
- * Copyright (C) 2023-2024 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -170,6 +170,7 @@ public class AcmDeployer implements RappDeployer {
                         automationComposition.getCompositionId(), automationComposition.getInstanceId(),
                         UUID.randomUUID());
                 rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.ACMUNDEPLOYED);
+                rappInstance.getAcm().setAcmInstanceId(null);
                 return true;
             }
         }
@@ -243,7 +244,7 @@ public class AcmDeployer implements RappDeployer {
     }
 
     public void syncRappInstanceStatus(UUID compositionId, RappInstance rappInstance) {
-        if (rappInstance.getAcm().getAcmInstanceId() != null) {
+        if (rappInstance.getAcm() != null && rappInstance.getAcm().getAcmInstanceId() != null) {
             try {
                 AutomationComposition compositionInstance =
                         automationCompositionInstanceApiClient.getCompositionInstance(compositionId,

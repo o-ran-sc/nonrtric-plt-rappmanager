@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START======================================================================
  * Copyright (C) 2023 Nordix Foundation. All rights reserved.
- * Copyright (C) 2023-2024 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 
 package org.oransc.rappmanager.service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -145,6 +146,7 @@ public class RappService {
         if (rApp.getRappInstances().get(rappInstanceId).getState().equals(RappInstanceState.UNDEPLOYED)) {
             rappInstanceStateMachine.deleteRappInstance(rApp.getRappInstances().get(rappInstanceId));
             rApp.getRappInstances().remove(rappInstanceId);
+            rappCacheService.putRapp(rApp);
             return ResponseEntity.noContent().build();
         }
         throw new RappHandlerException(HttpStatus.BAD_REQUEST,
@@ -153,5 +155,18 @@ public class RappService {
 
     public void updateRappInstanceState(Rapp rapp, RappInstance rappInstance) {
         acmDeployer.syncRappInstanceStatus(rapp.getCompositionId(), rappInstance);
+    }
+
+    public Collection<Rapp> syncRappStates(Collection<Rapp> rapps) {
+        rapps.forEach(this::syncRappState);
+        return rapps;
+    }
+
+    public Rapp syncRappState(Rapp rapp) {
+        rapp.getRappInstances().forEach((instanceId, instance) -> {
+            updateRappInstanceState(rapp, instance);
+            instance.setState(rappInstanceStateMachine.getRappInstanceState(instanceId));
+        });
+        return rapp;
     }
 }

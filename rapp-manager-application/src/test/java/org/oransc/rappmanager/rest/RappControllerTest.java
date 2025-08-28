@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -41,6 +42,9 @@ import org.oransc.rappmanager.models.rapp.PrimeOrder;
 import org.oransc.rappmanager.models.rapp.Rapp;
 import org.oransc.rappmanager.models.rapp.RappPrimeOrder;
 import org.oransc.rappmanager.models.rapp.RappState;
+import org.oransc.rappmanager.models.rappinstance.RappInstance;
+import org.oransc.rappmanager.models.rappinstance.RappInstanceState;
+import org.oransc.rappmanager.models.statemachine.RappInstanceStateMachine;
 import org.oransc.rappmanager.sme.service.SmeLifecycleManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -61,6 +65,9 @@ class RappControllerTest {
     @Autowired
     private RappCacheService rappCacheService;
 
+    @Autowired
+    RappInstanceStateMachine rappInstanceStateMachine;
+
     @MockitoBean
     AcmDeployer acmDeployer;
 
@@ -80,32 +87,48 @@ class RappControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/rapps")).andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
         UUID rappId = UUID.randomUUID();
+        UUID instanceId = UUID.randomUUID();
+        RappInstance instance = new RappInstance();
+        instance.setRappInstanceId(instanceId);
+        instance.setState(RappInstanceState.UNDEPLOYED);
+        Map<UUID, RappInstance> instances = Map.of(instanceId, instance);
         Rapp rapp = Rapp.builder().rappId(rappId).name(String.valueOf(rappId)).packageName(validRappFile)
-                            .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
+                            .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).rappInstances(instances).build();
         AsdMetadata asdMetadata = new AsdMetadata();
         asdMetadata.setDescriptorId(UUID.randomUUID().toString());
         asdMetadata.setDescriptorInvariantId(UUID.randomUUID().toString());
         asdMetadata.setDeploymentItems(List.of());
         rapp.setAsdMetadata(asdMetadata);
         rappCacheService.putRapp(rapp);
+        rappInstanceStateMachine.onboardRappInstance(instanceId);
         mockMvc.perform(MockMvcRequestBuilders.get("/rapps")).andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)));
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].rappInstances." + instanceId + ".rappInstanceId").value(instanceId.toString()))
+                .andExpect(jsonPath("$[0].rappInstances." + instanceId + ".state").value(instance.getState().name()));
     }
 
     @Test
     void testGetRapp() throws Exception {
         UUID rappId = UUID.randomUUID();
+        UUID instanceId = UUID.randomUUID();
+        RappInstance instance = new RappInstance();
+        instance.setRappInstanceId(instanceId);
+        instance.setState(RappInstanceState.UNDEPLOYED);
+        Map<UUID, RappInstance> instances = Map.of(instanceId, instance);
         Rapp rapp = Rapp.builder().rappId(rappId).name(String.valueOf(rappId)).packageName(validRappFile)
-                            .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).build();
+                            .packageLocation(validCsarFileLocation).state(RappState.COMMISSIONED).rappInstances(instances).build();
         AsdMetadata asdMetadata = new AsdMetadata();
         asdMetadata.setDescriptorId(UUID.randomUUID().toString());
         asdMetadata.setDescriptorInvariantId(UUID.randomUUID().toString());
         asdMetadata.setDeploymentItems(List.of());
         rapp.setAsdMetadata(asdMetadata);
         rappCacheService.putRapp(rapp);
+        rappInstanceStateMachine.onboardRappInstance(instanceId);
         mockMvc.perform(MockMvcRequestBuilders.get("/rapps/{rapp_id}", rappId)).andExpect(status().isOk())
                 .andExpect(jsonPath("$.rappId").value(rappId.toString()))
-                .andExpect(jsonPath("$.state").value(RappState.COMMISSIONED.name()));
+                .andExpect(jsonPath("$.state").value(RappState.COMMISSIONED.name()))
+                .andExpect(jsonPath("$.rappInstances." + instanceId + ".rappInstanceId").value(instanceId.toString()))
+                .andExpect(jsonPath("$.rappInstances." + instanceId + ".state").value(instance.getState().name()));
     }
 
     @Test

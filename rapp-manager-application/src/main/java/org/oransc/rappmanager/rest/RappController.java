@@ -37,8 +37,6 @@ import org.oransc.rappmanager.models.rapp.Rapp;
 import org.oransc.rappmanager.models.rapp.RappPrimeOrder;
 import org.oransc.rappmanager.models.rapp.RappState;
 import org.oransc.rappmanager.service.RappService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -57,7 +55,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class RappController {
 
-    Logger logger = LoggerFactory.getLogger(RappController.class);
     private final RappCsarConfigurationHandler rappCsarConfigurationHandler;
     private final RappValidationHandler rappValidationHandler;
     private final RappManagerConfiguration rappManagerConfiguration;
@@ -67,12 +64,12 @@ public class RappController {
 
     @GetMapping
     public ResponseEntity<Collection<Rapp>> getRapps() {
-        return ResponseEntity.ok(rappCacheService.getAllRapp());
+        return ResponseEntity.ok(rappService.syncRappStates(rappCacheService.getAllRapp()));
     }
 
     @GetMapping("{rapp_id}")
     public ResponseEntity<Rapp> getRapp(@PathVariable("rapp_id") String rappId) {
-        return rappCacheService.getRapp(rappId).map(ResponseEntity::ok).orElseThrow(
+        return rappCacheService.getRapp(rappId).map(rappService::syncRappState).map(ResponseEntity::ok).orElseThrow(
                 () -> new RappHandlerException(HttpStatus.NOT_FOUND, String.format(RAPP_NOT_FOUND, rappId)));
     }
 

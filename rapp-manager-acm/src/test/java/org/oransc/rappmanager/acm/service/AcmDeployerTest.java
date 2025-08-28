@@ -267,6 +267,7 @@ class AcmDeployerTest {
         boolean rappUndeployStateActual = acmDeployer.undeployRappInstance(rapp, rappInstance);
         mockServer.verify();
         assertTrue(rappUndeployStateActual);
+        assertNull(rappInstance.getAcm().getAcmInstanceId());
     }
 
     @Test
@@ -351,6 +352,26 @@ class AcmDeployerTest {
         rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
         acmDeployer.syncRappInstanceStatus(compositionId, rappInstance);
         mockServer.verify();
+        verify(rappInstanceStateMachine, never()).sendRappInstanceEvent(any(), any());
+    }
+
+    @Test
+    void testSyncRappStatusFailureAcmNull() {
+        UUID compositionId = UUID.randomUUID();
+        RappInstance rappInstance = rappResourceBuilder.getRappInstance();
+        rappInstance.setAcm(null);
+        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
+        acmDeployer.syncRappInstanceStatus(compositionId, rappInstance);
+        verify(rappInstanceStateMachine, never()).sendRappInstanceEvent(any(), any());
+    }
+
+    @Test
+    void testSyncRappStatusFailureAcmInstanceIdNull() {
+        UUID compositionId = UUID.randomUUID();
+        RappInstance rappInstance = rappResourceBuilder.getRappInstance();
+        rappInstance.getAcm().setAcmInstanceId(null);
+        rappInstanceStateMachine.onboardRappInstance(rappInstance.getRappInstanceId());
+        acmDeployer.syncRappInstanceStatus(compositionId, rappInstance);
         verify(rappInstanceStateMachine, never()).sendRappInstanceEvent(any(), any());
     }
 
