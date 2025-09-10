@@ -15,6 +15,11 @@ security:
 dme:
   baseUrl: http://localhost:63475
 
+logging:
+  level:
+    ROOT: INFO
+    org.springframework.web.client.RestTemplate: DEBUG
+
 participant:
   intermediaryParameters:
     topics:
