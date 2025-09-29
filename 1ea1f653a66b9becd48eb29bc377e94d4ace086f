@@ -1,0 +1,9 @@
+Verified+1: ORAN Required GHA <releng+oran.required.gha@linuxfoundation.org>
+Verified+1: John Keeney <john.keeney@est.tech>
+Code-Review+2: John Keeney <john.keeney@est.tech>
+Verified+1: ORAN Jobbuilder <releng+oran-jobbuilder@linuxfoundation.org>
+Submitted-by: John Keeney <john.keeney@est.tech>
+Submitted-at: Mon, 29 Sep 2025 11:24:04 +0000
+Reviewed-on: https://gerrit.o-ran-sc.org/r/c/nonrtric/plt/rappmanager/+/15018
+Project: nonrtric/plt/rappmanager
+Branch: refs/heads/master
