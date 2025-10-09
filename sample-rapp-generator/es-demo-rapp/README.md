@@ -46,7 +46,8 @@ NOTE: The installation is just pointed at with the above commands. For the full 
 [SMO Install Guide](https://github.com/o-ran-sc/it-dep/blob/master/smo-install/README.md)
 
 ### Energy Saving rApp Deployment Preparation
-1. The rApp needs to know the address and port of your chart repository. We can do this by running the following command:
+1. The rApp needs to know the address and port of your chart repository. If you need to run a local chart repository, you can refer to the instructions [here](https://github.com/o-ran-sc/it-dep/blob/master/smo-install/helm-override/rappmanager/README.md#helm-repository-configuration)
+    Replace `IP_ADD` and `PORT` in the command below with the address and port of your chart repository.
    ```bash
    cd scripts/install
    ./patch-sample-rapps.sh -i IP_ADD -p PORT -r "es-demo-rapp/rapp-energy-saving"
