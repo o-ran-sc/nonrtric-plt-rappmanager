@@ -22,6 +22,30 @@
       },
       "revId": "4c160ea2e7af080da00528c03db05ab6e71e90ef",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3649ddc6_8903767a",
+        "filename": "sample-rapp-generator/es-demo-rapp/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2025-10-13T10:39:11Z",
+      "side": 1,
+      "message": "This is added as part of https://gerrit.o-ran-sc.org/r/c/it/dep/+/15135/2/smo-install/helm-override/rappmanager/README.md#28 in the rappmanager flavour readme.",
+      "parentUuid": "e3d66bfe_ee41ad8b",
+      "range": {
+        "startLine": 49,
+        "startChar": 61,
+        "endLine": 49,
+        "endChar": 71
+      },
+      "revId": "4c160ea2e7af080da00528c03db05ab6e71e90ef",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
