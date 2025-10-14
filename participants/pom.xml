@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.5</version>
+        <version>3.5.6</version>
         <relativePath/>
     </parent>
     <groupId>org.o-ran-sc.nonrtric.plt</groupId>
@@ -51,9 +51,9 @@
     </repositories>
     <properties>
         <java.version>17</java.version>
-        <openapi.maven.version>7.14.0</openapi.maven.version>
-        <docker-maven-plugin>0.46.0</docker-maven-plugin>
-        <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
+        <openapi.maven.version>7.15.0</openapi.maven.version>
+        <docker-maven-plugin>0.47.0</docker-maven-plugin>
+        <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
         <onap.acm.models.version>8.0.1</onap.acm.models.version> 
         <openapi.jackson.databind.nullable.version>0.2.6</openapi.jackson.databind.nullable.version>
     </properties>
