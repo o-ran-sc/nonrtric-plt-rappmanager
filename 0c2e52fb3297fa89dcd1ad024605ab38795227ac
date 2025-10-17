@@ -1,5 +1,23 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c4f5704d_7525f36c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-10-17T16:09:48Z",
+      "side": 1,
+      "message": "Seems fine for now.\nLooking forward to seeing the follow-ups. :-)\n\nThanks.\n\nNote: later we need to see if some test/ci job may be needed. But lets the code \u0026 docs uploaded \u0026 safe first :-)\n\nNote: This directory is for rApps that will be assembled by the generator tool. If the generator tool is not used we may re-file this work in another directory",
+      "revId": "0c2e52fb3297fa89dcd1ad024605ab38795227ac",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
