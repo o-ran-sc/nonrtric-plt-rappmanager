@@ -1,0 +1,1 @@
+models folder contains trained AI/ML models and scalers.
