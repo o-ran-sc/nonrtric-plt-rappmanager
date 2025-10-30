@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c4a01f2f_cf0e683a",
+        "filename": "sample-rapp-generator/rapp-slice-prb-prediction/src/sme_client.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-10-30T10:47:15Z",
+      "side": 1,
+      "message": "How will this value be set? \nThanks.",
+      "range": {
+        "startLine": 127,
+        "startChar": 37,
+        "endLine": 129,
+        "endChar": 40
+      },
+      "revId": "a2f9f6d03c3fe7c4cd100e4da9b91e4b6710eaf3",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
