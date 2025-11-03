@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b376071b_c21e742c",
+        "filename": "sample-rapp-generator/rapp-ran-nssmf-simulator/ran-nssmf-simulator/src/main/java/org/oransc/ran/nssmf/simulator/controller/FileDataReportingMnSController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2025-11-03T12:10:54Z",
+      "side": 1,
+      "message": "Can you use logger wherever possible as sysout/syserr cause Sonarqube issues.",
+      "range": {
+        "startLine": 61,
+        "startChar": 8,
+        "endLine": 61,
+        "endChar": 26
+      },
+      "revId": "b602f50c071ad53d2b4eac983ef73747fdff8857",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
