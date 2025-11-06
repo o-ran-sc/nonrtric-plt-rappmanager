@@ -1,0 +1,27 @@
+{
+  "DB": {
+    "address": "http://localhost:8086",
+    "token": "",
+    "org": "",
+    "bucket": "nssi_pm_bucket",
+    "time_range": "-0",
+    "measurements": "nssi_pm_bucket",
+    "window_size" : 672,
+    "field_names": ["RRU.PrbDl.SNSSAI", "DRB.PdcpSduVolumeDL.SNSSAI", "RRC.ConnEstabSucc.Cause"],
+    "tag_slice_type": "sliceType",
+    "tag_nssi_id": "measObjLdn"
+  },
+  "RAPP": {
+    "interval": "1",
+    "ran_nssmf_address": "http://localhost:8080",
+    "callback_uri": "http://localhost:8080/handleFileReadyNotification"
+  },
+  "SME": {
+    "sme_discovery_endpoint": "http://localhost:31575/service-apis/v1/allServiceAPIs",
+    "invoker_id": "6a965002-ed7c-4f69-855c-ab9196f86e61",
+    "influxdb_api_name": "influxdb2-http",
+    "influxdb_resource_name": "root",
+    "ran_nssmf_api_name": "",
+    "ran_nssmf_resource_name": ""
+  }
+}
