@@ -22,6 +22,30 @@
       },
       "revId": "1b2d5fa6a81bf3ca58279d47cfc84e1baaccbbfa",
       "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca768d9a_6f042074",
+        "filename": "sample-rapp-generator/rapp-slice-prb-prediction/src/sme_client.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2025-11-06T13:20:54Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "ae3e9c2d_0dfb794a",
+      "range": {
+        "startLine": 128,
+        "startChar": 47,
+        "endLine": 129,
+        "endChar": 52
+      },
+      "revId": "1b2d5fa6a81bf3ca58279d47cfc84e1baaccbbfa",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
     }
   ]
 }
