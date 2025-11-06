@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "22a113fb_70f45962",
+        "filename": "sonar-project.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2025-11-06T08:40:51Z",
+      "side": 1,
+      "message": "This repository also contains an additional project in the participants/ directory. This project isn\u0027t linked to the main Maven build(It has it\u0027s own maven build), and its SonarCloud analysis is published separately at\nhttps://sonarcloud.io/summary/new_code?id\u003dnonrtric-plt-participants\u0026branch\u003dmaster. Does this current configuration provide adequate coverage for both projects?",
+      "range": {
+        "startLine": 4,
+        "startChar": 2,
+        "endLine": 4,
+        "endChar": 51
+      },
+      "revId": "afaa817935aeab131edddf2820049e8f3e9a6577",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
