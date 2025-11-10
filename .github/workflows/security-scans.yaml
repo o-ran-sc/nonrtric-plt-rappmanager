@@ -65,7 +65,7 @@ jobs:
       - name: "Build Maven project"
         if: steps.maven-project.outputs.type == 'file'
         # yamllint disable-line rule:line-length
-        uses: lfreleng-actions/maven-build-action@766c383c4d1103778a5c166c3a84d081555895e2 # v0.1.0
+        uses: lfreleng-actions/maven-build-action@c62bd77eeaaee7a875ba6fd1d3f6970262de58c0 # v0.1.1
         with:
           jdk-version: "17"
           mvn-phases: 'clean verify'
