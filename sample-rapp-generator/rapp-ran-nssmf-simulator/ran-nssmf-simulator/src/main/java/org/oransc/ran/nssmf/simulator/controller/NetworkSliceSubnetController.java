@@ -2,12 +2,17 @@ package org.oransc.ran.nssmf.simulator.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+
+import jakarta.validation.Valid;
+
 import org.oransc.ran.nssmf.simulator.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -117,5 +122,26 @@ public class NetworkSliceSubnetController {
         responseDto.setAttributes(attributes);
 
         return ResponseEntity.ok(responseDto);
+    }
+
+    /**
+     * Modifies an existing Network Slice Subnet with the provided profile.
+     *
+     * @param subnetId The unique identifier of the Network Slice Subnet to be modified.
+     * @param updatedSliceProfile The DTO containing the updated characteristics for the Network Slice Subnet.
+     * @return A ResponseEntity with HTTP status 200 (OK) and the updated profile,
+     *         or 204 (No Content) if no content is returned on success.
+     */
+    @PutMapping("/NetworkSliceSubnets/{subnetId}")
+    public ResponseEntity<SliceProfileDTO> modifyNetworkSliceSubnet(@PathVariable String subnetId, @Valid @RequestBody NetworkSliceSubnetDTO updatedSliceProfile) {
+        try {
+            String updatedSliceProfileJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(updatedSliceProfile);
+            logger.info("Modification request received for subnetId: {} with data:\\n {}",  subnetId, updatedSliceProfileJson);
+        } catch (Exception e) {
+            logger.error("Error converting updatedSliceProfile to JSON: {}", e.getMessage());
+        }
+        // Assume modification is successful and return the updated profile (placeholder)
+        SliceProfileDTO updatedProfile = new SliceProfileDTO(); // In a real scenario, this would be populated
+        return ResponseEntity.ok(updatedProfile);
     }
 }

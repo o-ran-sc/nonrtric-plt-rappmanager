@@ -6,10 +6,16 @@
 
 ### Network Slice Subnet Management API
 
-#### Endpoint
+#### Get Network Slice Subnet
 - **URL**: `http://localhost:8080/3GPPManagement/ProvMnS/v17.0.0/NetworkSliceSubnets/{subnetId}`
 - **Method**: `GET`
 - **Content-Type**: `application/json`
+
+#### Modify Network Slice Subnet
+- **URL**: `http://localhost:8080/3GPPManagement/ProvMnS/v17.0.0/NetworkSliceSubnets/{subnetId}`
+- **Method**: `PUT`
+- **Content-Type**: `application/json`
+- **Request Body**: NetworkSliceSubnetDTO with updated slice profile characteristics
 
 #### Supported Subnet IDs
 The simulator supports 6 pre-configured network slice subnets with different characteristics:
@@ -67,16 +73,49 @@ The simulator supports 6 pre-configured network slice subnets with different cha
 
 #### Example Usage
 
-**cURL Command:**
+**cURL Command (GET):**
 ```bash
 curl -X GET \
   http://localhost:8080/3GPPManagement/ProvMnS/v17.0.0/NetworkSliceSubnets/9090d36f-6af5-4cfd-8bda-7a3c88fa82fa \
   -H 'Content-Type: application/json'
 ```
 
+**cURL Command (PUT):**
+```bash
+curl -X PUT \
+  http://localhost:8080/3GPPManagement/ProvMnS/v17.0.0/NetworkSliceSubnets/9090d36f-6af5-4cfd-8bda-7a3c88fa82fa \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "id": "9090d36f-6af5-4cfd-8bda-7a3c88fa82fa",
+    "attributes": {
+      "operationalState": "enabled",
+      "administrativeState": "UNLOCKED",
+      "networkSliceSubnetType": "RAN_SLICESUBNET",
+      "sliceProfileList": [
+        {
+          "sliceProfileId": "2f1ca17d-5c44-4355-bfed-e9800a2996c1",
+          "pLMNInfoList": [
+            {
+              "PLMNId": {
+                "mcc": "330",
+                "mnc": "220"
+              },
+              "SNSSAI": {
+                "sst": 1,
+                "sd": "000001"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }'
+```
+
 **Response Codes:**
-- `200 OK`: Successfully retrieved network slice subnet
+- `200 OK`: Successfully retrieved or modified network slice subnet
 - `404 Not Found`: Subnet ID not found
+- `400 Bad Request`: Invalid request body or validation errors
 
 #### Key Features
 - **3GPP Compliance**: Implements 3GPP 28.532 Network Slice Subnet Management
@@ -225,6 +264,7 @@ The simulator automatically sends file ready notifications to all subscribed end
 ### Network Slice Subnet DTOs
 - **NetworkSliceSubnetDTO**: Main network slice subnet representation with ID and attributes
 - **NetworkSliceSubnetAttributesDTO**: Slice subnet attributes including operational state, administrative state, and slice profiles
+- **SliceProfileDTO**: Response DTO for slice profile modification operations (placeholder for 3GPP TS28541_SliceNrm.yaml compliance)
 - **SliceProfileItemDTO**: Individual slice profile configuration with PLMN info and RAN profile
 - **SliceProfileExtensionsDTO**: Slice profile extensions including service state
 - **PlmnInfoListDTO**: PLMN information list containing network identifiers
@@ -252,11 +292,13 @@ The simulator automatically sends file ready notifications to all subscribed end
 
 ### Key Components
 - **FileDataReportingMnSController**: REST controller handling subscriptions and notifications
-- **NetworkSliceSubnetController**: REST controller handling network slice subnet management operations
+- **NetworkSliceSubnetController**: REST controller handling network slice subnet management operations (GET and PUT)
+- **Request Validation**: Jakarta validation annotations for input validation on modification requests
 - **Scheduled Notifications**: Automated file ready notifications every 5 minutes
 - **RestTemplate**: HTTP client for sending callback notifications
 - **In-memory Storage**: HashMap-based subscription management
 - **Pre-configured Slice Data**: Mock network slice subnet configurations for testing
+- **Comprehensive Logging**: Detailed logging for all operations including modification requests
 
 ## Directory Structure
 
