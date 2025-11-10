@@ -4,6 +4,88 @@
 
 ## API Documentation
 
+### Network Slice Subnet Management API
+
+#### Endpoint
+- **URL**: `http://localhost:8080/3GPPManagement/ProvMnS/v17.0.0/NetworkSliceSubnets/{subnetId}`
+- **Method**: `GET`
+- **Content-Type**: `application/json`
+
+#### Supported Subnet IDs
+The simulator supports 6 pre-configured network slice subnets with different characteristics:
+
+1. `9090d36f-6af5-4cfd-8bda-7a3c88fa82fa` - SST: 1, SD: 000001
+2. `9090d36f-6af5-4cfd-8bda-7a3c88fa82fb` - SST: 1, SD: 000002 (with RRU resource allocation)
+3. `9090d36f-6af5-4cfd-8bda-7a3c88fa82fc` - SST: 2, SD: 000003
+4. `9090d36f-6af5-4cfd-8bda-7a3c88fa82fd` - SST: 2, SD: 000004 (with RRU resource allocation)
+5. `9090d36f-6af5-4cfd-8bda-7a3c88fa82fe` - SST: 3, SD: 000005
+6. `9090d36f-6af5-4cfd-8bda-7a3c88fa82ff` - SST: 1, SD: 000006 (with RRU resource allocation)
+
+#### Response Structure
+```json
+{
+  "id": "9090d36f-6af5-4cfd-8bda-7a3c88fa82fa",
+  "attributes": {
+    "operationalState": "enabled",
+    "administrativeState": "UNLOCKED",
+    "networkSliceSubnetType": "RAN_SLICESUBNET",
+    "managedFunctionRef": [
+      "2c000978-15e3-4393-984e-a20d32c96004-AUPF_200000",
+      "2c000978-15e3-4393-984e-a20d32c96004-DU_200000",
+      "2c000978-15e3-4393-984e-a20d32c96004-ACPF_200000"
+    ],
+    "networkSliceSubnetRef": [],
+    "sliceProfileList": [
+      {
+        "sliceProfileId": "2f1ca17d-5c44-4355-bfed-e9800a2996c1",
+        "extensions": {
+          "state": "IN_SERVICE"
+        },
+        "pLMNInfoList": [
+          {
+            "PLMNId": {
+              "mcc": "330",
+              "mnc": "220"
+            },
+            "SNSSAI": {
+              "sst": 1,
+              "sd": "000001"
+            }
+          }
+        ],
+        "RANSliceSubnetProfile": {
+          "coverageAreaTAList": [1, 2],
+          "resourceSharingLevel": "shared",
+          "RRU.PrbDl": 1024,
+          "RRU.PrbUl": 3096
+        }
+      }
+    ]
+  }
+}
+```
+
+#### Example Usage
+
+**cURL Command:**
+```bash
+curl -X GET \
+  http://localhost:8080/3GPPManagement/ProvMnS/v17.0.0/NetworkSliceSubnets/9090d36f-6af5-4cfd-8bda-7a3c88fa82fa \
+  -H 'Content-Type: application/json'
+```
+
+**Response Codes:**
+- `200 OK`: Successfully retrieved network slice subnet
+- `404 Not Found`: Subnet ID not found
+
+#### Key Features
+- **3GPP Compliance**: Implements 3GPP 28.532 Network Slice Subnet Management
+- **Pre-configured Data**: 6 different slice configurations with varying characteristics
+- **SNSSAI Support**: Different Slice/Service Type (SST) and Slice Differentiator (SD) combinations
+- **RAN Resource Allocation**: Configurable RRU PRB (Physical Resource Block) allocations
+- **PLMN Support**: Public Land Mobile Network identifiers
+- **Managed Function References**: Links to network functions (AUPF, DU, ACPF)
+
 ### File Data Reporting Subscription API
 
 #### Endpoint
@@ -132,7 +214,7 @@ The simulator automatically sends file ready notifications to all subscribed end
 
 ## Data Transfer Objects (DTOs)
 
-### Core DTOs
+### File Data Reporting DTOs
 - **SubscriptionRequestDTO**: Handles subscription requests with callback URI validation
 - **SubscriptionDTO**: Response object for subscription confirmation
 - **NotifyFileReadyDTO**: Complete notification payload sent to subscribers
@@ -140,11 +222,23 @@ The simulator automatically sends file ready notifications to all subscribed end
 - **FileInfoDTO**: Detailed file information including location, size, and timestamps
 - **DateTimeDTO**: Standardized date/time format using ISO 8601
 
+### Network Slice Subnet DTOs
+- **NetworkSliceSubnetDTO**: Main network slice subnet representation with ID and attributes
+- **NetworkSliceSubnetAttributesDTO**: Slice subnet attributes including operational state, administrative state, and slice profiles
+- **SliceProfileItemDTO**: Individual slice profile configuration with PLMN info and RAN profile
+- **SliceProfileExtensionsDTO**: Slice profile extensions including service state
+- **PlmnInfoListDTO**: PLMN information list containing network identifiers
+- **PlmnIdDTO**: Public Land Mobile Network identifier (MCC/MNC)
+- **SnssaiDTO**: Single-Network Slice Selection Assistance Information (SST/SD)
+- **RanSliceSubnetProfileDTO**: RAN-specific slice profile including coverage area and resource allocation
+
 ### DTO Features
 - **Lombok Integration**: Automatic getter/setter generation and builder patterns
 - **Validation**: Jakarta validation annotations for request validation
 - **Builder Pattern**: Fluent API for object creation
 - **Sample Data**: Static factory methods for creating test data
+- **JSON Property Mapping**: Custom JSON property annotations for 3GPP compliance
+- **3GPP Compliance**: All DTOs follow 3GPP 28.532 standards
 
 ## Technical Architecture
 
@@ -158,9 +252,11 @@ The simulator automatically sends file ready notifications to all subscribed end
 
 ### Key Components
 - **FileDataReportingMnSController**: REST controller handling subscriptions and notifications
+- **NetworkSliceSubnetController**: REST controller handling network slice subnet management operations
 - **Scheduled Notifications**: Automated file ready notifications every 5 minutes
 - **RestTemplate**: HTTP client for sending callback notifications
 - **In-memory Storage**: HashMap-based subscription management
+- **Pre-configured Slice Data**: Mock network slice subnet configurations for testing
 
 ## Directory Structure
 
@@ -169,12 +265,21 @@ src/
 ├── main/
 │   ├── java/org/oransc/ran/nssmf/simulator/
 │   │   ├── controller/
-│   │   │   └── FileDataReportingMnSController.java
+│   │   │   ├── FileDataReportingMnSController.java
+│   │   │   └── NetworkSliceSubnetController.java
 │   │   ├── dto/
 │   │   │   ├── DateTimeDTO.java
 │   │   │   ├── FileInfoDTO.java
+│   │   │   ├── NetworkSliceSubnetAttributesDTO.java
+│   │   │   ├── NetworkSliceSubnetDTO.java
 │   │   │   ├── NotificationHeaderDTO.java
 │   │   │   ├── NotifyFileReadyDTO.java
+│   │   │   ├── PlmnIdDTO.java
+│   │   │   ├── PlmnInfoListDTO.java
+│   │   │   ├── RanSliceSubnetProfileDTO.java
+│   │   │   ├── SliceProfileExtensionsDTO.java
+│   │   │   ├── SliceProfileItemDTO.java
+│   │   │   ├── SnssaiDTO.java
 │   │   │   ├── SubscriptionDTO.java
 │   │   │   └── SubscriptionRequestDTO.java
 │   │   └── RanNssmfSimulatorApplication.java
@@ -244,3 +349,7 @@ This simulator is designed to:
 4. **Callback Testing**: Enable testing of asynchronous notification mechanisms
 5. **Performance Testing**: Support load testing with multiple subscribers
 6. **API Validation**: Validate client implementations against 3GPP standards
+7. **Network Slice Testing**: Test network slice subnet retrieval and management operations
+8. **SNSSAI Validation**: Validate Slice/Service Type and Slice Differentiator handling
+9. **RAN Resource Management**: Test RAN resource allocation and configuration scenarios
+10. **PLMN Configuration**: Test Public Land Mobile Network identifier handling
