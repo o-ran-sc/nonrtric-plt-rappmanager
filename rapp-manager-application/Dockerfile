@@ -1,6 +1,7 @@
 #
 # ============LICENSE_START=======================================================
 #  Copyright (C) 2023 Nordix Foundation.
+#  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,7 +18,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # ============LICENSE_END=========================================================
 #
-FROM openjdk:17-jdk as jre-build
+FROM nexus3.o-ran-sc.org:10001/eclipse-temurin:17-jdk as jre-build
 
 RUN $JAVA_HOME/bin/jlink \
 --verbose \
