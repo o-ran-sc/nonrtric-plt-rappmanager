@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START======================================================================
  * Copyright (C) 2023 Nordix Foundation. All rights reserved.
- * Copyright (C) 2024 OpenInfra Foundation Europe. All rights reserved.
+ * Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
  * ===============================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ package org.oransc.rappmanager.sme.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.oransc.rappmanager.models.RappDeployer;
@@ -115,6 +116,9 @@ public class SmeDeployer implements RappDeployer {
                                 s -> deletePublishApi(s, rappInstance.getSme().getApfId())));
                 Optional.ofNullable(rappInstance.getSme().getProviderFunctionIds())
                         .ifPresent(providerList -> providerList.forEach(this::deleteProviderFunc));
+                rappInstance.getSme().setInvokerIds(null);
+                rappInstance.getSme().setServiceApiIds(null);
+                rappInstance.getSme().setProviderFunctionIds(null);
                 rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.SMEUNDEPLOYED);
                 return true;
             } catch (Exception e) {
@@ -222,14 +226,12 @@ public class SmeDeployer implements RappDeployer {
             if (invokerPayload != null) {
                 List<APIInvokerEnrolmentDetails> apiInvokerEnrolmentDetails =
                         objectMapper.readValue(invokerPayload, new TypeReference<>() { });
-                apiInvokerEnrolmentDetails.forEach(apiInvokerEnrolmentDetail -> {
+                List<String> invokerIds = apiInvokerEnrolmentDetails.stream().map(apiInvokerEnrolmentDetail -> {
                     APIInvokerEnrolmentDetails apiInvokerEnrolmentDetailsResponse =
                             invokerDefaultApiClient.postOnboardedInvokers(apiInvokerEnrolmentDetail);
-                    if (apiInvokerEnrolmentDetailsResponse.getApiList() != null) {
-                        rappInstance.getSme()
-                                .setInvokerIds(List.of(apiInvokerEnrolmentDetailsResponse.getApiInvokerId()));
-                    }
-                });
+                    return apiInvokerEnrolmentDetailsResponse.getApiInvokerId();
+                }).filter(Objects::nonNull).toList();
+                rappInstance.getSme().setInvokerIds(invokerIds);
                 return true;
             }
         } catch (Exception e) {

@@ -117,6 +117,7 @@ public class RappService {
             rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.DEPLOYING);
             if (rappDeployers.parallelStream()
                         .allMatch(rappDeployer -> rappDeployer.deployRappInstance(rapp, rappInstance))) {
+                rappCacheService.putRapp(rapp);
                 return ResponseEntity.accepted().build();
             }
             throw new RappHandlerException(HttpStatus.BAD_GATEWAY, rappInstance.getReason());
@@ -133,6 +134,7 @@ public class RappService {
             rappInstanceStateMachine.sendRappInstanceEvent(rappInstance, RappEvent.UNDEPLOYING);
             if (rappDeployers.parallelStream()
                         .allMatch(rappDeployer -> rappDeployer.undeployRappInstance(rapp, rappInstance))) {
+                rappCacheService.putRapp(rapp);
                 return ResponseEntity.accepted().build();
             }
             throw new RappHandlerException(HttpStatus.BAD_GATEWAY, rappInstance.getReason());
