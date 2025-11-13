@@ -1,8 +1,8 @@
 # 5G RAN NSSMF Simulator RAPP
 
-The 5G RAN NSSMF Simulator RAPP (Resource Application Package) implements 5G RAN Network Slice Subnet Management Function (NSSMF) interfaces for subscriptions, NSSI creation, modification, get and delete APIs according to 3GPP 28.532 standards.
+The 5G RAN NSSMF Simulator RAPP implements 5G RAN Network Slice Subnet Management Function (NSSMF) interfaces for subscriptions, NSSI creation, modification, get and delete APIs according to 3GPP 28.532 standards.
 
-This comprehensive package includes both a **Spring Boot application** that provides the NSSMF simulator functionality and a **Helm chart** for Kubernetes deployment, making it a complete, production-ready solution for O-RAN Near-Real-Time RIC (Radio Access Network Intelligent Controller) integration testing.
+This comprehensive package includes both a **Spring Boot application** that provides the NSSMF simulator functionality and a **Helm chart** for Kubernetes deployment.
 
 ## Overview
 
