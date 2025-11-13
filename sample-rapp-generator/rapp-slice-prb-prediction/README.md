@@ -254,6 +254,47 @@ The client uses the following configuration sections from `config.json`:
 }
 ```
 
+#### Available Methods
+
+##### subscribe_to_file_ready_notifications(callback_uri)
+Subscribes to file-ready notifications from the RAN NSSMF for receiving performance data and configuration updates.
+
+**Parameters:**
+- `callback_uri` (str): The URI where the RAN NSSMF should send notifications
+
+**Returns:**
+- `requests.Response`: The response object from the POST request, or None on failure
+
+**Example:**
+```python
+response = ran_client.subscribe_to_file_ready_notifications(
+    "http://localhost:8080/handleFileReadyNotification"
+)
+if response and response.status_code == 201:
+    print("Successfully subscribed to notifications")
+```
+
+##### get_network_slice_subnet(subnet_id)
+Retrieves detailed information about a specific Network Slice Subnet from the RAN NSSMF. This method enables the RAPP to query slice configuration and status information for resource optimization decisions.
+
+**Parameters:**
+- `subnet_id` (str): The unique identifier of the Network Slice Subnet to retrieve
+
+**Returns:**
+- `dict`: A dictionary representing the NetworkSliceSubnetDTO if successful, None otherwise
+
+**Example:**
+```python
+# Get details for a specific network slice subnet
+subnet_details = ran_client.get_network_slice_subnet("9090d36f-6af5-4cfd-8bda-7a3c88fa82fa")
+if subnet_details:
+    print(f"Slice Name: {subnet_details.get('name')}")
+    print(f"Slice Status: {subnet_details.get('operationalStatus')}")
+    print(f"PRB Allocation: {subnet_details.get('prbAllocation')}")
+else:
+    print("Network slice subnet not found or error occurred")
+```
+
 #### Usage Example
 ```python
 # Initialize RAN NSSMF client
@@ -265,7 +306,16 @@ ran_client.get_url_from_sme()
 # Use the discovered or configured endpoint
 if ran_client.ran_nssmf_address:
     print(f"RAN NSSMF available at: {ran_client.ran_nssmf_address}")
-    # Make API calls to RAN NSSMF for slice management
+    
+    # Subscribe to file-ready notifications
+    response = ran_client.subscribe_to_file_ready_notifications(
+        "http://localhost:8080/handleFileReadyNotification"
+    )
+    
+    # Get network slice subnet details
+    subnet_info = ran_client.get_network_slice_subnet("slice-subnet-id")
+    
+    # Make additional API calls to RAN NSSMF for slice management
 else:
     print("RAN NSSMF endpoint not available")
 ```

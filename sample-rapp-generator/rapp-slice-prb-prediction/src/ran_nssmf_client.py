@@ -91,4 +91,60 @@ class RAN_NSSMF_CLIENT(object):
             logger.error(f"An unexpected error occurred while subscribing: {req_err}")
             
         return None
+
+    def get_network_slice_subnet(self, subnet_id: str):
+        """
+        Retrieves details of a specific Network Slice Subnet from the RAN NSSMF.
+
+        Args:
+            subnet_id (str): The unique identifier of the Network Slice Subnet.
+
+        Returns:
+            dict: A dictionary representing the NetworkSliceSubnetDTO if successful,
+                  None otherwise.
+        """
+        base_url = self.ran_nssmf_address
+        
+        if not base_url:
+            logger.error("RAN NSSMF address is not configured. Cannot get network slice subnet.")
+            return None
+
+        # Ensure base_url does not have a trailing slash
+        base_url = base_url.rstrip('/')
+        # The version v17.0.0 is used in other endpoints of the simulator
+        get_subnet_url = f"{base_url}/3GPPManagement/ProvMnS/v17.0.0/NetworkSliceSubnets/{subnet_id}"
+        
+        headers = {
+            "Accept": "application/json"
+        }
+        
+        logger.info(f"Getting details for Network Slice Subnet ID: {subnet_id} from: {get_subnet_url}")
+        
+        try:
+            response = requests.get(get_subnet_url, headers=headers, timeout=10)
+            
+            # Check for 404 Not Found specifically, as the simulator returns this for unknown IDs
+            if response.status_code == 404:
+                logger.warning(f"Network Slice Subnet with ID '{subnet_id}' not found. Status: {response.status_code}")
+                return None
+            
+            response.raise_for_status()  # Raise an exception for other HTTP errors (4xx or 5xx)
+            
+            logger.info(f"Successfully retrieved details for Network Slice Subnet ID: {subnet_id}. Status: {response.status_code}")
+            # logger.debug(f"Response Body: {response.json()}") # Uncomment for detailed debugging
+            return response.json() # Return the parsed JSON response (NetworkSliceSubnetDTO)
+            
+        except requests.exceptions.HTTPError as http_err:
+            # This will catch errors from response.raise_for_status() for non-404 codes
+            logger.error(f"HTTP error occurred while getting network slice subnet '{subnet_id}': {http_err} - Response: {http_err.response.text}")
+        except requests.exceptions.ConnectionError as conn_err:
+            logger.error(f"Connection error occurred while getting network slice subnet '{subnet_id}': {conn_err}")
+        except requests.exceptions.Timeout as timeout_err:
+            logger.error(f"Timeout error occurred while getting network slice subnet '{subnet_id}': {timeout_err}")
+        except requests.exceptions.RequestException as req_err:
+            logger.error(f"An unexpected error occurred while getting network slice subnet '{subnet_id}': {req_err}")
+        except json.JSONDecodeError as json_err:
+            logger.error(f"Failed to decode JSON response for network slice subnet '{subnet_id}': {json_err} - Response text: {response.text if 'response' in locals() else 'N/A'}")
+            
+        return None
             
