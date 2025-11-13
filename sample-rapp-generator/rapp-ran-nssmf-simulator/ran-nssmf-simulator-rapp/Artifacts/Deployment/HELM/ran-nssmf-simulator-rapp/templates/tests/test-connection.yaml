@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "ran-nssmf-simulator-rapp.fullname" . }}-test-connection"
+  labels:
+    {{- include "ran-nssmf-simulator-rapp.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "ran-nssmf-simulator-rapp.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never
