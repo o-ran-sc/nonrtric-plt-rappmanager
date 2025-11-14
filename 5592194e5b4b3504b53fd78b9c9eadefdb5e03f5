@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "090c13cd_8a12b405",
+        "filename": "sample-rapp-generator/rapp-ran-nssmf-simulator/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 437,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2025-11-14T09:37:45Z",
+      "side": 1,
+      "message": "Consider using placeholders like \u003cDOCKER_REGISTRY\u003e instead.",
+      "range": {
+        "startLine": 437,
+        "startChar": 16,
+        "endLine": 437,
+        "endChar": 30
+      },
+      "revId": "5592194e5b4b3504b53fd78b9c9eadefdb5e03f5",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f02a8057_fc811a03",
+        "filename": "sample-rapp-generator/rapp-ran-nssmf-simulator/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2025-11-14T09:37:45Z",
+      "side": 1,
+      "message": "Consider using placeholders like \u003cDOCKER_REGISTRY\u003e instead.",
+      "range": {
+        "startLine": 440,
+        "startChar": 12,
+        "endLine": 440,
+        "endChar": 26
+      },
+      "revId": "5592194e5b4b3504b53fd78b9c9eadefdb5e03f5",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f8371f3_1b27a606",
+        "filename": "sample-rapp-generator/rapp-ran-nssmf-simulator/ran-nssmf-simulator-rapp/Artifacts/Deployment/HELM/ran-nssmf-simulator-rapp/values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2025-11-14T09:37:45Z",
+      "side": 1,
+      "message": "Separating the image registry and name into separate values can make the registry configuration change easier.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 53
+      },
+      "revId": "5592194e5b4b3504b53fd78b9c9eadefdb5e03f5",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
