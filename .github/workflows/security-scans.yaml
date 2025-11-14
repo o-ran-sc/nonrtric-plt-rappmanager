@@ -29,7 +29,7 @@ jobs:
   sonatype-lifecycle:
     name: "Sonatype Lifecycle"
     # yamllint disable-line rule:line-length
-    uses: lfit/releng-reusable-workflows/.github/workflows/reuse-sonatype-lifecycle.yaml@8c3cf221da0e47955647647c9a254c1f807081ce # v0.2.18
+    uses: lfit/releng-reusable-workflows/.github/workflows/reuse-sonatype-lifecycle.yaml@21dee35da5cf13331dad63a2c81ae5bb6d023f95 # v0.2.25
     secrets:
       NEXUS_IQ_PASSWORD: ${{ secrets.NEXUS_IQ_PASSWORD }}
 
@@ -65,7 +65,7 @@ jobs:
       - name: "Build Maven project"
         if: steps.maven-project.outputs.type == 'file'
         # yamllint disable-line rule:line-length
-        uses: lfreleng-actions/maven-build-action@766c383c4d1103778a5c166c3a84d081555895e2 # v0.1.0
+        uses: lfreleng-actions/maven-build-action@c62bd77eeaaee7a875ba6fd1d3f6970262de58c0 # v0.1.1
         with:
           jdk-version: "17"
           mvn-phases: 'clean verify'
@@ -74,7 +74,7 @@ jobs:
 
       - name: "SonarQube Cloud Scan"
         # yamllint disable-line rule:line-length
-        uses: lfreleng-actions/sonarqube-cloud-scan-action@e40df6a91b88fe684184c7e3ebe9c010e2a4b41c # v0.1.4
+        uses: lfreleng-actions/sonarqube-cloud-scan-action@c72bf92c73d9c41fa12da57f1a50fcdf0d06994c # v0.1.5
         with:
           sonar_token: ${{ secrets.SONAR_TOKEN }}
           no_checkout: 'true'
