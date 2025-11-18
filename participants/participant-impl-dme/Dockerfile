@@ -18,7 +18,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # ============LICENSE_END=========================================================
 #
-FROM nexus3.o-ran-sc.org:10001/eclipse-temurin:17-jdk as jre-build
+FROM nexus3.o-ran-sc.org:10001/amazoncorretto:17.0.17 AS jre-build
+RUN yum install -y binutils
 
 RUN $JAVA_HOME/bin/jlink \
 --verbose \
@@ -29,8 +30,8 @@ RUN $JAVA_HOME/bin/jlink \
 --compress=2 \
 --output /customjre
 
-# Use debian base image (same as openjdk uses)
-FROM debian:11-slim
+# Use debian base image
+FROM nexus3.o-ran-sc.org:10001/debian:11-slim
 
 ENV JAVA_HOME=/jre
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
