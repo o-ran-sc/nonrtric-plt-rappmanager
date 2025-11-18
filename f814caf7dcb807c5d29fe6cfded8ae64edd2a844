@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "779659e1_90e79327",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002638
+      },
+      "writtenOn": "2025-11-18T09:13:15Z",
+      "side": 1,
+      "message": "I guess there should be some kind of license header on these files...",
+      "revId": "f814caf7dcb807c5d29fe6cfded8ae64edd2a844",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
