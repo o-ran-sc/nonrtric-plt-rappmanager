@@ -1,5 +1,74 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f412698_aeea4849",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002844
+      },
+      "writtenOn": "2025-11-18T09:36:34Z",
+      "side": 1,
+      "message": "Few suggestions to improve error handling.",
+      "revId": "4a3d3c5acdfc06a8aebc100d2847763ee4610c4f",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e22b73e4_ea01a95a",
+        "filename": "sample-rapp-generator/rapp-slice-prb-prediction/src/ran_nssmf_client.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1002844
+      },
+      "writtenOn": "2025-11-18T09:36:34Z",
+      "side": 1,
+      "message": "Consider using environment variables or a more dynamic configuration loading mechanism instead of a hardcoded",
+      "revId": "4a3d3c5acdfc06a8aebc100d2847763ee4610c4f",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "126925e9_6d80ee5a",
+        "filename": "sample-rapp-generator/rapp-slice-prb-prediction/src/ran_nssmf_client.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1002844
+      },
+      "writtenOn": "2025-11-18T09:36:34Z",
+      "side": 1,
+      "message": "Validation:\nValidate the callback_uri to ensure it is a valid URL before making the request",
+      "revId": "4a3d3c5acdfc06a8aebc100d2847763ee4610c4f",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4a4852a3_b24b0018",
+        "filename": "sample-rapp-generator/rapp-slice-prb-prediction/src/ran_nssmf_client.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1002844
+      },
+      "writtenOn": "2025-11-18T09:36:34Z",
+      "side": 1,
+      "message": "Retry Logic:\nAdd retry logic for failed HTTP requests to improve reliability.",
+      "revId": "4a3d3c5acdfc06a8aebc100d2847763ee4610c4f",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
