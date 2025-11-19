@@ -295,6 +295,59 @@ else:
     print("Network slice subnet not found or error occurred")
 ```
 
+##### modify_network_slice_subnet(subnet_id, new_prb_dl)
+Modifies the RRU.PrbDl (Physical Resource Block Downlink) value of an existing Network Slice Subnet in the RAN NSSMF. This method enables dynamic resource allocation adjustments based on PRB predictions and optimization algorithms.
+
+**Parameters:**
+- `subnet_id` (str): The unique identifier of the Network Slice Subnet to modify
+- `new_prb_dl` (int): The new RRU.PrbDl value to set (represents PRB allocation percentage)
+
+**Returns:**
+- `requests.Response`: The response object from the PUT request if successful, None otherwise
+
+**Method Workflow:**
+1. Fetches the current network slice subnet data using `get_network_slice_subnet()`
+2. Validates the data structure and locates the RRU.PrbDl field
+3. Updates the RRU.PrbDl value within the slice profile
+4. Sends a PUT request to the RAN NSSMF with the modified configuration
+5. Handles various error conditions (404, connection issues, malformed data)
+
+**Example:**
+```python
+# Modify PRB allocation for a specific network slice subnet
+response = ran_client.modify_network_slice_subnet(
+    "9090d36f-6af5-4cfd-8bda-7a3c88fa82fa", 
+    new_prb_dl=75
+)
+if response and response.status_code == 200:
+    print("Successfully modified PRB allocation")
+else:
+    print("Failed to modify PRB allocation")
+
+# Example usage in PRB optimization workflow
+predicted_prb_usage = model.predict_next_prb_usage()
+if predicted_prb_usage > threshold:
+    # Increase PRB allocation to prevent congestion
+    new_allocation = min(current_allocation + 10, 100)
+    ran_client.modify_network_slice_subnet(slice_id, new_allocation)
+elif predicted_prb_usage < low_threshold:
+    # Decrease PRB allocation to free up resources
+    new_allocation = max(current_allocation - 5, 10)
+    ran_client.modify_network_slice_subnet(slice_id, new_allocation)
+```
+
+**Data Structure Path:**
+The method updates the RRU.PrbDl value at the following path in the NetworkSliceSubnetDTO:
+```
+attributes.sliceProfileList[0].ransliceSubnetProfile.RRU.PrbDl
+```
+
+**Error Handling:**
+- Validates RAN NSSMF address configuration
+- Handles 404 errors for non-existent subnet IDs
+- Provides detailed logging for debugging data structure issues
+- Includes comprehensive exception handling for network and parsing errors
+
 #### Usage Example
 ```python
 # Initialize RAN NSSMF client
