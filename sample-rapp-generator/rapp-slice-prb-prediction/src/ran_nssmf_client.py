@@ -147,4 +147,90 @@ class RAN_NSSMF_CLIENT(object):
             logger.error(f"Failed to decode JSON response for network slice subnet '{subnet_id}': {json_err} - Response text: {response.text if 'response' in locals() else 'N/A'}")
             
         return None
+
+    def modify_network_slice_subnet(self, subnet_id: str, new_prb_dl: int):
+        """
+        Modifies the RRU.PrbDl value of an existing Network Slice Subnet in the RAN NSSMF.
+        It first fetches the current subnet data, updates the RRU.PrbDl, and then sends the modification.
+
+        Args:
+            subnet_id (str): The unique identifier of the Network Slice Subnet to modify.
+            new_prb_dl (int): The new RRU.PrbDl value to set.
+
+        Returns:
+            requests.Response: The response object from the PUT request if successful,
+                              None otherwise.
+        """
+        base_url = self.ran_nssmf_address
+        
+        if not base_url:
+            logger.error("RAN NSSMF address is not configured. Cannot modify network slice subnet.")
+            return None
+
+        logger.info(f"Attempting to modify Network Slice Subnet ID: {subnet_id}. Fetching current data first.")
+        
+        # Fetch the current network slice subnet data
+        current_subnet_data = self.get_network_slice_subnet(subnet_id)
+        
+        if current_subnet_data is None:
+            logger.error(f"Failed to retrieve current data for Network Slice Subnet ID: {subnet_id}. Cannot modify.")
+            return None
+
+        # Ensure base_url does not have a trailing slash
+        base_url = base_url.rstrip('/')
+        modify_subnet_url = f"{base_url}/3GPPManagement/ProvMnS/v17.0.0/NetworkSliceSubnets/{subnet_id}"
+        
+        # Update the RRU.PrbDl in the fetched data.
+        # The path to RRU.PrbDl is based on the structure returned by get_network_slice_subnet
+        # and the expected payload for PUT.
+        try:
+            if "attributes" not in current_subnet_data or \
+               "sliceProfileList" not in current_subnet_data["attributes"] or \
+               not isinstance(current_subnet_data["attributes"]["sliceProfileList"], list) or \
+               len(current_subnet_data["attributes"]["sliceProfileList"]) == 0 or \
+               "ransliceSubnetProfile" not in current_subnet_data["attributes"]["sliceProfileList"][0] or \
+               "RRU.PrbDl" not in current_subnet_data["attributes"]["sliceProfileList"][0]["ransliceSubnetProfile"]:
+                logger.error(f"Unexpected structure in current subnet data for ID: {subnet_id}. Cannot update RRU.PrbDl.")
+                logger.debug(f"Current subnet data: {json.dumps(current_subnet_data, indent=2)}")
+                return None
+
+            current_subnet_data["attributes"]["sliceProfileList"][0]["ransliceSubnetProfile"]["RRU.PrbDl"] = new_prb_dl
+            payload = current_subnet_data # Use the entire modified data as payload
+
+        except (KeyError, IndexError, TypeError) as e:
+            logger.error(f"Error updating RRU.PrbDl in fetched data for subnet ID '{subnet_id}': {e}")
+            logger.debug(f"Current subnet data: {json.dumps(current_subnet_data, indent=2)}")
+            return None
+        
+        headers = {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        }
+        
+        logger.info(f"Modifying Network Slice Subnet ID: {subnet_id} with new PRB DL: {new_prb_dl}. URL: {modify_subnet_url}")
+        logger.debug(f"Payload for modification (based on fetched data): {json.dumps(payload, indent=2)}")
+        
+        try:
+            response = requests.put(modify_subnet_url, json=payload, headers=headers, timeout=10)
+            
+            # Check for 404 Not Found specifically
+            if response.status_code == 404:
+                logger.warning(f"Network Slice Subnet with ID '{subnet_id}' not found for modification during PUT. Status: {response.status_code}")
+                return None
+            
+            response.raise_for_status()  # Raise an exception for other HTTP errors (4xx or 5xx)
+            
+            logger.info(f"Successfully sent modification request for Network Slice Subnet ID: {subnet_id}. Status: {response.status_code}")
+            return response
+            
+        except requests.exceptions.HTTPError as http_err:
+            logger.error(f"HTTP error occurred while modifying network slice subnet '{subnet_id}': {http_err} - Response: {http_err.response.text}")
+        except requests.exceptions.ConnectionError as conn_err:
+            logger.error(f"Connection error occurred while modifying network slice subnet '{subnet_id}': {conn_err}")
+        except requests.exceptions.Timeout as timeout_err:
+            logger.error(f"Timeout error occurred while modifying network slice subnet '{subnet_id}': {timeout_err}")
+        except requests.exceptions.RequestException as req_err:
+            logger.error(f"An unexpected error occurred while modifying network slice subnet '{subnet_id}': {req_err}")
+            
+        return None
             
