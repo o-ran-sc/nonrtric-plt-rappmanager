@@ -6,6 +6,7 @@ Using 5G RAN Slice PRB Prediction Rapp, we can properly manage available RAN res
 
 - `src` - contains source code for the Rapp
   - `config.json` - configuration file for database, RAPP, and SME settings
+  - `data.py` - database configuration and management class for InfluxDB connections
   - `sme_client.py` - Service Management Environment client for service discovery
   - `ran_nssmf_client.py` - RAN Network Slice Subnet Management Function client
   - `models/` - directory for trained AI/ML models and scalers
@@ -129,6 +130,117 @@ The `config.json` file contains all necessary configuration parameters for the R
   }
 }
 ```
+
+## Database Management (`src/data.py`)
+
+The `data.py` module implements a comprehensive database configuration and management class that centralizes all InfluxDB connection settings and configuration loading for the RAPP. This component provides a unified interface for database operations and configuration management.
+
+### Key Features
+
+- **Centralized Configuration**: Loads all database and SME settings from a single config.json file
+- **Environment Variable Support**: Supports INFLUX_TOKEN environment variable for secure credential management
+- **Flexible Configuration**: Handles both static configuration and dynamic service discovery parameters
+- **Pandas Integration**: Configures pandas display options for optimal data visualization
+- **Error Handling**: Includes logging for configuration loading and validation
+
+### DATABASE Class
+
+The main class provides the following functionality:
+
+#### Initialization
+```python
+db = DATABASE()
+```
+
+The class automatically initializes all configuration parameters from `config.json` and sets up pandas display options for better data visualization.
+
+#### Configuration Loading Process
+
+1. **JSON Configuration Loading**: Reads and parses the `config.json` file
+2. **SME Configuration**: Extracts Service Management Environment settings
+3. **InfluxDB Configuration**: Loads database connection parameters
+4. **Environment Variable Override**: Checks for INFLUX_TOKEN environment variable
+5. **Parameter Validation**: Converts string parameters to appropriate data types
+6. **Pandas Configuration**: Sets up display options for data analysis
+
+#### Configuration Parameters
+
+The DATABASE class loads the following configuration sections from `config.json`:
+
+**SME Configuration:**
+```python
+self.invoker_id = sme_config.get("invoker_id")
+self.influx_api_name = sme_config.get("influxdb_api_name")
+self.influx_resource_name = sme_config.get("influxdb_resource_name")
+```
+
+**Database Configuration:**
+```python
+self.address = influx_config.get("address")           # InfluxDB server URL
+self.token = influx_config.get("token")               # Authentication token
+self.org = influx_config.get("org")                   # Organization name
+self.bucket = influx_config.get("bucket")             # Database bucket
+self.time_range = influx_config.get("time_range")     # Query time range
+self.measurements = influx_config.get("measurements") # Measurement name
+self.window_size = int(influx_config.get("window_size", "900"))  # Data window size
+self.field_names = influx_config.get("field_names")   # KPI field names
+self.tag_slice_type = influx_config.get("tag_slice_type")    # Slice type tag
+self.tag_nssi_id = influx_config.get("tag_nssi_id")          # NSSI ID tag
+```
+
+#### Environment Variable Support
+
+The class supports secure credential management through environment variables:
+
+```python
+if os.getenv('INFLUX_TOKEN'):
+    self.token = os.getenv('INFLUX_TOKEN')
+else:
+    logger.info("INFLUX_TOKEN environment variable is not set.")
+    self.token = influx_config.get("token")
+```
+
+#### Pandas Display Configuration
+
+The class automatically configures pandas for optimal data visualization:
+
+```python
+pd.set_option('display.max_rows', None)        # Show all rows
+pd.set_option('display.max_columns', None)     # Show all columns
+pd.set_option('display.width', 1000)           # Adjust width to avoid line breaks
+pd.set_option('display.colheader_justify', 'left')  # Align headers left
+```
+
+#### Usage Example
+```python
+# Initialize database configuration
+db = DATABASE()
+```
+
+#### Integration with RAPP Architecture
+
+The DATABASE class serves as the foundation for all data operations in the RAPP:
+
+1. **Model Training**: Provides configuration for fetching training data from InfluxDB
+2. **Real-time Prediction**: Supplies connection parameters for live data queries
+3. **Performance Monitoring**: Enables KPI data collection and analysis
+4. **Service Discovery**: Supports SME integration for dynamic endpoint resolution
+
+#### Error Handling and Logging
+
+The class includes comprehensive error handling:
+- Configuration file validation and error reporting
+- Environment variable detection and fallback handling
+- Logging for configuration loading status
+- Graceful handling of missing configuration parameters
+
+#### Benefits
+
+- **Centralized Management**: All database configuration in one place
+- **Security**: Support for environment variable-based credential management
+- **Flexibility**: Handles both development and production deployment scenarios
+- **Maintainability**: Easy to update and extend configuration parameters
+- **Consistency**: Ensures all components use the same configuration source
 
 ## Service Discovery (`src/sme_client.py`)
 
