@@ -133,7 +133,12 @@ The `config.json` file contains all necessary configuration parameters for the R
 
 ## Database Management (`src/data.py`)
 
-The `data.py` module implements a comprehensive database configuration and management class that centralizes all InfluxDB connection settings and configuration loading for the RAPP. This component provides a unified interface for database operations and configuration management.
+The `data.py` module implements a comprehensive database configuration and management class that centralizes all InfluxDB connection settings and configuration loading for the RAPP. This component provides a unified interface for database operations and configuration management with enhanced connection handling and robust error management.
+
+**Key Import Enhancements:**
+- **`influxdb_client`**: Direct import of the InfluxDB client library for database connectivity
+- **`time`**: Added for implementing retry logic and connection delay mechanisms
+- **`RequestException`**: Specific exception handling for HTTP and network-related errors
 
 ### Key Features
 
@@ -141,7 +146,9 @@ The `data.py` module implements a comprehensive database configuration and manag
 - **Environment Variable Support**: Supports INFLUX_TOKEN environment variable for secure credential management
 - **Flexible Configuration**: Handles both static configuration and dynamic service discovery parameters
 - **Pandas Integration**: Configures pandas display options for optimal data visualization
-- **Error Handling**: Includes logging for configuration loading and validation
+- **Connection Management**: Robust InfluxDB connection handling with automatic reconnection and retry logic
+- **Error Handling**: Comprehensive error handling for configuration loading, connection issues, and database operations
+- **Version Verification**: Automatic InfluxDB server version detection for compatibility checking
 
 ### DATABASE Class
 
@@ -211,11 +218,27 @@ pd.set_option('display.width', 1000)           # Adjust width to avoid line brea
 pd.set_option('display.colheader_justify', 'left')  # Align headers left
 ```
 
-#### Usage Example
+#### Connection Management
+
+The DATABASE class provides robust connection management with automatic reconnection and error handling:
+
 ```python
 # Initialize database configuration
 db = DATABASE()
+
+# Establish connection to InfluxDB
+if db.connect():
+    logger.info("Successfully connected to InfluxDB")
+    # Perform database operations
+else:
+    logger.error("Failed to connect to InfluxDB")
 ```
+
+**Error Handling:**
+- Catches `RequestException` and `ConnectionError` for network-related issues
+- Provides detailed error logging for troubleshooting
+- Implements automatic retry delay to handle temporary network issues
+- Logs InfluxDB version information for debugging compatibility issues
 
 #### Integration with RAPP Architecture
 
@@ -225,14 +248,6 @@ The DATABASE class serves as the foundation for all data operations in the RAPP:
 2. **Real-time Prediction**: Supplies connection parameters for live data queries
 3. **Performance Monitoring**: Enables KPI data collection and analysis
 4. **Service Discovery**: Supports SME integration for dynamic endpoint resolution
-
-#### Error Handling and Logging
-
-The class includes comprehensive error handling:
-- Configuration file validation and error reporting
-- Environment variable detection and fallback handling
-- Logging for configuration loading status
-- Graceful handling of missing configuration parameters
 
 #### Benefits
 

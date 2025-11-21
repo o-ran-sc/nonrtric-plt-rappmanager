@@ -1,8 +1,12 @@
 import logging
+import time
+import influxdb_client
 import pandas as pd
 
 import json
 import os
+
+from requests import RequestException
 
 logger = logging.getLogger(__name__)
 
@@ -62,3 +66,18 @@ class DATABASE(object):
         self.window_size = int(window_size_str)
         self.tag_slice_type = influx_config.get("tag_slice_type")
         self.tag_nssi_id = influx_config.get("tag_nssi_id")
+
+    # Connect with influxdb
+    def connect(self):
+        if self.client is not None:
+            self.client.close()
+
+        try:
+            self.client = influxdb_client.InfluxDBClient(url=self.address, org=self.org, token=self.token)
+            version = self.client.version()
+            logger.info("Connected to Influx Database, InfluxDB version : {}".format(version))
+            return True
+
+        except (RequestException, ConnectionError):
+            logger.error("Failed to establish a new connection with InflulxDB, Please check your url/hostname")
+            time.sleep(120)
