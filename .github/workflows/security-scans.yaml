@@ -26,12 +26,53 @@ on:
 permissions: {}
 
 jobs:
-  sonatype-lifecycle:
-    name: "Sonatype Lifecycle"
-    # yamllint disable-line rule:line-length
-    uses: lfit/releng-reusable-workflows/.github/workflows/reuse-sonatype-lifecycle.yaml@21dee35da5cf13331dad63a2c81ae5bb6d023f95 # v0.2.25
-    secrets:
-      NEXUS_IQ_PASSWORD: ${{ secrets.NEXUS_IQ_PASSWORD }}
+  sonatype-cli:
+    name: "Sonatype Lifecycle Scan"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Load secrets from 1Password
+        uses: 1password/load-secrets-action@13f58eec611f8e5db52ec16247f58c508398f3e6 # v3.0.0
+        with:
+          export-env: true
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          NEXUS_PASSWORD: op://6n4qm2onchsinyyeuxmcfbo7ne/ajxfr5yoj2is2o4hpqlw766ogu/password
+
+      - name: "Check NEXUS_PASSWORD available"
+        id: check-nexus-password
+        env:
+          NEXUS_PASSWORD: ${{ env.NEXUS_PASSWORD }}
+        run: |
+          # Check NEXUS_PASSWORD available
+          # Use a temp file to avoid exposing password in process list
+          PASSWORD_FILE=$(mktemp)
+          printf '%s' "$NEXUS_PASSWORD" > "${PASSWORD_FILE}"
+          PASSWORD_SHA1=$(sha1sum "${PASSWORD_FILE}" | awk '{print $1}')
+          # Securely overwrite and remove the temp file
+          shred -vfz -n 3 "${PASSWORD_FILE}" 2>/dev/null || rm -f "${PASSWORD_FILE}"
+          echo "NEXUS_PASSWORD SHA1: ${PASSWORD_SHA1}"
+          NULL_STRING_SHA1="da39a3ee5e6b4b0d3255bfef95601890afd80709"
+          if [ -z "$NEXUS_PASSWORD" ] || [ "${PASSWORD_SHA1}" = "${NULL_STRING_SHA1}" ]; then
+            echo "NEXUS_PASSWORD is not set or is empty. Sonatype scan will be skipped."
+            echo "## :warning: Nexus Password Warning" >> $GITHUB_STEP_SUMMARY
+            echo "The NEXUS_PASSWORD is not set or is an empty string." >> $GITHUB_STEP_SUMMARY
+            echo "Sonatype Lifecycle scan has been skipped." >> $GITHUB_STEP_SUMMARY
+            echo "set=false" >> $GITHUB_OUTPUT
+          else
+            echo "NEXUS_PASSWORD is set. Sonatype scan will proceed."
+            echo "set=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: "Sonatype Lifecycle Scan"
+        if: steps.check-nexus-password.outputs.set == 'true'
+        # yamllint disable-line rule:line-length
+        uses: lfreleng-actions/sonatype-lifecycle-scan-action@91b0d6c368e06bd596fb3a4df83a9bb6479bed93 # v0.1.0
+        env:
+          NEXUS_PASSWORD: ${{ env.NEXUS_PASSWORD }}
+        with:
+          nexus_iq_server: ${{ vars.NEXUS_IQ_SERVER }}
+          nexus_iq_username: ${{ vars.NEXUS_IQ_USERNAME }}
+          nexus_iq_password: ${{ env.NEXUS_PASSWORD }}
 
   # Scan results are found at: https://sonarcloud.io/login
   sonarqube-cloud:
@@ -46,36 +87,60 @@ jobs:
       # contents: read
       # actions: read
     steps:
+      - name: "Check SONAR_TOKEN available"
+        id: credentials
+        run: |
+          # Check SONAR_TOKEN available
+          # Use a temp file to avoid exposing token in process list
+          TOKEN_FILE=$(mktemp)
+          printf '%s' "${{ secrets.SONAR_TOKEN }}" > "${TOKEN_FILE}"
+          TOKEN_SHA1=$(sha1sum "${TOKEN_FILE}" | awk '{print $1}')
+          # Securely overwrite and remove the temp file
+          shred -vfz -n 3 "${TOKEN_FILE}" 2>/dev/null || rm -f "${TOKEN_FILE}"
+          echo "SONAR_TOKEN SHA1: ${TOKEN_SHA1}"
+          NULL_STRING_SHA1="da39a3ee5e6b4b0d3255bfef95601890afd80709"
+          if [ -z "${{ secrets.SONAR_TOKEN }}" ] || [ "${TOKEN_SHA1}" = "${NULL_STRING_SHA1}" ]; then
+            echo "SONAR_TOKEN is not set or is empty. SonarQube scan will be skipped."
+            echo "## :warning: SonarQube Token Warning" >> $GITHUB_STEP_SUMMARY
+            echo "The SONAR_TOKEN secret is not set or is an empty string." >> $GITHUB_STEP_SUMMARY
+            echo "SonarQube Cloud scan has been skipped." >> $GITHUB_STEP_SUMMARY
+            echo "set=false" >> $GITHUB_OUTPUT
+          else
+            echo "SONAR_TOKEN is set. SonarQube scan will proceed."
+            echo "set=true" >> $GITHUB_OUTPUT
+          fi
+
       - name: 'Checkout repository'
-        if: inputs.no_checkout != 'true'
+        if: steps.credentials.outputs.set == 'true' && inputs.no_checkout != 'true'
         # yamllint disable-line rule:line-length
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         with:
           # Disabling shallow clones is recommended
           # This improves the relevancy of reporting output
           fetch-depth: 0
 
       - name: 'Check for file: pom.xml'
+        if: steps.credentials.outputs.set == 'true'
         id: maven-project
         # yamllint disable-line rule:line-length
-        uses: lfreleng-actions/path-check-action@aa7dabfa92e50e31a0f091dd3e2741692e8dde07 # v0.1.5
+        uses: lfreleng-actions/path-check-action@cb871760a182743c1a18a709168e14333ba5298f # v0.2.0
         with:
           path: "pom.xml"
 
       - name: "Build Maven project"
-        if: steps.maven-project.outputs.type == 'file'
+        if: steps.credentials.outputs.set == 'true' && steps.maven-project.outputs.type == 'file'
         # yamllint disable-line rule:line-length
-        uses: lfreleng-actions/maven-build-action@c62bd77eeaaee7a875ba6fd1d3f6970262de58c0 # v0.1.1
+        uses: lfreleng-actions/maven-build-action@991e8d30f164b10839c5de4419615e9df42cf69f # v0.2.0
         with:
-          jdk-version: "17"
+          java-version: "17"
           mvn-phases: 'clean verify'
           mvn-params: '-Ddocker.skip=true'
           global-settings: ${{ vars.GLOBAL_SETTINGS }}
 
       - name: "SonarQube Cloud Scan"
         # yamllint disable-line rule:line-length
-        uses: lfreleng-actions/sonarqube-cloud-scan-action@c72bf92c73d9c41fa12da57f1a50fcdf0d06994c # v0.1.5
+        uses: lfreleng-actions/sonarqube-cloud-scan-action@00b5ddefae0dd3a16e765857d827f61130e1c72f # v1.0.0
+        if: steps.credentials.outputs.set == 'true'
         with:
           sonar_token: ${{ secrets.SONAR_TOKEN }}
-          no_checkout: 'true'
-          debug: 'false'
+          no_checkout: true
