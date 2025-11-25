@@ -1,6 +1,17 @@
-5G RAN NSSMF Simulator Rapp
+# 5G RAN NSSMF Simulator RAPP
 
-5G RAN NSSMF Simulator Rapp implements 5G RAN NSSMF Interfaces for subscriptions, NSSI creation, modification, get and delete APIs according to 3GPP 28.532
+The 5G RAN NSSMF Simulator RAPP implements 5G RAN Network Slice Subnet Management Function (NSSMF) interfaces for subscriptions, NSSI creation, modification, get and delete APIs according to 3GPP 28.532 standards.
+
+This comprehensive package includes both a **Spring Boot application** that provides the NSSMF simulator functionality and a **Helm chart** for Kubernetes deployment.
+
+## Overview
+
+The RAN NSSMF Simulator RAPP consists of two main components:
+
+1. **Spring Boot Application** (`ran-nssmf-simulator/`): A fully functional NSSMF simulator that implements 3GPP-compliant REST APIs
+2. **Helm Chart** (`ran-nssmf-simulator-rapp/`): Kubernetes deployment configuration for containerized orchestration
+
+This RAPP is designed to facilitate testing, development, and integration of O-RAN components by providing a mock NSSMF that simulates real network slice management operations without requiring actual network infrastructure.
 
 ## API Documentation
 
@@ -303,32 +314,52 @@ The simulator automatically sends file ready notifications to all subscribed end
 ## Directory Structure
 
 ```
-src/
-├── main/
-│   ├── java/org/oransc/ran/nssmf/simulator/
-│   │   ├── controller/
-│   │   │   ├── FileDataReportingMnSController.java
-│   │   │   └── NetworkSliceSubnetController.java
-│   │   ├── dto/
-│   │   │   ├── DateTimeDTO.java
-│   │   │   ├── FileInfoDTO.java
-│   │   │   ├── NetworkSliceSubnetAttributesDTO.java
-│   │   │   ├── NetworkSliceSubnetDTO.java
-│   │   │   ├── NotificationHeaderDTO.java
-│   │   │   ├── NotifyFileReadyDTO.java
-│   │   │   ├── PlmnIdDTO.java
-│   │   │   ├── PlmnInfoListDTO.java
-│   │   │   ├── RanSliceSubnetProfileDTO.java
-│   │   │   ├── SliceProfileExtensionsDTO.java
-│   │   │   ├── SliceProfileItemDTO.java
-│   │   │   ├── SnssaiDTO.java
-│   │   │   ├── SubscriptionDTO.java
-│   │   │   └── SubscriptionRequestDTO.java
-│   │   └── RanNssmfSimulatorApplication.java
-│   └── resources/
-│       └── application.properties
-└── test/
-    └── java/org/oransc/ran_nssmf_simulator/
+├── ran-nssmf-simulator/                          # Spring Boot Application
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/org/oransc/ran/nssmf/simulator/
+│   │   │   │   ├── controller/
+│   │   │   │   │   ├── FileDataReportingMnSController.java
+│   │   │   │   │   └── NetworkSliceSubnetController.java
+│   │   │   │   ├── dto/
+│   │   │   │   │   ├── DateTimeDTO.java
+│   │   │   │   │   ├── FileInfoDTO.java
+│   │   │   │   │   ├── NetworkSliceSubnetAttributesDTO.java
+│   │   │   │   │   ├── NetworkSliceSubnetDTO.java
+│   │   │   │   │   ├── NotificationHeaderDTO.java
+│   │   │   │   │   ├── NotifyFileReadyDTO.java
+│   │   │   │   │   ├── PlmnIdDTO.java
+│   │   │   │   │   ├── PlmnInfoListDTO.java
+│   │   │   │   │   ├── RanSliceSubnetProfileDTO.java
+│   │   │   │   │   ├── SliceProfileExtensionsDTO.java
+│   │   │   │   │   ├── SliceProfileItemDTO.java
+│   │   │   │   │   ├── SnssaiDTO.java
+│   │   │   │   │   ├── SubscriptionDTO.java
+│   │   │   │   │   └── SubscriptionRequestDTO.java
+│   │   │   │   └── RanNssmfSimulatorApplication.java
+│   │   │   └── resources/
+│   │   │       └── application.properties
+│   │   └── test/
+│   │       └── java/org/oransc/ran_nssmf_simulator/
+│   ├── build.gradle
+│   ├── gradlew
+│   └── gradlew.bat
+└── ran-nssmf-simulator-rapp/                     # Helm Chart for Kubernetes Deployment
+    └── Artifacts/
+        └── Deployment/
+            └── HELM/
+                └── ran-nssmf-simulator-rapp/
+                    ├── Chart.yaml
+                    ├── values.yaml
+                    ├── .helmignore
+                    └── templates/
+                        ├── _helpers.tpl
+                        ├── deployment.yaml
+                        ├── service.yaml
+                        ├── serviceaccount.yaml
+                        ├── NOTES.txt
+                        └── tests/
+                            └── test-connection.yaml
 ```
 
 ## Configuration
@@ -369,6 +400,137 @@ java -jar build/libs/ran-nssmf-simulator-0.0.1-SNAPSHOT.jar
 ```bash
 docker build -t ran-nssmf-simulator .
 docker run -p 8080:8080 ran-nssmf-simulator
+```
+
+### Kubernetes Deployment with Helm
+
+The RAN NSSMF Simulator includes a comprehensive Helm chart for deployment in Kubernetes clusters. The Helm chart is located in the `ran-nssmf-simulator-rapp/Artifacts/Deployment/HELM/ran-nssmf-simulator-rapp/` directory.
+
+#### Prerequisites
+- **Kubernetes Cluster**: v1.20+ with access to configure deployments and services
+- **Helm 3**: Package manager for Kubernetes (v3.0+)
+- **kubectl**: Kubernetes command-line tool configured for your cluster
+
+#### Helm Chart Configuration
+
+**Chart Details:**
+- **Chart Name**: `ran-nssmf-simulator-rapp`
+- **Chart Version**: 0.1.0
+- **App Version**: 1.16.0
+- **API Version**: v2 (Helm 3 compatible)
+
+**Key Configuration Options** (in `values.yaml`):
+- **Replica Count**: Number of pod replicas (default: 1)
+- **Image Repository**: `<DOCKER_REGISTRY>/ran-nssmf-simulator-rapp`
+- **Image Tag**: `1.0.0`
+- **Service Type**: ClusterIP (default) - configurable to NodePort, LoadBalancer, or ClusterIP
+- **Service Port**: 8080
+- **Resource Limits**: Configurable CPU and memory limits
+- **Auto-scaling**: Optional horizontal pod autoscaling support
+- **Environment Variables**: Configurable application settings including SME discovery endpoint
+
+#### Deployment Steps
+
+**1. Build and Push Docker Image:**
+```bash
+# Build the Docker image
+docker build -t <DOCKER_REGISTRY>/ran-nssmf-simulator-rapp:1.0.0 .
+
+# Push to your container registry
+docker push <DOCKER_REGISTRY>/ran-nssmf-simulator-rapp:1.0.0
+```
+
+**2. Install the Helm Chart:**
+```bash
+# Navigate to the Helm chart directory
+cd ran-nssmf-simulator-rapp/Artifacts/Deployment/HELM/ran-nssmf-simulator-rapp/
+
+# Install the chart (default namespace)
+helm install ran-nssmf-simulator .
+
+# Install in a specific namespace
+helm install ran-nssmf-simulator . --namespace nssmf --create-namespace
+
+# Install with custom values
+helm install ran-nssmf-simulator . --values custom-values.yaml
+```
+
+**3. Verify Deployment:**
+```bash
+# Check pod status
+kubectl get pods -l app.kubernetes.io/name=ran-nssmf-simulator-rapp
+
+# Check service status
+kubectl get svc ran-nssmf-simulator-rapp
+
+# Check deployment logs
+kubectl logs -l app.kubernetes.io/name=ran-nssmf-simulator-rapp
+```
+
+**4. Access the Application:**
+
+The access method depends on the service type configured:
+
+**For ClusterIP (default):**
+```bash
+# Port forward to access locally
+kubectl port-forward svc/ran-nssmf-simulator-rapp 8080:8080
+# Access at http://localhost:8080
+```
+
+**For NodePort:**
+```bash
+# Get the node port
+export NODE_PORT=$(kubectl get svc ran-nssmf-simulator-rapp -o jsonpath='{.spec.ports[0].nodePort}')
+export NODE_IP=$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}')
+echo "Access at http://$NODE_IP:$NODE_PORT"
+```
+
+**For LoadBalancer:**
+```bash
+# Get the external IP
+export SERVICE_IP=$(kubectl get svc ran-nssmf-simulator-rapp -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+echo "Access at http://$SERVICE_IP:8080"
+```
+
+#### Customization Options
+
+**Custom Values File Example** (`custom-values.yaml`):
+```yaml
+replicaCount: 3
+image:
+  repository: my-registry.com/ran-nssmf-simulator-rapp
+  tag: "2.0.0"
+service:
+  type: LoadBalancer
+  port: 8080
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+environment:
+  appId: "my-nssmf-app"
+  smeDiscoveryEndpoint: "http://my-service-manager:8095/service-apis/v1/allServiceAPIs"
+```
+
+#### Helm Operations
+
+**Uninstall Deployment:**
+```bash
+helm uninstall ran-nssmf-simulator
+```
+
+**API Testing:**
+```bash
+# Test health endpoint
+kubectl port-forward svc/ran-nssmf-simulator-rapp 8080:8080 &
+curl http://localhost:8080/actuator/health
+
+# Test network slice subnet API
+curl http://localhost:8080/3GPPManagement/ProvMnS/v17.0.0/NetworkSliceSubnets/9090d36f-6af5-4cfd-8bda-7a3c88fa82fa
 ```
 
 ## Testing and Integration
