@@ -6,12 +6,46 @@ This comprehensive package includes both a **Spring Boot application** that prov
 
 ## Overview
 
-The RAN NSSMF Simulator RAPP consists of two main components:
+The RAN NSSMF Simulator RAPP consists of three main components:
 
 1. **Spring Boot Application** (`ran-nssmf-simulator/`): A fully functional NSSMF simulator that implements 3GPP-compliant REST APIs
-2. **Helm Chart** (`ran-nssmf-simulator-rapp/`): Kubernetes deployment configuration for containerized orchestration
+2. **Helm Chart** (`ran-nssmf-simulator-rapp/Artifacts/Deployment/HELM/`): Kubernetes deployment configuration for containerized orchestration
+3. **CSAR Package** (`ran-nssmf-simulator-rapp/`): Cloud Service Archive for non-RT RIC rApp Manager deployment
 
 This RAPP is designed to facilitate testing, development, and integration of O-RAN components by providing a mock NSSMF that simulates real network slice management operations without requiring actual network infrastructure.
+
+## CSAR Package Structure
+
+The RAN NSSMF Simulator includes a **CSAR (Cloud Service Archive)** package that enables deployment through the non-RT RIC rApp Manager. The CSAR package contains:
+
+### Core CSAR Files
+- **`asd.mf`**: ETSI entry manifest file with package metadata and file inventory
+- **`TOSCA-Metadata/TOSCA.meta`**: TOSCA metadata with entry definitions and version information
+- **`Definitions/asd.yaml`**: Application Service Descriptor defining rApp properties and deployment artifacts
+- **`Definitions/asd_types.yaml`**: TOSCA type definitions for the rApp
+
+### Deployment Artifacts
+- **`Artifacts/Deployment/HELM/ran-nssmf-simulator-rapp-0.1.0.tgz`**: Packaged Helm chart for Kubernetes deployment
+
+### Service Management Files
+- **`Files/Acm/definition/compositions.json`**: Automation Composition definitions for ONAP Policy CLAMP integration
+- **`Files/Acm/instances/k8s-instance.json`**: Kubernetes instance configuration
+- **`Files/Sme/providers/provider-function-1.json`**: Service Management Entity provider configuration
+- **`Files/Sme/serviceapis/api-set-1.json`**: API service definitions exposing RAN NSSMF Simulator endpoints
+
+### rApp Manager Integration
+The CSAR package enables:
+- **Package Upload**: Upload rApp packages to non-RT RIC rApp Manager
+- **Automated Deployment**: Deploy rApp instances using uploaded CSAR packages
+- **Service Discovery**: Automatic registration of rApp APIs with Service Management Entity
+- **Lifecycle Management**: Complete rApp lifecycle control through rApp Manager
+
+### API Exposure
+The rApp exposes the following APIs through SME:
+- **Base URI**: `/3GPPManagement`
+- **Operations**: GET, POST, PUT, DELETE
+- **Protocol**: HTTP/1.1
+- **Service Endpoint**: `ran-nssmf-simulator-rapp.smo.svc.cluster.local:8080`
 
 ## API Documentation
 
@@ -344,11 +378,28 @@ The simulator automatically sends file ready notifications to all subscribed end
 │   ├── build.gradle
 │   ├── gradlew
 │   └── gradlew.bat
-└── ran-nssmf-simulator-rapp/                     # Helm Chart for Kubernetes Deployment
-    └── Artifacts/
+└── ran-nssmf-simulator-rapp/                     # CSAR Package for rApp Manager
+    ├── asd.mf                                    # ETSI Entry Manifest
+    ├── Definitions/                              # TOSCA Definitions
+    │   ├── asd.yaml                              # Application Service Descriptor
+    │   └── asd_types.yaml                        # TOSCA Type Definitions
+    ├── Files/                                    # Service Management Files
+    │   ├── Acm/                                  # Automation Composition
+    │   │   ├── definition/
+    │   │   │   └── compositions.json             # ONAP Policy CLAMP definitions
+    │   │   └── instances/
+    │   │       └── k8s-instance.json             # Kubernetes instance config
+    │   └── Sme/                                  # Service Management Entity
+    │       ├── providers/
+    │       │   └── provider-function-1.json      # SME provider configuration
+    │       └── serviceapis/
+    │           └── api-set-1.json                # API service definitions
+    ├── TOSCA-Metadata/                           # TOSCA Metadata
+    │   └── TOSCA.meta                            # TOSCA metadata file
+    └── Artifacts/                                # Deployment Artifacts
         └── Deployment/
             └── HELM/
-                └── ran-nssmf-simulator-rapp/
+                └── ran-nssmf-simulator-rapp/     # Helm Chart
                     ├── Chart.yaml
                     ├── values.yaml
                     ├── .helmignore
