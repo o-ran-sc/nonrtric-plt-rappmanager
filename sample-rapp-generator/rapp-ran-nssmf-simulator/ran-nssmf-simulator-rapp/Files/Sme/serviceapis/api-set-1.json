@@ -1,0 +1,35 @@
+{
+  "apiName": "RAN NSSMF Simulator API Set 1",
+  "description": "RAN NSSMF Simulator API",
+  "aefProfiles": [
+    {
+      "aefId": "RAN NSSMF Simulator as AEF",
+      "description": "RAN NSSMF Simulator API",
+      "versions": [
+        {
+          "apiVersion": "",
+          "resources": [
+            {
+              "resourceName": "rannssmfsimulator",
+              "commType": "REQUEST_RESPONSE",
+              "uri": "/3GPPManagement",
+              "operations": [
+                "GET",
+                "DELETE",
+                "POST",
+                "PUT"
+              ]
+            }
+          ]
+        }
+      ],
+      "protocol": "HTTP_1_1",
+      "interfaceDescriptions": [
+        {
+          "ipv4Addr": "ran-nssmf-simulator-rapp.smo.svc.cluster.local",
+          "port": 8080
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+tosca_definitions_version: tosca_simple_yaml_1_2
+
+description: rApp RAN NSSMF Simulator
+
+imports:
+  - asd_types.yaml
+
+topology_template:
+  node_templates:
+    applicationServiceDescriptor:
+      type: tosca.nodes.asd
+      description: "rapp-ran-nssmf-simulator"
+      properties:
+        descriptor_id: 2cd6a567-2e33-4960-8ef7-1cc519c998c6
+        descriptor_invariant_id: 3f8a5e1b-68f1-42e5-89d0-47090dd0ef5c
+        descriptor_version: 1.0
+        schema_version: 2.0
+        function_description: rapp-ran-nssmf-simulator
+        provider: O-RAN SC NONRTRIC team
+        application_name: rapp-ran-nssmf-simulator
+        application_version: 1.0
+      artifacts:
+        ran-nssmf-simulator:
+          type: tosca.artifacts.asd.deploymentItem
+          file: "Artifacts/Deployment/HELM/ran-nssmf-simulator-rapp-0.1.0.tgz"
+          properties:
+            artifact_type: "helm_chart"
+            target_server: "chartmuseum"
+            target_server_uri: "http://71.1.0.251:18080/api/charts"
+            item_id: 1
