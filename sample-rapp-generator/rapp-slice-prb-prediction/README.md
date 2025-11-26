@@ -240,6 +240,31 @@ else:
 - Implements automatic retry delay to handle temporary network issues
 - Logs InfluxDB version information for debugging compatibility issues
 
+#### Data Query Methods
+
+##### read_data()
+The `read_data()` method enables fetching performance monitoring data from InfluxDB using Flux query language. This method constructs dynamic queries based on configuration parameters and retrieves time-series data for PRB prediction analysis.
+
+**Usage Example:**
+```python
+# Initialize database and connect
+db = DATABASE()
+if db.connect():
+    # Fetch performance data
+    data = db.read_data()
+    # Process the retrieved data for model training or prediction
+    print(f"Retrieved {len(data)} records")
+else:
+    logger.error("Cannot fetch data - database connection failed")
+```
+
+**Expected Data Structure:**
+The method returns a pandas DataFrame with the following structure:
+- `_time`: Timestamp of the measurement
+- `{tag_slice_type}`: Slice type (eMBB, URLLC, mMTC)
+- `{tag_nssi_id}`: Network Slice Subnet Instance identifier
+- KPI fields as configured in `field_names` (PRB usage, data volume, RRC connections)
+
 #### Integration with RAPP Architecture
 
 The DATABASE class serves as the foundation for all data operations in the RAPP:

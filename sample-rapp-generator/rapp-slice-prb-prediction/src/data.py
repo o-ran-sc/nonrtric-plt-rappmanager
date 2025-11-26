@@ -81,3 +81,20 @@ class DATABASE(object):
         except (RequestException, ConnectionError):
             logger.error("Failed to establish a new connection with InflulxDB, Please check your url/hostname")
             time.sleep(120)
+
+    def read_data(self):
+        # Fetch Data from InfluxDB
+        fields_filter = " or ".join([f'r["_field"] == "{f}"' for f in self.field_names])
+        query = f'''
+            from(bucket: "{self.bucket}")
+            |> range(start: {self.time_range})
+            |> filter(fn: (r) => r["_measurement"] == "{self.measurements}")
+            |> filter(fn: (r) => {fields_filter})
+            |> tail(n:{self.window_size})
+            |> pivot(rowKey: ["_time"], columnKey: ["_field"], valueColumn: "_value")
+            |> keep(columns: ["_time", "{self.tag_slice_type}", "{self.tag_nssi_id}", "{'","'.join(self.field_names)}"])
+            |> sort(columns: ["_time"])
+        '''
+
+        result = self.query(query)
+        return result
