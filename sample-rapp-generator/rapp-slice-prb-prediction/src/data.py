@@ -98,3 +98,14 @@ class DATABASE(object):
 
         result = self.query(query)
         return result
+
+    # Query data
+    def query(self, query):
+        while True:
+            try:
+                query_api = self.client.query_api()
+                result = query_api.query_data_frame(org=self.org, query=query)
+                return result
+            except (RequestException, ConnectionError) as e:
+                logger.error(f'Failed to query influxdb: {e}, retrying in 60 seconds...')
+                time.sleep(60)

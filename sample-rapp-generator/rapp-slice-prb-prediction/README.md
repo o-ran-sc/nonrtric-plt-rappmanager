@@ -265,6 +265,25 @@ The method returns a pandas DataFrame with the following structure:
 - `{tag_nssi_id}`: Network Slice Subnet Instance identifier
 - KPI fields as configured in `field_names` (PRB usage, data volume, RRC connections)
 
+##### query()
+The `query()` method provides robust database query execution with automatic retry logic for handling temporary connection failures. This method ensures reliable data retrieval by implementing exponential backoff retry mechanism.
+
+**Features:**
+- **Automatic Retry**: Retries failed queries with 60-second delays
+- **Error Handling**: Catches `RequestException` and `ConnectionError` for network issues
+- **Logging**: Detailed error logging for troubleshooting connection issues
+- **Data Frame Return**: Returns results as pandas DataFrame for easy analysis
+
+**Usage Example:**
+```python
+# Execute custom query with retry logic
+db = DATABASE()
+if db.connect():
+    query = 'from(bucket:"test") |> range(start:-1h)'
+    result = db.query(query)
+    # Process query results
+```
+
 #### Integration with RAPP Architecture
 
 The DATABASE class serves as the foundation for all data operations in the RAPP:
