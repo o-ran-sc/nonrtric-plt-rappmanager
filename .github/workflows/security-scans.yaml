@@ -123,7 +123,7 @@ jobs:
         if: steps.credentials.outputs.set == 'true'
         id: maven-project
         # yamllint disable-line rule:line-length
-        uses: lfreleng-actions/path-check-action@cb871760a182743c1a18a709168e14333ba5298f # v0.2.0
+        uses: lfreleng-actions/path-check-action@9606e61c870025bc956e63156d1d55c5df54426c # v0.2.0
         with:
           path: "pom.xml"
 
