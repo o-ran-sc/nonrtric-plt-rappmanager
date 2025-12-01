@@ -66,7 +66,7 @@ jobs:
       - name: "Sonatype Lifecycle Scan"
         if: steps.check-nexus-password.outputs.set == 'true'
         # yamllint disable-line rule:line-length
-        uses: lfreleng-actions/sonatype-lifecycle-scan-action@91b0d6c368e06bd596fb3a4df83a9bb6479bed93 # v0.1.0
+        uses: lfreleng-actions/sonatype-lifecycle-scan-action@40d8e15deff16aeec890657406e3ba0a0bf92e1e # v0.1.0
         env:
           NEXUS_PASSWORD: ${{ env.NEXUS_PASSWORD }}
         with:
