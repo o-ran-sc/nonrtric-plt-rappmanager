@@ -625,6 +625,237 @@ To train a new model:
 4. Monitor training progress and evaluation metrics
 5. Use the saved artifacts for deployment in the RAPP
 
+## Main Application (`src/main.py`)
+
+The `main.py` file implements a comprehensive Flask-based web application that provides real-time PRB prediction and automated resource optimization for 5G RAN slices. This application serves as the core runtime component that integrates machine learning predictions with RAN network management.
+
+### Key Features
+
+- **Real-time PRB Prediction**: Uses trained LSTM models to predict future PRB demand for each network slice
+- **Automated Resource Optimization**: Automatically adjusts slice PRB allocations based on prediction results
+- **Flask Web Service**: Provides RESTful API endpoints for external integration and notification handling
+- **RAN NSSMF Integration**: Seamlessly integrates with RAN Network Slice Subnet Management Function for slice control
+- **Thread-Safe Operations**: Implements locking mechanisms to prevent concurrent inference conflicts
+- **Service Discovery Support**: Optional SME integration for dynamic endpoint discovery
+- **Comprehensive Logging**: Detailed logging for monitoring, debugging, and operational visibility
+
+### Architecture Overview
+
+The application follows a modular architecture with the following key components:
+
+#### SlicePRBPrediction Class
+
+The main prediction engine that orchestrates the entire PRB prediction and optimization workflow.
+
+**Initialization Parameters:**
+- `use_sme` (bool): Enable Service Management Environment for dynamic service discovery
+
+**Core Components:**
+- **Database Integration**: Uses `DATABASE` class for InfluxDB connectivity and data retrieval
+- **RAN NSSMF Client**: Integrates with `RAN_NSSMF_CLIENT` for slice management operations
+- **ML Model Loading**: Loads pre-trained LSTM models and preprocessing artifacts
+- **Configuration Management**: Centralized configuration loading from `config.json`
+
+#### Flask Web Service
+
+The application exposes a RESTful API endpoint for handling notifications and triggering inference:
+
+**Endpoint: `POST /handleFileReadyNotification`**
+- Receives notifications from RAN NSSMF and external systems
+- Triggers the PRB prediction and optimization workflow
+- Returns JSON responses with operation status
+
+### Core Workflow
+
+#### 1. Initialization Process
+```python
+# Initialize the prediction application
+rapp = SlicePRBPrediction(use_sme=True)
+
+# Automatic initialization includes:
+# - Database connection setup
+# - Model and preprocessing artifacts loading
+# - RAN NSSMF client configuration
+# - Service discovery (if enabled)
+```
+
+#### 2. Notification-Driven Inference
+The application operates on a notification-driven model:
+
+1. **Notification Reception**: Receives HTTP POST notifications at `/handleFileReadyNotification`
+2. **Data Retrieval**: Fetches latest performance data from InfluxDB
+3. **Prediction Execution**: Runs LSTM model inference for each network slice
+4. **Resource Optimization**: Compares predictions with current allocations and adjusts as needed
+5. **Response Generation**: Returns operation status and results
+
+#### 3. Prediction Pipeline
+
+**Data Processing:**
+- Retrieves time-series performance data from InfluxDB
+- Standardizes column names and data types
+- Filters and sorts data by slice type and NSSI ID
+- Handles missing data and edge cases
+
+**Feature Engineering:**
+- One-hot encoding for slice types and NSSI IDs
+- MinMax scaling for numerical features (PRB, data volume, RRC connections)
+- Time series window creation with configurable window size
+- Feature concatenation for model input preparation
+
+**Model Inference:**
+- LSTM neural network prediction for each slice
+- Inverse transformation of scaled predictions
+- Confidence interval estimation (optional)
+
+#### 4. Automated Resource Optimization
+
+**Decision Logic:**
+```python
+# Compare predicted vs current PRB usage
+if predicted_prb > current_prb_allocation:
+    # Increase allocation to prevent congestion
+    modify_network_slice_subnet(nssi_id, new_prb_allocation=int(predicted_prb))
+else:
+    # Current allocation sufficient, no action needed
+    logger.info("No modification required")
+```
+
+**Optimization Features:**
+- Proactive resource allocation based on ML predictions
+- Automatic slice configuration updates via RAN NSSMF
+- Safety thresholds to prevent over-allocation
+- Detailed logging of all optimization actions
+
+### Configuration
+
+The application uses `src/config.json` for runtime configuration:
+
+```json
+{
+  "RAPP": {
+    "interval": "672",                                    // Processing interval
+    "ran_nssmf_address": "http://localhost:8080",         // RAN NSSMF endpoint
+    "callback_uri": "http://localhost:8080/handleFileReadyNotification"
+  },
+  "DB": {
+    "window_size": 672,                                   // Time series window size
+    "field_names": ["RRU.PrbDl.SNSSAI", "DRB.PdcpSduVolumeDL.SNSSAI", "RRC.ConnEstabSucc.Cause"]
+  }
+}
+```
+
+### Model Artifacts
+
+The application loads the following ML artifacts from the `models/` directory:
+
+- `best_prb_lstm.keras`: Trained LSTM model for PRB prediction
+- `slice_onehot.joblib`: One-hot encoder for slice types
+- `nssi_onehot.joblib`: One-hot encoder for NSSI IDs
+- `scaler_*.joblib`: Feature scaling transformers for different metrics
+- `scaler_y.joblib`: Target variable scaler for prediction inverse transformation
+
+### API Endpoints
+
+#### POST /handleFileReadyNotification
+
+Receives notifications and triggers the PRB prediction workflow.
+
+**Request Format:**
+```json
+{
+  "fileInfoList": [
+    {
+      "fileId": "performance_data_12345",
+      "fileSize": 1024000,
+      "fileLocation": "http://data-server/files/perf_data.csv"
+    }
+  ]
+}
+```
+
+**Response Format:**
+```json
+{
+  "status": "success",
+  "message": "Notification received and inference triggered"
+}
+```
+
+**Error Responses:**
+```json
+{
+  "status": "error",
+  "message": "Application not properly initialized"
+}
+```
+
+### Running the Application
+
+#### Command Line Options
+
+```bash
+# Run with static configuration
+python src/main.py
+
+# Run with Service Management Environment discovery
+python src/main.py --use_sme True
+
+# Run without SME (default)
+python src/main.py --use_sme False
+```
+
+#### Startup Process
+
+1. **Argument Parsing**: Parse command line arguments for SME configuration
+2. **Application Initialization**: Create `SlicePRBPrediction` instance
+3. **Service Discovery**: Optionally discover endpoints via SME
+4. **Notification Subscription**: Subscribe to RAN NSSMF notifications
+5. **Web Server Start**: Launch Flask application on port 8080
+
+
+### Operational Features
+
+#### Logging and Monitoring
+
+Detailed logging at multiple levels:
+
+```python
+# Configuration and status logging
+logger.info("Successfully subscribed to RAN NSSMF notifications.")
+logger.warning("Previous inference still running, skipping this iteration")
+logger.error("Failed to fetch details for NSSI ID: {nssi}")
+
+# Debug logging for detailed troubleshooting
+logger.debug(f"NSSI Details: {json.dumps(nssi_details, indent=2)}")
+```
+
+### Integration Examples
+
+#### External System Integration
+
+```python
+import requests
+
+# Trigger inference from external system
+response = requests.post(
+    "http://localhost:8080/handleFileReadyNotification",
+    json={
+        "fileInfoList": [
+            {
+                "fileId": "trigger_001",
+                "fileSize": 1000,
+                "fileLocation": "http://external-system/trigger"
+            }
+        ]
+    }
+)
+
+if response.status_code == 200:
+    print("Inference triggered successfully")
+else:
+    print(f"Failed to trigger inference: {response.text}")
+```
+
 ## Deployment and Usage
 
 ### Prerequisites
@@ -632,7 +863,27 @@ To train a new model:
 - Python 3.8+
 - InfluxDB 2.x for time series data storage
 - TensorFlow/Keras for model inference
+- Flask web framework for API service
 - O-RAN Service Management Environment (optional for service discovery)
+- RAN Network Slice Subnet Management Function (for slice control)
+
+### Dependencies
+
+Install required Python packages:
+
+```bash
+pip install -r src/requirements.txt
+```
+
+**Required Packages:**
+- `influxdb_client`: InfluxDB 2.x client library
+- `pandas`: Data manipulation and analysis
+- `requests`: HTTP client library
+- `tensorflow`: Machine learning framework
+- `numpy`: Numerical computing
+- `joblib`: Model serialization
+- `scikit-learn`: Machine learning utilities
+- `Flask`: Web framework for API service
 
 ### Running the Application
 
@@ -650,3 +901,13 @@ To train a new model:
    - Update `src/config.json` with your environment settings
    - Configure InfluxDB connection parameters
    - Set up SME endpoints if using service discovery
+   - Ensure model artifacts are present in `models/` directory
+
+4. **Start the Prediction Service**:
+   ```bash
+   # Run with static configuration
+   python src/main.py
+   
+   # Run with Service Management Environment discovery
+   python src/main.py --use_sme True
+   ```
