@@ -265,6 +265,22 @@ The method returns a pandas DataFrame with the following structure:
 - `{tag_nssi_id}`: Network Slice Subnet Instance identifier
 - KPI fields as configured in `field_names` (PRB usage, data volume, RRC connections)
 
+##### get_url_from_sme()
+The `get_url_from_sme()` method enables dynamic discovery of InfluxDB endpoint through the Service Management Environment (SME). This method allows the DATABASE class to automatically locate and configure the InfluxDB connection without hardcoded endpoints.
+
+**Usage Example:**
+```python
+# Initialize database and discover InfluxDB endpoint
+db = DATABASE()
+db.get_url_from_sme()
+
+if db.address:
+    logger.info(f"Discovered InfluxDB at: {db.address}")
+    # Connect and use the discovered endpoint
+    if db.connect():
+        data = db.read_data()
+```
+
 ##### query()
 The `query()` method provides robust database query execution with automatic retry logic for handling temporary connection failures. This method ensures reliable data retrieval by implementing exponential backoff retry mechanism.
 
