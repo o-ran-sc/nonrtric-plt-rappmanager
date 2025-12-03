@@ -8,6 +8,8 @@ import os
 
 from requests import RequestException
 
+from sme_client import SMEClient
+
 logger = logging.getLogger(__name__)
 
 class DATABASE(object):
@@ -109,3 +111,20 @@ class DATABASE(object):
             except (RequestException, ConnectionError) as e:
                 logger.error(f'Failed to query influxdb: {e}, retrying in 60 seconds...')
                 time.sleep(60)
+
+    def get_url_from_sme(self):
+        sme_client = SMEClient(
+            invoker_id=self.invoker_id,
+            api_name=self.influx_api_name,
+            resource_name=self.influx_resource_name
+        )
+
+        self.influx_url = sme_client.discover_service()
+
+        logger.info("InfluxDB URL: {}".format(self.influx_url))
+
+        if self.influx_url is not None:
+            self.address = self.influx_url.rstrip('/')
+            logger.debug(f"InfluxDB Address: {self.address}")
+        else:
+            logger.error("Failed to discover InfluxDB URL from SME.")
