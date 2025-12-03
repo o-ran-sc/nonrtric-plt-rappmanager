@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e37ce15_bd78837b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001877
+      },
+      "writtenOn": "2025-12-03T08:22:03Z",
+      "side": 1,
+      "message": "Would it be possible to submit the code in larger sections? Reviewing very small fragments makes it challenging to understand the full context and evaluate the changes effectively.",
+      "revId": "327ca4dc9eba05f312fc70eeb2ac9c3272d5383b",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
