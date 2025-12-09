@@ -1,0 +1,27 @@
+{
+  "DB": {
+    "address": "{{ .Values.influxdb.address }}",
+    "token": "{{ .Values.influxdb.token }}",
+    "org": "{{ .Values.influxdb.org }}",
+    "bucket": "{{ .Values.influxdb.bucket }}",
+    "time_range": "{{ .Values.influxdb.timeRange }}",
+    "measurements": "{{ .Values.influxdb.measurements }}",
+    "window_size" : "{{ .Values.influxdb.window_size }}",
+    "field_names": ["RRU.PrbDl.SNSSAI", "DRB.PdcpSduVolumeDL.SNSSAI", "RRC.ConnEstabSucc.Cause"],
+    "tag_slice_type": "sliceType",
+    "tag_nssi_id": "measObjLdn"
+  },
+  "RAPP": {
+    "interval": "{{ .Values.rapp.interval }}",
+    "ran_nssmf_address": "http://ran-nssmf-simulator-rapp.smo:8080",
+    "callback_uri": "http://slice-prb-prediction-rapp.smo:8080/handleFileReadyNotification"
+  },
+  "SME": {
+    "sme_discovery_endpoint": "{{ .Values.environment.smeDiscoveryEndpoint }}",
+    "influxdb_invoker_id": "{{ .Values.environment.appId }}",
+    "influxdb_api_name": "{{ .Values.influxdb.apiName }}",
+    "influxdb_resource_name": "{{ .Values.influxdb.resourceName }}",
+    "ran_nssmf_api_name": "",
+    "ran_nssmf_resource_name": ""
+  }
+}

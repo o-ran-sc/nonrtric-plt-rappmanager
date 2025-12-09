@@ -11,7 +11,15 @@ Using 5G RAN Slice PRB Prediction Rapp, we can properly manage available RAN res
   - `ran_nssmf_client.py` - RAN Network Slice Subnet Management Function client
   - `models/` - directory for trained AI/ML models and scalers
 - `data_generator.py` - generates data for training and testing the model
-- `Dockerfile` - contains instructions to build a Docker image for the Rapp
+- `slice-prb-prediction-rapp/` - Kubernetes deployment artifacts
+  - `Artifacts/Deployment/HELM/slice-prb-prediction-rapp/` - Helm chart for containerized deployment
+    - `Chart.yaml` - Helm chart metadata
+    - `values.yaml` - Default configuration values
+    - `templates/` - Kubernetes resource templates
+      - `deployment.yaml` - Pod deployment configuration
+      - `service.yaml` - Service exposure configuration
+      - `configmap.yaml` - Configuration management
+      - `serviceaccount.yaml` - Service account configuration
 
 ## Data Generator (`data_generator.py`)
 
@@ -911,3 +919,78 @@ pip install -r src/requirements.txt
    # Run with Service Management Environment discovery
    python src/main.py --use_sme True
    ```
+
+## Kubernetes Deployment
+
+### Helm Chart Deployment
+
+The application includes a complete Helm chart for containerized deployment in Kubernetes clusters.
+
+#### Prerequisites
+- Kubernetes cluster (v1.16+)
+- Helm 3.x installed
+- Container registry access
+
+#### Deployment Steps
+
+1. **Build and Push Docker Image**:
+   ```bash
+   # Build container image
+   docker build -t slice-prb-prediction-rapp:1.0.0 .
+   
+   # Push to registry
+   docker push slice-prb-prediction-rapp:1.0.0
+   ```
+
+2. **Configure Helm Values**:
+   Edit `slice-prb-prediction-rapp/Artifacts/Deployment/HELM/slice-prb-prediction-rapp/values.yaml`:
+   ```yaml
+   image:
+     repository: your-registry.com
+     tag: "1.0.0"
+   
+   influxdb:
+     address: "http://influxdb2.smo:8086"
+     token: "your-influxdb-token"
+     org: "your-org"
+     bucket: "nssi_pm_bucket"
+   
+   environment:
+     smeDiscoveryEndpoint: "http://servicemanager.nonrtric.svc.cluster.local:8095/service-apis/v1/allServiceAPIs"
+   ```
+
+3. **Deploy with Helm**:
+   ```bash
+   # Install the Helm chart
+   helm install slice-prb-prediction-rapp \
+     ./slice-prb-prediction-rapp/Artifacts/Deployment/HELM/slice-prb-prediction-rapp \
+     --namespace nonrtric \
+     --create-namespace
+   
+   # Upgrade existing deployment
+   helm upgrade slice-prb-prediction-rapp \
+     ./slice-prb-prediction-rapp/Artifacts/Deployment/HELM/slice-prb-prediction-rapp
+   ```
+
+#### Kubernetes Resources
+
+The Helm chart creates the following resources:
+- **Deployment**: Pod with the PRB prediction application
+- **Service**: ClusterIP service exposing port 8080
+- **ConfigMap**: Application configuration from `values.yaml`
+- **ServiceAccount**: Dedicated service account for the application
+- **Secret**: InfluxDB token management (if configured)
+
+#### Configuration Management
+
+- **ConfigMap**: Automatically generated from Helm values
+- **Secrets**: Secure management of InfluxDB tokens
+- **Environment Variables**: Runtime configuration via Kubernetes secrets
+- **Volume Mounts**: Configuration file mounted at `/app/config.json`
+
+#### Monitoring and Scaling
+
+- **Health Checks**: Configurable liveness and readiness probes
+- **Resource Limits**: CPU and memory constraints
+- **Auto-scaling**: Horizontal Pod Autoscaler support (optional)
+- **Logging**: Structured logs for Kubernetes monitoring
