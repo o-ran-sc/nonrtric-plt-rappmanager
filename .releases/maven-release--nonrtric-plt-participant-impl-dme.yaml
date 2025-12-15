@@ -1,5 +1,6 @@
 ---
 distribution_type: maven
-version: 0.3.0
+version: 0.4.0
 project: nonrtric-plt-participant-impl-dme
-log_dir: nonrtric-plt-participants-maven-stage-master/11/
+log_dir: nonrtric-plt-participants-maven-stage-master/12/
+tag_release: false
