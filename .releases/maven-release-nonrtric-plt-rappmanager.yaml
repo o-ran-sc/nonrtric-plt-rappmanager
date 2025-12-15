@@ -1,5 +1,6 @@
 ---
 distribution_type: maven
-version: 0.3.0
+version: 0.4.0
 project: nonrtric-plt-rappmanager
-log_dir: nonrtric-plt-rappmanager-maven-stage-master/18/
+log_dir: nonrtric-plt-rappmanager-maven-stage-master/19/
+tag_release: false
