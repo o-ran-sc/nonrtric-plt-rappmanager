@@ -29,7 +29,7 @@
     </parent>
     <groupId>org.o-ran-sc.nonrtric.plt</groupId>
     <artifactId>rappmanager</artifactId>
-    <version>0.4.0-SNAPSHOT</version>
+    <version>0.4.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>NONRTRIC rAppmanager</name>
     <description>O-RAN SC rApp Management function.</description>
