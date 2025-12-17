@@ -18,9 +18,13 @@ from docs_conf.conf import *
 
 #branch configuration
 
-branch = 'latest'
+selfbranch = 'latest'
+participantsbranch = 'latest'  #sometimes this may be different from self.branch, e.g. on first build, it may not exist yet, so linkcheck will fail
+nonrtricbranch = 'latest' #sometimes this may be different from self.branch, e.g. on first build, it may not exist yet, so linkcheck will fail
 baseurl = 'https://docs.o-ran-sc.org/projects/'
-selfurl = '%s/o-ran-sc-nonrtric-plt-rappmanager/en/%s' %(baseurl, branch)
+selfurl = '%s/o-ran-sc-nonrtric-plt-rappmanager/en/%s' %(baseurl, selfbranch)
+participantsurl = '%s/o-ran-sc-nonrtric-plt-rappmanager/en/%s/participant' %(baseurl, participantsbranch)
+nonrtricurl = '%s/o-ran-sc-nonrtric/en/%s' %(baseurl, nonrtricbranch)
 
 linkcheck_ignore = [
     'http://localhost.*',
@@ -45,6 +49,6 @@ redoc_uri = 'https://cdn.jsdelivr.net/npm/redoc@2.5.0/bundles/redoc.standalone.j
 #intershpinx mapping with other projects
 intersphinx_mapping = {}
 
-intersphinx_mapping['nonrtric'] = ('%s/o-ran-sc-nonrtric/en/%s' %(baseurl, branch), None)
-intersphinx_mapping['participants'] = ('%s/participants' % selfurl, None)
+intersphinx_mapping['nonrtric'] = ('%s' %(nonrtricurl), None)
+intersphinx_mapping['participants'] = ('%s' %(participantsurl), None)
 intersphinx_disabled_reftypes = ["*"]
