@@ -1,0 +1,35 @@
+{
+  "name": "SlicePRBInstance0",
+  "version": "1.0.1",
+  "compositionId": "DO_NOT_CHANGE_THIS_COMPOSITION_ID",
+  "description": "RAN Slice PRB Prediction automation composition instance 0",
+  "elements": {
+    "d7be552e-bcc5-4478-b64d-797dbaec8f56": {
+      "id": "d7be552e-bcc5-4478-b64d-797dbaec8f56",
+      "definition": {
+        "name": "onap.policy.clamp.ac.element.K8S_StarterAutomationCompositionElement",
+        "version": "1.2.3"
+      },
+      "description": "Starter Automation Composition Element for the RAN Slice PRB Prediction",
+      "properties": {
+        "chart": {
+          "chartId": {
+            "name": "slice-prb-prediction-rapp",
+            "version": "0.1.0"
+          },
+          "namespace": "smo",
+          "releaseName": "slice-prb-prediction-rapp",
+          "podName": "slice-prb-prediction-rapp",
+          "repository": {
+            "repoName": "local",
+            "address": "UPDATE_THIS_CHART_MUSEUM_GET_CHARTS_URI"
+          },
+          "overrideParams": {
+            "environment.appId": "DO_NOT_CHANGE_THIS_RAPP_INSTANCE_ID",
+            "environment.smeDiscoveryEndpoint": "DO_NOT_CHANGE_THIS_SME_DISCOVERY_ENDPOINT"
+          }
+        }
+      }
+    }
+  }
+}

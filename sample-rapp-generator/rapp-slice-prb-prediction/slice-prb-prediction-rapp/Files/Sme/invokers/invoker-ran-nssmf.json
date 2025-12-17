@@ -1,0 +1,14 @@
+[
+  {
+    "apiInvokerInformation": "DO_NOT_CHANGE_THIS_RAPP_INSTANCE_ID",
+    "apiList": [
+      { "apiName": "RAN NSSMF Simulator API Set 1" }
+    ],
+    "notificationDestination": "http://NOT_USED_HERE",
+    "onboardingInformation": {
+      "apiInvokerPublicKey": "{PUBLIC_KEY_INVOKER_RAN_NSSMF}",
+      "apiInvokerCertificate": "apiInvokerCertificate"
+    },
+    "requestTestNotification": true
+  }
+]
