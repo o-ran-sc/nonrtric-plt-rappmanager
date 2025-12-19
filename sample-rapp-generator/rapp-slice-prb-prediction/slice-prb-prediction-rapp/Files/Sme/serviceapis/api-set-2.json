@@ -1,0 +1,32 @@
+{
+  "apiName": "RAN Slice PRB Prediction API Set 1",
+  "description": "RAN Slice PRB Prediction API",
+  "aefProfiles": [
+    {
+      "aefId": "RAN Slice PRB Prediction as AEF",
+      "description": "RAN Slice PRB Prediction API",
+      "versions": [
+        {
+          "apiVersion": "",
+          "resources": [
+            {
+              "resourceName": "sliceprbprediction",
+              "commType": "REQUEST_RESPONSE",
+              "uri": "/sliceprbprediction/v1/subpath1",
+              "operations": [
+                "GET"
+              ]
+            }
+          ]
+        }
+      ],
+      "protocol": "HTTP_1_1",
+      "interfaceDescriptions": [
+        {
+          "ipv4Addr": "slice-prb-prediction-rapp.smo.svc.cluster.local",
+          "port": 8080
+        }
+      ]
+    }
+  ]
+}

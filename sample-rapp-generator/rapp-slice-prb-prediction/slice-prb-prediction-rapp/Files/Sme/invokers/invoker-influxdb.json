@@ -1,0 +1,14 @@
+[
+  {
+    "apiInvokerInformation": "DO_NOT_CHANGE_THIS_RAPP_INSTANCE_ID",
+    "apiList": [
+      { "apiName": "influxdb2-http" }
+    ],
+    "notificationDestination": "http://NOT_USED_HERE",
+    "onboardingInformation": {
+      "apiInvokerPublicKey": "{PUBLIC_KEY_INVOKER_INFLUXDB}",
+      "apiInvokerCertificate": "apiInvokerCertificate"
+    },
+    "requestTestNotification": true
+  }
+]
