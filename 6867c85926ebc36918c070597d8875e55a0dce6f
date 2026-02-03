@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "76043402_57fd94d1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000103
+      },
+      "writtenOn": "2026-02-03T10:59:49Z",
+      "side": 1,
+      "message": "A fix is needed in rAppManager to avoid requiring this entry in each service-provider API description. \nWill update ASAP.",
+      "revId": "6867c85926ebc36918c070597d8875e55a0dce6f",
+      "serverId": "84e4e190-e623-4c37-9eda-58b1937c1b53"
+    }
+  ]
+}
