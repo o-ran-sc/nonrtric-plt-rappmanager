@@ -24,7 +24,8 @@
       "interfaceDescriptions": [
         {
           "ipv4Addr": "energysaving.nonrtric.svc.cluster.local",
-          "port": 8080
+          "port": 8080,
+          "securityMethods": null
         }
       ]
     }

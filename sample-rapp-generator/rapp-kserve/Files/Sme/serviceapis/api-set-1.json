@@ -24,7 +24,8 @@
       "interfaceDescriptions": [
         {
           "ipv4Addr": "sklearn-iris-predictor-default.kserve-test.svc.cluster.local",
-          "port": 80
+          "port": 80,
+          "securityMethods": null
         }
       ]
     }
