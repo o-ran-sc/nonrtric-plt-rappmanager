@@ -28,8 +28,7 @@
       "interfaceDescriptions": [
         {
           "ipv4Addr": "es-aiml-model-predictor.kserve-test.svc.cluster.local",
-          "port": 80,
-          "securityMethods": null
+          "port": 80
         }
       ]
     }

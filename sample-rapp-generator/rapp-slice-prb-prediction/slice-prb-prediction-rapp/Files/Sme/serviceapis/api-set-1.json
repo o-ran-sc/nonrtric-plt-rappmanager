@@ -24,8 +24,7 @@
       "interfaceDescriptions": [
         {
           "ipv4Addr": "slice-prb-prediction-rapp.smo.svc.cluster.local",
-          "port": 8080,
-          "securityMethods": null
+          "port": 8080
         }
       ]
     }

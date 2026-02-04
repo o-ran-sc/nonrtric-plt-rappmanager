@@ -24,8 +24,7 @@
       "interfaceDescriptions": [
         {
           "ipv4Addr": "hello-world-chart-service.nonrtric.svc.cluster.local",
-          "port": 8080,
-          "securityMethods": null
+          "port": 8080
         }
       ]
     }

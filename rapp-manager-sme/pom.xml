@@ -200,6 +200,7 @@
                                 <apiPackage>org.oransc.rappmanager.sme.publishservice.rest</apiPackage>
                                 <modelPackage>org.oransc.rappmanager.sme.publishservice.data</modelPackage>
                                 <generateClientAsBean>false</generateClientAsBean>
+                                <containerDefaultToNull>true</containerDefaultToNull>
                             </configOptions>
                         </configuration>
                     </execution>
