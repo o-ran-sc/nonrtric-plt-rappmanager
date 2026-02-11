@@ -382,7 +382,7 @@ The SME returns a nested JSON structure containing:
 - `aefProfiles`: Application Exposure Function profiles
 - `versions`: API version information
 - `resources`: Available resources within each version
-- `interfaceDescriptions`: Network endpoint details (IP, port)
+- `interfaceDescriptions`: Network endpoint details (IP, port )
 
 ## RAN NSSMF Client (`src/ran_nssmf_client.py`)
 
