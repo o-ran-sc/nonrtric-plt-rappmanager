@@ -3,10 +3,10 @@ distribution_type: container
 container_pull_registry: nexus3.o-ran-sc.org:10004
 container_push_registry: nexus3.o-ran-sc.org:10002
 project: nonrtric
-ref: 7cedbd36ff589e193c8c0e53a0026d0f1bd6d8f8
+ref: b8d4f4f81ba3562ca5a6788628352b48b1765a14
 tag_release: false
-container_release_tag: 0.4.0
+container_release_tag: 0.4.1
 containers:
     - name: nonrtric-plt-participant-impl-dme
-      version: 0.4.0
+      version: 0.4.1
 
