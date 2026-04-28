@@ -14,3 +14,4 @@ Non-RT RIC rApp Manager
    ./api-docs.rst
    ./installation-guide.rst
    ./release-notes.rst
+   ./rappmanager-api.rst
