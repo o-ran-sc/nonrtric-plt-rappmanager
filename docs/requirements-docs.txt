@@ -2,5 +2,4 @@ sphinx>=7,<10
 sphinx-rtd-theme
 sphinxcontrib-httpdomain
 lfdocs-conf
-sphinxcontrib-redoc
-setuptools<81
+sphinxcontrib-openapi

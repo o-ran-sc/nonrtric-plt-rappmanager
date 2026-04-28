@@ -30,22 +30,17 @@ linkcheck_ignore = [
     'http://localhost.*',
     'http://127.0.0.1.*',
     'https://gerrit.o-ran-sc.org.*',
-    './rappmanager-api.html', #Generated file that doesn't exist at link check.
 ]
 
-extensions = ['sphinxcontrib.redoc', 'sphinx.ext.intersphinx',]
+extensions = ['sphinxcontrib.openapi', 'sphinx.ext.intersphinx']
 
-redoc = [
-            {
-                'name': 'rApp Manager API',
-                'page': 'rappmanager-api',
-                'spec': '../openapi/rappmanager/rappmanager-spec.yaml',
-                'embed': True,
-            }
-        ]
-
-redoc_uri = 'https://cdn.jsdelivr.net/npm/redoc@2.5.0/bundles/redoc.standalone.js'
-
+# sphinxcontrib-openapi synthesises HTTP request/response examples
+# whose bodies (e.g. enum literal values, free-form 'string'
+# placeholders) Pygments' http lexer rejects. The extension already
+# falls back to relaxed-mode lexing, but the warnings are promoted to
+# errors under sphinx-build -W. Suppress them since the rendered
+# output is correct.
+suppress_warnings = ['misc.highlighting_failure']
 #intershpinx mapping with other projects
 intersphinx_mapping = {}
 

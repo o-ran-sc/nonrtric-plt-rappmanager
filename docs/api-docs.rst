@@ -20,7 +20,7 @@ Here we describe the API to access the Non-RT RIC rApp Manager.
 rApp Manager
 ============
 
-See `rApp Manager API <./rappmanager-api.html>`_ for full details of the API.
+See :doc:`rappmanager-api` for full details of the API.
 
 The API is also described in Swagger-JSON and YAML:
 
