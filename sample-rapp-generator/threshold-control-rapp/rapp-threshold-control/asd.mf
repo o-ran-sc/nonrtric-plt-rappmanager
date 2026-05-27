@@ -1,0 +1,17 @@
+metadata:
+  application_name: rapp-threshold-control
+  application_provider: O-RAN SC NONRTRIC team
+  release_date_time: 2024-01-19T12:00:00+00:00
+  entry_definition_type: asd
+
+Source: asd.mf
+Source: Definitions/asd.yaml
+Source: Definitions/asd_types.yaml
+Source: TOSCA-Metadata/TOSCA.meta
+Source: Files/Acm/definition/compositions.json
+Source: Files/Acm/instances/threshold-control-instance.json
+Source: Files/Sme/invokers/invoker-threshold-control.json
+Source: Files/Sme/providers/threshold-control-provider.json
+Source: Files/Sme/serviceapis/influxdb-api.json
+Source: Files/Sme/serviceapis/sdnc-api.json
+Source: Files/Sme/serviceapis/threshold-control-apis.json

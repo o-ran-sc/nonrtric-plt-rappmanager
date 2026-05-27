@@ -1,0 +1,69 @@
+{
+  "SME": {
+    "sme_discovery_endpoint": "http://localhost:31575/service-apis/v1/allServiceAPIs",
+    "host": "localhost",
+    "port": "31575",
+    "invoker_id": "threshold-control",
+    "influxdb_invoker_id": "threshold-control",
+    "influxdb_api_name": "influxdb2-http",
+    "influxdb_token": "9ID1jUgFP1kJxSCFmN8cqbJ4x63Q2QGL",
+    "influxdb_org": "est",
+    "sdnc_invoker_id": "threshold-control",
+    "sdnc_api_name": "sdnc-rest",
+    "sdnc_username": "admin",
+    "sdnc_password": "Kp8bJ4SXszM0WXlhak3eHlcse2gAw84vaoGGmJvUy2U",
+    "url_rewrite": {
+      "oran-nonrtric-kong-proxy.nonrtric.svc.cluster.local:80": "localhost:31313",
+      "kong-proxy.nonrtric.svc.cluster.local:8000": "localhost:31313",
+      "influxdb.nonrtric.svc.cluster.local:8086": "localhost:42703",
+      "sdnc.onap.svc.cluster.local:8282": "localhost:30267"
+    }
+  },
+  "InfluxDB": {
+    "url": "http://localhost:42703",
+    "token": "9ID1jUgFP1kJxSCFmN8cqbJ4x63Q2QGL",
+    "org": "est",
+    "query": {
+      "bucket": "pm-logg-bucket",
+      "measurement": "ManagedElement=OAI-DU,DuFunction=0,CellId=0",
+      "time_range": "7d",
+      "fields": ["DRB.MeanActiveUeUl", "DRB.MeanActiveUeDl", "DRB.MaxActiveUeDl", "DRB.MaxActiveUeUl"],
+      "tag_filters": {}
+    }
+  },
+  "Equipment": {
+    "id_extraction": {
+      "method": "measurement_full",
+      "tag_name": "equipment_id",
+      "key_prefix": "CellId"
+    }
+  },
+  "Threshold": {
+    "value": "1",
+    "operator": "less_than",
+    "monitored_field": "DRB.MeanActiveUeUl",
+    "monitored_fields": ["DRB.MeanActiveUeUl", "DRB.MeanActiveUeDl", "DRB.MaxActiveUeDl", "DRB.MaxActiveUeUl"]
+  },
+  "SDNC": {
+    "node_name": "Benetel_RU",
+    "component_name": "benetel_RU",
+    "username": "admin",
+    "password": "Kp8bJ4SXszM0WXlhak3eHlcse2gAw84vaoGGmJvUy2U",
+    "retry_attempts": "5",
+    "retry_delay_seconds": "3",
+    "endpoints": {
+      "hardware": "/rests/data/network-topology:network-topology/topology=topology-netconf/node=Benetel_RU/yang-ext:mount/ietf-hardware:hardware/component=benetel_RU",
+      "carriers": "/rests/data/network-topology:network-topology/topology=topology-netconf/node=Benetel_RU/yang-ext:mount/o-ran-uplane-conf:user-plane-configuration"
+    }
+  },
+  "Timer": {
+    "duration_seconds": "60"
+  },
+  "Monitoring": {
+    "polling_interval_seconds": "30"
+  },
+  "Logging": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  }
+}

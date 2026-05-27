@@ -1,0 +1,20 @@
+{
+  "apiProvDomInfo": "Threshold ES Provider domain",
+  "apiProvFuncs": [
+    {
+      "apiProvFuncInfo": "Threshold ES as APF",
+      "apiProvFuncRole": "APF",
+      "regInfo": {
+        "apiProvPubKey": "NOT USED here"
+      }
+    },
+    {
+      "apiProvFuncInfo": "Threshold ES as AEF",
+      "apiProvFuncRole": "AEF",
+      "regInfo": {
+        "apiProvPubKey": "NOT USED here"
+      }
+    }
+  ],
+  "regSec": "plain"
+}

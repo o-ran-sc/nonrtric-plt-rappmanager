@@ -1,0 +1,146 @@
+# Default values for threshold-control-rapp
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: "nexus3.onap.org:10001/estdemoimages/threshold-es-rapp"
+  pullPolicy: Always
+  tag: "0.1.16"
+
+imagePullSecrets: []
+nameOverride: "threshold-control-rapp"
+fullnameOverride: "threshold-control-rapp"
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  fsGroup: 1001
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: false
+  runAsNonRoot: true
+  runAsUser: 1001
+  runAsGroup: 1001
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: threshold-control.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Environment configuration
+environment:
+  appId: "threshold-control-rapp"
+  smeDiscoveryEndpoint: "http://sme-discovery.default.svc.cluster.local:8080/service-apis/v1/allServiceAPIs"
+  logLevel: "INFO"
+
+# SME (Service Management & Exposure) configuration
+sme:
+  host: "servicemanager.nonrtric.svc.cluster.local"
+  port: 8080
+  influxdbApiName: "influxdb2-http"
+  sdncApiName: "sdnc-rest"
+
+# InfluxDB configuration
+influxdb:
+  url: "http://influxdb.nonrtric.svc.cluster.local:8086"
+  token: "9ID1jUgFP1kJxSCFmN8cqbJ4x63Q2QGL"  # Will be set via environment variable
+  org: "est"
+  bucket: "pm-logg-bucket"
+  measurement: "ManagedElement=DURANTA-DU,DuFunction=0,CellId=0"
+  timeRange: "5m"
+  monitoredFields:
+    - "DRB.MaxActiveUeDl"
+    - "DRB.MaxActiveUeUl"
+    - "DRB.MeanActiveUeDl"
+    - "DRB.MeanActiveUeUl"
+
+# Equipment identification configuration
+equipment:
+  idMethod: "measurement_full"  # Options: measurement_full, measurement_parsing, tag
+  idTagName: "equipment_id"
+  idPrefix: "CellId"
+
+# Threshold configuration
+threshold:
+  value: 1
+  operator: "less_than"  # Options: greater_than, less_than, greater_equal, less_equal, equal, not_equal
+  monitoredField: "DRB.MeanActiveUeDl"  # Single field to monitor for threshold
+  monitoredFields:  # Multiple fields (for backward compatibility)
+    - "DRB.MaxActiveUeDl"
+    - "DRB.MaxActiveUeUl"
+    - "DRB.MeanActiveUeDl"
+    - "DRB.MeanActiveUeUl"
+
+# SDNC configuration
+sdnc:
+  endpoint: "/rests/data/network-topology:network-topology/topology=topology-netconf/node=Benetel_RU/yang-ext:mount/ietf-hardware:hardware/component=benetel_RU"
+  method: "PATCH"
+  username: "admin"
+  password: "Kp8bJ4SXszM0WXlhak3eHlcse2gAw84vaoGGmJvUy2U"
+  componentName: "benetel_RU"
+  apiName: "sdnc-rest"
+
+# Timer configuration
+timer:
+  durationSeconds: 120
+
+# Monitoring configuration
+monitoring:
+  pollingIntervalSeconds: 120
+
+# Application startup configuration
+appStartup:
+  command: ["/bin/sh", "-c"]
+  args: ["python main.py --config config.json --log-level ${LOG_LEVEL}"]
+
+# Health check configuration
+healthCheck:
+  enabled: true
+  path: "/health"
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3

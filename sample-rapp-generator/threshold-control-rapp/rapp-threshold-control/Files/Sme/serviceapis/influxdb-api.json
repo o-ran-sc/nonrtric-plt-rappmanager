@@ -1,0 +1,36 @@
+{
+  "apiName": "InfluxDB API",
+  "description": "InfluxDB time series database API for metrics collection",
+  "aefProfiles": [
+    {
+      "aefId": "InfluxDB as AEF",
+      "description": "InfluxDB API for time series data",
+      "versions": [
+        {
+          "apiVersion": "v2",
+          "resources": [
+            {
+              "resourceName": "all-endpoints",
+              "commType": "REQUEST_RESPONSE",
+              "uri": "/*",
+              "operations": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "PATCH"
+              ]
+            }
+          ]
+        }
+      ],
+      "protocol": "HTTP_1_1",
+      "interfaceDescriptions": [
+        {
+          "ipv4Addr": "influxdb.nonrtric.svc.cluster.local",
+          "port": 8086
+        }
+      ]
+    }
+  ]
+}
