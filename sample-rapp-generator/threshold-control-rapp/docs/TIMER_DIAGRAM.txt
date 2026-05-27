@@ -1,0 +1,196 @@
+TIMER MECHANISM - VISUAL FLOW DIAGRAM
+======================================
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         MONITORING CYCLE (Every 30s)                     │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+                    ┌───────────────────────────────┐
+                    │  Query InfluxDB for Metrics   │
+                    │  (DRB.MaxActiveUeDl, etc.)    │
+                    └───────────────────────────────┘
+                                    │
+                                    ▼
+                    ┌───────────────────────────────┐
+                    │   Evaluate Threshold          │
+                    │   value > threshold?          │
+                    └───────────────────────────────┘
+                                    │
+                    ┌───────────────┴───────────────┐
+                    │                               │
+                    ▼                               ▼
+            ┌───────────────┐              ┌───────────────┐
+            │  NO: Continue │              │  YES: Check   │
+            │  Monitoring   │              │  Equipment    │
+            └───────────────┘              │  State        │
+                                           └───────────────┘
+                                                   │
+                                   ┌───────────────┴───────────────┐
+                                   │                               │
+                                   ▼                               ▼
+                          ┌────────────────┐            ┌────────────────┐
+                          │ State = 'off'  │            │ State = 'on'   │
+                          │ Do Nothing     │            │ Take Action!   │
+                          │ (Timer Running)│            └────────────────┘
+                          └────────────────┘                     │
+                                                                 ▼
+                                                    ┌────────────────────────┐
+                                                    │ Send PATCH to SDNC     │
+                                                    │ energy-saving: true    │
+                                                    │ (Turn OFF Equipment)   │
+                                                    └────────────────────────┘
+                                                                 │
+                                                                 ▼
+                                                    ┌────────────────────────┐
+                                                    │ Update Equipment State │
+                                                    │ state: 'off'           │
+                                                    │ timer: now + 60s       │
+                                                    └────────────────────────┘
+                                                                 │
+                                                                 ▼
+                                                    ┌────────────────────────┐
+                                                    │ Start Background Timer │
+                                                    │ threading.Timer(60s)   │
+                                                    └────────────────────────┘
+                                                                 │
+                                                                 │
+                    ┌────────────────────────────────────────────┘
+                    │
+                    │  [Timer Running in Background Thread]
+                    │  [Main Monitoring Continues Normally]
+                    │
+                    │  ... 60 seconds pass ...
+                    │
+                    ▼
+        ┌───────────────────────────┐
+        │   TIMER EXPIRES!          │
+        │   Callback Triggered      │
+        └───────────────────────────┘
+                    │
+                    ▼
+        ┌───────────────────────────┐
+        │ turn_on_equipment()       │
+        │ called automatically      │
+        └───────────────────────────┘
+                    │
+                    ▼
+        ┌───────────────────────────┐
+        │ Send PATCH to SDNC        │
+        │ energy-saving: false      │
+        │ (Turn ON Equipment)       │
+        └───────────────────────────┘
+                    │
+                    ▼
+        ┌───────────────────────────┐
+        │ Update Equipment State    │
+        │ state: 'on'               │
+        │ timer: None               │
+        └───────────────────────────┘
+                    │
+                    ▼
+        ┌───────────────────────────┐
+        │ Equipment Back Online!    │
+        │ Ready for Next Cycle      │
+        └───────────────────────────┘
+
+
+MULTIPLE EQUIPMENT EXAMPLE:
+===========================
+
+Time: 14:30:00
+┌──────────┬─────────┬──────────────────────┐
+│ Equipment│  State  │      Timer           │
+├──────────┼─────────┼──────────────────────┤
+│ gNB-001  │   on    │      None            │
+│ gNB-002  │   on    │      None            │
+│ gNB-003  │   on    │      None            │
+└──────────┴─────────┴──────────────────────┘
+
+Time: 14:30:15 (gNB-001 threshold exceeded)
+┌──────────┬─────────┬──────────────────────┐
+│ Equipment│  State  │      Timer           │
+├──────────┼─────────┼──────────────────────┤
+│ gNB-001  │  off    │  14:31:15 (60s)      │ ← Timer started
+│ gNB-002  │   on    │      None            │
+│ gNB-003  │   on    │      None            │
+└──────────┴─────────┴──────────────────────┘
+
+Time: 14:30:45 (gNB-002 threshold exceeded)
+┌──────────┬─────────┬──────────────────────┐
+│ Equipment│  State  │      Timer           │
+├──────────┼─────────┼──────────────────────┤
+│ gNB-001  │  off    │  14:31:15 (30s left) │
+│ gNB-002  │  off    │  14:31:45 (60s)      │ ← Timer started
+│ gNB-003  │   on    │      None            │
+└──────────┴─────────┴──────────────────────┘
+
+Time: 14:31:15 (gNB-001 timer expires)
+┌──────────┬─────────┬──────────────────────┐
+│ Equipment│  State  │      Timer           │
+├──────────┼─────────┼──────────────────────┤
+│ gNB-001  │   on    │      None            │ ← Turned back on
+│ gNB-002  │  off    │  14:31:45 (30s left) │
+│ gNB-003  │   on    │      None            │
+└──────────┴─────────┴──────────────────────┘
+
+Time: 14:31:45 (gNB-002 timer expires)
+┌──────────┬─────────┬──────────────────────┐
+│ Equipment│  State  │      Timer           │
+├──────────┼─────────┼──────────────────────┤
+│ gNB-001  │   on    │      None            │
+│ gNB-002  │   on    │      None            │ ← Turned back on
+│ gNB-003  │   on    │      None            │
+└──────────┴─────────┴──────────────────────┘
+
+All equipment back online!
+
+
+THREAD ARCHITECTURE:
+====================
+
+Main Thread:
+  │
+  ├─► Monitoring Loop (runs every 30s)
+  │   ├─► Query InfluxDB
+  │   ├─► Evaluate Thresholds
+  │   └─► Start Timers if needed
+  │
+  └─► Flask Health Server (port 8080)
+
+Background Timer Threads (one per equipment):
+  │
+  ├─► Timer Thread for gNB-001 (60s countdown)
+  │   └─► Calls turn_on_equipment('gNB-001') when expires
+  │
+  ├─► Timer Thread for gNB-002 (60s countdown)
+  │   └─► Calls turn_on_equipment('gNB-002') when expires
+  │
+  └─► Timer Thread for gNB-003 (60s countdown)
+      └─► Calls turn_on_equipment('gNB-003') when expires
+
+All threads share equipment_states dict (protected by lock)
+
+
+KEY IMPLEMENTATION DETAILS:
+============================
+
+1. Timer Creation:
+   threading.Timer(60, self.turn_on_equipment, args=['gNB-001']).start()
+   
+2. State Tracking:
+   equipment_states['gNB-001'] = {
+       'state': 'off',
+       'timer': datetime(2026, 1, 20, 14, 31, 15),
+       'reason': 'Threshold exceeded: DRB.MaxActiveUeDl=10'
+   }
+
+3. Thread Safety:
+   with self.state_lock:
+       # Only one thread can access equipment_states at a time
+       current_state = self.equipment_states.get(equipment_id)
+
+4. No Re-triggering:
+   if threshold_exceeded and current_state['state'] == 'on':
+       # Only act if equipment is currently ON
+       # If already OFF, do nothing (timer is running)

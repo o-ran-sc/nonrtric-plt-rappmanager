@@ -1,0 +1,30 @@
+tosca_definitions_version: tosca_simple_yaml_1_2
+
+description: Threshold Control rApp ASD
+
+imports:
+  - asd_types.yaml
+
+topology_template:
+  node_templates:
+    applicationServiceDescriptor:
+      type: tosca.nodes.asd
+      description: "rapp-threshold-control"
+      properties:
+        descriptor_id: 8f7e9c2d-4b5a-4c8e-9f2d-1a3b5c7d9e0f
+        descriptor_invariant_id: 2a4b6c8d-1e3f-4a5b-8c9d-0e1f2a3b4c5d
+        descriptor_version: 1.0
+        schema_version: 2.0
+        function_description: Threshold-based equipment control rApp
+        provider: O-RAN SC NONRTRIC team
+        application_name: rapp-threshold-control
+        application_version: 1.0
+      artifacts:
+        threshold-control:
+          type: tosca.artifacts.asd.deploymentItem
+          file: "Artifacts/Deployment/HELM/threshold-control-rapp-0.1.16.tgz"
+          properties:
+            artifact_type: "helm_chart"
+            target_server: "chartmuseum"
+            target_server_uri: "http://192.168.100.46:18080/api/charts"
+            item_id: 1

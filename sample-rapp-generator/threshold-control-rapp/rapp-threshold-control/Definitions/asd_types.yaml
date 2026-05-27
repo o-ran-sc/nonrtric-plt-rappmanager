@@ -1,0 +1,63 @@
+tosca_definitions_version: tosca_simple_yaml_1_2
+
+description: ASD types for threshold control rApp
+
+node_types:
+  tosca.nodes.asd:
+    derived_from: tosca.nodes.Root
+    description: "Application Service Descriptor node type"
+    properties:
+      descriptor_id:
+        type: string
+        required: true
+        description: "Unique identifier for the ASD"
+      descriptor_invariant_id:
+        type: string
+        required: true
+        description: "Invariant identifier for the ASD"
+      descriptor_version:
+        type: string
+        required: true
+        description: "Version of the ASD"
+      schema_version:
+        type: string
+        required: true
+        description: "Schema version"
+      function_description:
+        type: string
+        required: false
+        description: "Description of the application function"
+      provider:
+        type: string
+        required: true
+        description: "Provider of the application"
+      application_name:
+        type: string
+        required: true
+        description: "Name of the application"
+      application_version:
+        type: string
+        required: true
+        description: "Version of the application"
+
+artifact_types:
+  tosca.artifacts.asd.deploymentItem:
+    derived_from: tosca.artifacts.Root
+    description: "Deployment item artifact type"
+    properties:
+      artifact_type:
+        type: string
+        required: true
+        description: "Type of the artifact"
+      target_server:
+        type: string
+        required: false
+        description: "Target server for deployment"
+      target_server_uri:
+        type: string
+        required: false
+        description: "URI of the target server"
+      item_id:
+        type: integer
+        required: false
+        description: "Identifier for the deployment item"

@@ -1,0 +1,63 @@
+{
+  "SME": {
+    "sme_discovery_endpoint": "${SME_DISCOVERY_ENDPOINT:http://localhost:31575/service-apis/v1/allServiceAPIs}",
+    "host": "${SME_HOST:localhost}",
+    "port": "${SME_PORT:31575}",
+    "invoker_id": "${APP_ID:threshold-control}",
+    "influxdb_invoker_id": "${APP_ID:threshold-control}",
+    "influxdb_api_name": "${INFLUXDB_API_NAME:influxdb2-http}",
+    "influxdb_token": "${INFLUXDB_TOKEN:9ID1jUgFP1kJxSCFmN8cqbJ4x63Q2QGL}",
+    "influxdb_org": "${INFLUXDB_ORG:est}",
+    "sdnc_invoker_id": "${APP_ID:threshold-control}",
+    "sdnc_api_name": "${SDNC_API_NAME:sdnc-rest}",
+    "sdnc_username": "${SDNC_USERNAME:admin}",
+    "sdnc_password": "${SDNC_PASSWORD:Kp8bJ4SXszM0WXlhak3eHlcse2gAw84vaoGGmJvUy2U}"
+  },
+  "InfluxDB": {
+    "url": "${INFLUXDB_URL:http://localhost:8086}",
+    "token": "${INFLUXDB_TOKEN:9ID1jUgFP1kJxSCFmN8cqbJ4x63Q2QGL}",
+    "org": "${INFLUXDB_ORG:est}",
+    "query": {
+      "bucket": "${INFLUXDB_BUCKET:pm-logg-bucket}",
+      "measurement": "${INFLUXDB_MEASUREMENT:CellReports}",
+      "time_range": "${INFLUXDB_TIME_RANGE:5m}",
+      "fields": ["${MONITORED_FIELD_1:DRB.MeanActiveUeUl}", "${MONITORED_FIELD_2:DRB.MeanActiveUeDl}", "${MONITORED_FIELD_3:DRB.MaxActiveUeDl}", "${MONITORED_FIELD_4:DRB.MaxActiveUeUl}"],
+      "tag_filters": {}
+    }
+  },
+  "Equipment": {
+    "id_extraction": {
+      "method": "${EQUIPMENT_ID_METHOD:measurement_full}",
+      "tag_name": "${EQUIPMENT_ID_TAG:equipment_id}",
+      "key_prefix": "${EQUIPMENT_ID_PREFIX:CellId}"
+    }
+  },
+  "Threshold": {
+    "value": "${THRESHOLD_VALUE:1}",
+    "operator": "${THRESHOLD_OPERATOR:less_than}",
+    "monitored_field": "${THRESHOLD_MONITORED_FIELD:DRB.MeanActiveUeUl}",
+    "monitored_fields": ["${MONITORED_FIELD_1:DRB.MeanActiveUeUl}", "${MONITORED_FIELD_2:DRB.MeanActiveUeDl}", "${MONITORED_FIELD_3:DRB.MaxActiveUeDl}", "${MONITORED_FIELD_4:DRB.MaxActiveUeUl}"]
+  },
+  "SDNC": {
+    "node_name": "${SDNC_NODE_NAME:Benetel_RU}",
+    "component_name": "${COMPONENT_NAME:benetel_RU}",
+    "username": "${SDNC_USERNAME:admin}",
+    "password": "${SDNC_PASSWORD:Kp8bJ4SXszM0WXlhak3eHlcse2gAw84vaoGGmJvUy2U}",
+    "retry_attempts": "${SDNC_RETRY_ATTEMPTS:5}",
+    "retry_delay_seconds": "${SDNC_RETRY_DELAY:3}",
+    "endpoints": {
+      "hardware": "/rests/data/network-topology:network-topology/topology=topology-netconf/node=${NODE_NAME}/yang-ext:mount/ietf-hardware:hardware/component=${COMPONENT_NAME}",
+      "carriers": "/rests/data/network-topology:network-topology/topology=topology-netconf/node=${NODE_NAME}/yang-ext:mount/o-ran-uplane-conf:user-plane-configuration"
+    }
+  },
+  "Timer": {
+    "duration_seconds": "${TIMER_DURATION:60}"
+  },
+  "Monitoring": {
+    "polling_interval_seconds": "${POLLING_INTERVAL:30}"
+  },
+  "Logging": {
+    "level": "${LOG_LEVEL:INFO}",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  }
+}

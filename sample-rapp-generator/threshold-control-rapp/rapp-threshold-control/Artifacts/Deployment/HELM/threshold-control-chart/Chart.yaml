@@ -1,0 +1,23 @@
+apiVersion: v2
+name: threshold-control-rapp
+description: A Helm chart for Threshold Control rApp
+
+type: application
+
+# This is the chart version. This version number should be incremented each time you make changes
+# to the chart and its templates, including the app version.
+version: 0.1.16
+
+# This is the version number of the application being deployed.
+appVersion: "0.1.16"
+
+keywords:
+  - oran
+  - rapp
+  - threshold
+  - control
+  - nonrtric
+
+maintainers:
+  - name: O-RAN SC NONRTRIC team
+    email: nonrtric@lists.o-ran-sc.org

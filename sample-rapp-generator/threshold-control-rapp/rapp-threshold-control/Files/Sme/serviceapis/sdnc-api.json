@@ -1,0 +1,56 @@
+{
+  "apiName": "SDNC Web API",
+  "description": "Software Defined Network Controller Web API for equipment control",
+  "aefProfiles": [
+    {
+      "aefId": "SDNC Web as AEF",
+      "description": "SDNC Web API for network equipment control",
+      "versions": [
+        {
+          "apiVersion": "v1",
+          "resources": [
+            {
+              "resourceName": "rests-data",
+              "commType": "REQUEST_RESPONSE",
+              "uri": "/rests/data/*",
+              "operations": [
+                "GET",
+                "PUT",
+                "POST",
+                "DELETE",
+                "PATCH"
+              ]
+            },
+            {
+              "resourceName": "rests-operations",
+              "commType": "REQUEST_RESPONSE",
+              "uri": "/rests/operations/*",
+              "operations": [
+                "POST"
+              ]
+            },
+            {
+              "resourceName": "all-endpoints",
+              "commType": "REQUEST_RESPONSE",
+              "uri": "/*",
+              "operations": [
+                "GET",
+                "PUT",
+                "POST",
+                "DELETE",
+                "PATCH"
+              ]
+            }
+          ]
+        }
+      ],
+      "protocol": "HTTP_1_1",
+      "interfaceDescriptions": [
+        {
+          "ipv4Addr": "sdnc.onap.svc.cluster.local",
+          "port": 8282
+        }
+      ]
+    }
+  ]
+}

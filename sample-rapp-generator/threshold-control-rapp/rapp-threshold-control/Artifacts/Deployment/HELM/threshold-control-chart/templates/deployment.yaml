@@ -1,0 +1,171 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "threshold-control-chart.fullname" . }}
+  labels:
+    {{- include "threshold-control-chart.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "threshold-control-chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "threshold-control-chart.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "threshold-control-chart.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.appStartup.command }}
+          command:
+            {{- toYaml .Values.appStartup.command | nindent 12 }}
+          {{- end }}
+          {{- if .Values.appStartup.args }}
+          args:
+            {{- toYaml .Values.appStartup.args | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            # Application configuration
+            - name: APP_ID
+              value: {{ .Values.environment.appId | quote }}
+            - name: SME_DISCOVERY_ENDPOINT
+              value: {{ .Values.environment.smeDiscoveryEndpoint | quote }}
+            - name: LOG_LEVEL
+              value: {{ .Values.environment.logLevel | quote }}
+            
+            # SME configuration
+            - name: SME_HOST
+              value: {{ .Values.sme.host | quote }}
+            - name: SME_PORT
+              value: {{ .Values.sme.port | quote }}
+            - name: INFLUXDB_API_NAME
+              value: {{ .Values.sme.influxdbApiName | quote }}
+            - name: SDNC_API_NAME
+              value: {{ .Values.sme.sdncApiName | quote }}
+            
+            # InfluxDB configuration
+            - name: INFLUXDB_URL
+              value: {{ .Values.influxdb.url | quote }}
+            - name: INFLUXDB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "threshold-control-chart.fullname" . }}-secrets
+                  key: influxdb-token
+                  optional: true
+            - name: INFLUXDB_ORG
+              value: {{ .Values.influxdb.org | quote }}
+            - name: INFLUXDB_BUCKET
+              value: {{ .Values.influxdb.bucket | quote }}
+            - name: INFLUXDB_MEASUREMENT
+              value: {{ .Values.influxdb.measurement | quote }}
+            - name: INFLUXDB_TIME_RANGE
+              value: {{ .Values.influxdb.timeRange | quote }}
+            - name: MONITORED_FIELD_1
+              value: {{ index .Values.influxdb.monitoredFields 0 | default "DRB.MaxActiveUeDl" | quote }}
+            - name: MONITORED_FIELD_2
+              value: {{ index .Values.influxdb.monitoredFields 1 | default "DRB.MaxActiveUeUl" | quote }}
+            - name: MONITORED_FIELD_3
+              value: {{ index .Values.influxdb.monitoredFields 2 | default "DRB.MeanActiveUeDl" | quote }}
+            - name: MONITORED_FIELD_4
+              value: {{ index .Values.influxdb.monitoredFields 3 | default "DRB.MeanActiveUeUl" | quote }}
+            
+            # Equipment configuration
+            - name: EQUIPMENT_ID_METHOD
+              value: {{ .Values.equipment.idMethod | quote }}
+            - name: EQUIPMENT_ID_TAG
+              value: {{ .Values.equipment.idTagName | quote }}
+            - name: EQUIPMENT_ID_PREFIX
+              value: {{ .Values.equipment.idPrefix | quote }}
+            
+            # Threshold configuration
+            - name: THRESHOLD_VALUE
+              value: {{ .Values.threshold.value | quote }}
+            - name: THRESHOLD_OPERATOR
+              value: {{ .Values.threshold.operator | quote }}
+            - name: THRESHOLD_MONITORED_FIELD
+              value: {{ .Values.threshold.monitoredField | quote }}
+            
+            # SDNC configuration
+            - name: SDNC_ENDPOINT
+              value: {{ .Values.sdnc.endpoint | quote }}
+            - name: SDNC_METHOD
+              value: {{ .Values.sdnc.method | quote }}
+            - name: SDNC_USERNAME
+              value: {{ .Values.sdnc.username | quote }}
+            - name: SDNC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "threshold-control-chart.fullname" . }}-secrets
+                  key: sdnc-password
+                  optional: true
+            - name: COMPONENT_NAME
+              value: {{ .Values.sdnc.componentName | quote }}
+            
+            # Timer configuration
+            - name: TIMER_DURATION
+              value: {{ .Values.timer.durationSeconds | quote }}
+            
+            # Monitoring configuration
+            - name: POLLING_INTERVAL
+              value: {{ .Values.monitoring.pollingIntervalSeconds | quote }}
+            
+            # Invoker IDs (will be set by rApp Manager)
+            - name: INFLUXDB_INVOKER_ID
+              value: "threshold-control-rapp-invoker"
+            - name: SDNC_INVOKER_ID
+              value: "threshold-control-rapp-invoker"
+          
+          {{- if .Values.healthCheck.enabled }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.healthCheck.path }}
+              port: http
+            initialDelaySeconds: {{ .Values.healthCheck.initialDelaySeconds }}
+            periodSeconds: {{ .Values.healthCheck.periodSeconds }}
+            timeoutSeconds: {{ .Values.healthCheck.timeoutSeconds }}
+            failureThreshold: {{ .Values.healthCheck.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.healthCheck.path }}
+              port: http
+            initialDelaySeconds: {{ .Values.healthCheck.initialDelaySeconds }}
+            periodSeconds: {{ .Values.healthCheck.periodSeconds }}
+            timeoutSeconds: {{ .Values.healthCheck.timeoutSeconds }}
+            failureThreshold: {{ .Values.healthCheck.failureThreshold }}
+          {{- end }}
+          
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,39 @@
+{
+  "name": "ThresholdControlInstance0",
+  "version": "1.0.1",
+  "compositionId": "DO_NOT_CHANGE_THIS_COMPOSITION_ID",
+  "description": "Threshold Control automation composition instance 0",
+  "elements": {
+    "a1b2c3d4-e5f6-4789-a012-b3c4d5e6f789": {
+      "id": "a1b2c3d4-e5f6-4789-a012-b3c4d5e6f789",
+      "definition": {
+        "name": "onap.policy.clamp.ac.element.K8S_ThresholdControlAutomationCompositionElement",
+        "version": "1.2.3"
+      },
+      "description": "Threshold Control Automation Composition Element",
+      "properties": {
+        "chart": {
+          "chartId": {
+            "name": "threshold-control-rapp",
+            "version": "0.1.16"
+          },
+          "namespace": "nonrtric",
+          "releaseName": "threshold-control-rapp",
+          "podName": "threshold-control-rapp",
+          "repository": {
+            "repoName": "local",
+            "address": "http://192.168.100.46:18080"
+          },
+          "overrideParams": {
+            "environment.appId": "DO_NOT_CHANGE_THIS_RAPP_INSTANCE_ID",
+            "environment.smeDiscoveryEndpoint": "DO_NOT_CHANGE_THIS_SME_DISCOVERY_ENDPOINT",
+            "threshold.value": "1",
+            "threshold.operator": "less_than",
+            "timer.durationSeconds": "120",
+            "monitoring.pollingIntervalSeconds": "120"
+          }
+        }
+      }
+    }
+  }
+}

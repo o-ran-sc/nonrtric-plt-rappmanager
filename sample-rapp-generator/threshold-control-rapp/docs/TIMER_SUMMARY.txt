@@ -1,0 +1,37 @@
+TIMER MECHANISM - QUICK SUMMARY
+================================
+
+HOW IT WORKS:
+1. Threshold exceeded → Equipment turned OFF (energy-saving enabled)
+2. Timer starts (default: 60 seconds) in background thread
+3. Monitoring continues normally
+4. Timer expires → Equipment automatically turned ON (energy-saving disabled)
+
+KEY POINTS:
+- Each equipment has its own independent timer
+- Timers run in separate threads (non-blocking)
+- Thread-safe state management prevents conflicts
+- Equipment already OFF won't get a new timer (no re-triggering)
+- Multiple equipment can have different timer schedules
+- Configurable via TIMER_DURATION environment variable or Helm values
+
+EXAMPLE TIMELINE:
+14:30:00 - Threshold exceeded (value=10, threshold=5)
+14:30:00 - Turn OFF equipment (energy-saving: true)
+14:30:00 - Start 60-second timer
+14:31:00 - Timer expires
+14:31:00 - Turn ON equipment (energy-saving: false)
+
+CONFIGURATION:
+export TIMER_DURATION=120  # 2 minutes
+
+Or in Helm values:
+timer:
+  durationSeconds: 120
+
+STATUS MONITORING:
+curl http://localhost:8080/status
+
+Shows current equipment states and timer schedules.
+
+For detailed explanation with code examples, see TIMER_EXPLANATION.md
