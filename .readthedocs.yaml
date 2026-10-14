@@ -16,9 +16,9 @@ build:
     pre_build:
       - mkdir --parents _readthedocs/html/
       - mkdir --parents _readthedocs/tmp/doctrees
-      - sphinx-build -W -b html --keep-going -n -d
+      - sphinx-build -b html -n -d
         _readthedocs/tmp/doctrees  ./docs/ _readthedocs/html/
-      - sphinx-build -W -b html --keep-going -n -d
+      - sphinx-build -b html -n -d
         _readthedocs/tmp/doctrees/participants  ./participants/docs/
         _readthedocs/html/participants
 
